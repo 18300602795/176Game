@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">I76Game</string>
+    <string name="action_settings">Settings</string>
+
+
+    <string name="expand">展开</string>
+    <string name="shrink">收缩</string>
+    <string name="view_tag">view_tag</string>
+    <string name="register_message">注册即表示同意《76游戏平台用户协议》</string>
+<string name="viewpager_indicator">sdf</string>
+    <string name="share_img">share_img</string>
+
+</resources>

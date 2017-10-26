@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:orientation="vertical"
+              android:layout_height="match_parent">
+
+    <GridView
+        android:background="@color/white"
+        android:numColumns="2"
+        android:id="@+id/popup2_grid_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <View
+        android:id="@+id/popup_out"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@color/popup_bg"
+        android:layout_weight="1"/>
+
+</LinearLayout>

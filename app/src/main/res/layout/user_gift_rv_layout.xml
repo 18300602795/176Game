@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="horizontal"
+              android:layout_width="match_parent"
+              android:layout_marginLeft="10dp"
+              android:layout_marginRight="10dp"
+              android:layout_height="80dp">
+    <ImageView
+        android:layout_gravity="center_vertical"
+        android:id="@+id/gift_rv_icon"
+        android:layout_width="60dp"
+        android:layout_height="60dp"/>
+
+    <LinearLayout
+        android:layout_gravity="center_vertical"
+        android:orientation="vertical"
+        android:layout_width="0dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_weight="1"
+        android:layout_height="65dp">
+        <TextView
+            android:textColor="@color/main_item_text_color"
+            android:textSize="14sp"
+            android:text="礼包码："
+            android:id="@+id/gift_rv_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:textSize="12sp"
+            android:layout_marginTop="7dp"
+            android:id="@+id/gift_rv_content"
+            android:maxLines="1"
+            android:text="礼包码："
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_marginTop="7dp"
+            android:layout_height="wrap_content">
+            <TextView
+                android:textSize="12sp"
+                android:text="礼包码："
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <TextView
+                android:id="@+id/gift_rv_id"
+                android:textSize="12sp"
+                android:textColor="#e26020"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/gift_rv_copy"
+        android:layout_width="45dp"
+        android:text="复制"
+        android:layout_gravity="center_vertical"
+        android:textColor="@color/white"
+        android:background="@drawable/server_btn_gb_pregress"
+        android:layout_height="35dp"/>
+</LinearLayout>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+    <android.support.v7.widget.Toolbar
+        android:title="精彩资讯"
+        android:id="@+id/information_content_toolbar"
+        android:background="@color/main_item_text_color_p"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"/>
+    <com.i76game.view.PowerWebView
+        android:id="@+id/information_content_webview"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="10dp"
+        android:layout_weight="1"/>
+</LinearLayout>

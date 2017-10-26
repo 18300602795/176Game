@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:background="@color/main_item_text_color_p"
+        android:layout_height="50dp">
+
+        <ImageView
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:id="@+id/game_list_back"
+            android:layout_width="15dp"
+            android:background="@mipmap/ic_actionbar_back"
+            android:layout_gravity="center_vertical"
+            android:layout_height="23dp"/>
+
+        <RelativeLayout
+            android:background="@drawable/main_search_bg"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:id="@+id/game_list_search_layout"
+            android:layout_marginRight="15dp"
+            android:layout_marginLeft="15dp"
+            android:layout_gravity="center_vertical"
+            android:layout_height="32dp">
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_centerVertical="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:layout_width="18dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginLeft="10dp"
+                    android:background="@mipmap/ic_search"
+                    android:layout_height="18dp"/>
+
+                <TextView
+                    android:textColor="#c1c6c6"
+                    android:text="输入游戏名搜索"
+                    android:textSize="12sp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+        </RelativeLayout>
+
+        <ImageView
+            android:id="@+id/game_list_download"
+            android:layout_width="25dp"
+            android:layout_marginRight="10dp"
+            android:background="@mipmap/ic_download"
+            android:layout_gravity="center_vertical"
+            android:layout_height="27dp"/>
+    </LinearLayout>
+    <android.support.design.widget.TabLayout
+        android:id="@+id/game_list_table_layout"
+        android:layout_width="match_parent"
+        app:tabMode="fixed"
+        app:tabGravity="fill"
+        app:tabSelectedTextColor="@color/main_item_text_color_p"
+        app:tabIndicatorColor="@color/main_item_text_color_p"
+        android:layout_height="55dp"/>
+
+    <com.jcodecraeer.xrecyclerview.XRecyclerView
+        android:id="@+id/game_list_rv"
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"/>
+
+</LinearLayout>

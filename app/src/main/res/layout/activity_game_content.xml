@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:expandableTextView="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:orientation="vertical"
+              android:layout_height="match_parent">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:background="@mipmap/bg_game_detail"
+        android:layout_width="match_parent"
+        android:layout_height="130dp"
+        android:id="@+id/linearLayout">
+
+        <android.support.v7.widget.Toolbar
+            android:title="游戏详情"
+            android:id="@+id/game_content_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"/>
+
+        <LinearLayout
+            android:background="#ffffff"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dip"
+            android:layout_marginRight="10dip"
+            android:orientation="horizontal"
+            android:paddingTop="8dip">
+
+            <ImageView
+                android:id="@+id/home_rv_icon"
+                android:layout_width="66dip"
+                android:layout_height="66dip"
+                android:layout_gravity="center_vertical"
+                android:scaleType="fitXY"
+                android:transitionName="@string/share_img"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:src="@mipmap/ic_launcher"/>
+
+            <TableLayout
+                android:layout_marginLeft="10dp"
+                android:background="#ffffff"
+                android:paddingTop="8dip"
+                android:layout_marginRight="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="66dp">
+
+                <TextView
+                    android:id="@+id/game_content_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="left"
+                    android:textColor="#000"
+                    android:layout_marginBottom="3dp"
+                    android:textSize="15sp"
+                    android:textStyle="bold"/>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/game_content_download_count"
+                        android:layout_width="0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="left"
+                        android:text="下载："
+                        android:textSize="12sp"/>
+
+                    <TextView
+                        android:id="@+id/game_content_type"
+                        android:layout_width="0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="left"
+                        android:paddingLeft="10dip"
+                        android:text="类型："
+                        android:textSize="12sp"/>
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/game_content_versions"
+                        android:layout_width="0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="left"
+                        android:text="版本："
+                        android:textSize="12sp"/>
+
+                    <TextView
+                        android:id="@+id/game_content_language"
+                        android:layout_width="0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="left"
+                        android:paddingLeft="10dip"
+                        android:text="语言：中文 "
+                        android:textSize="12sp"/>
+                </TableRow>
+            </TableLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- 第二块，游戏截图 -->
+    <ScrollView
+        android:id="@+id/game_content_scroll_layout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp">
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <android.support.v7.widget.RecyclerView
+                android:paddingBottom="2dip"
+                android:paddingLeft="10dip"
+                android:paddingRight="10dip"
+                android:paddingTop="10dip"
+                android:id="@+id/game_content_rv"
+                android:layout_width="match_parent"
+                android:layout_height="250dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:textSize="14sp"
+                android:text="游戏简介"
+                android:layout_margin="10dp"
+                android:textColor="#121212"
+                android:textStyle="bold"
+                android:layout_height="wrap_content"/>
+
+            <!--游戏详情-->
+            <com.i76game.view.TextViewExpandableAnimation
+                android:id="@+id/expand_text_view"
+                expandableTextView:maxCollapsedLines="4"
+                expandableTextView:animDuration="200"
+                android:layout_weight="1"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="0dp">
+
+                <TextView
+                    android:id="@+id/expandable_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:textSize="14sp"
+                    android:textColor="#666666" />
+                <ImageButton
+                    android:id="@+id/expand_collapse"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="16dp"
+                    android:layout_gravity="right|bottom"
+                    android:background="@android:color/transparent"/>
+            </com.i76game.view.TextViewExpandableAnimation>
+        </LinearLayout>
+    </ScrollView>
+    <!-- 第五块，下载 -->
+    <RelativeLayout
+        android:id="@+id/game_content_download_layout"
+        android:layout_width="match_parent"
+        android:layout_height="38dip"
+        android:layout_marginBottom="10dp"
+        android:background="@android:color/white"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp" >
+
+            <ProgressBar
+                android:id="@+id/game_content_download_progress"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="38dp"
+                android:max="100"
+
+                android:progressDrawable="@drawable/ttw_progressbar_style"/>
+
+
+            <TextView
+                android:id="@+id/game_content_size"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="下载(14.2M)"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true"
+                android:textColor="#ffffff"
+                android:textSize="15sp"/>
+
+        <ImageView
+            android:id="@+id/game_content_download"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@mipmap/ic_toolbar_download_white"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/game_content_size"
+            android:layout_toStartOf="@+id/game_content_size"/>
+    </RelativeLayout>
+
+</LinearLayout>

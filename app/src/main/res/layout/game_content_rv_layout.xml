@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ImageView xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="180dp"
+           android:scaleType="fitXY"
+           android:layout_marginRight="5dp"
+           android:id="@+id/game_content_rv_image"
+              android:layout_height="250dp">
+
+</ImageView>

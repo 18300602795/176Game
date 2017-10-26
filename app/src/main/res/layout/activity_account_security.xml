@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/account_security_toolbar"
+        android:layout_width="match_parent"
+        android:background="@color/main_item_text_color_p"
+        android:layout_height="55dp"/>
+    <LinearLayout
+        android:id="@+id/account_security_phone"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="40dp">
+
+        <ImageView
+            android:background="@mipmap/mibao_phone"
+            android:layout_width="25dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_gravity="center_vertical"
+            android:layout_height="25dp"/>
+        <TextView
+            android:textSize="14sp"
+            android:text="密保手机"
+            android:layout_gravity="center_vertical"
+            android:textColor="@color/main_item_text_color"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/account_security_e_mail"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="40dp">
+
+        <ImageView
+            android:background="@mipmap/mibao_youxiang"
+            android:layout_width="25dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_gravity="center_vertical"
+            android:layout_height="25dp"/>
+        <TextView
+            android:textSize="14sp"
+            android:text="密保邮箱"
+            android:layout_gravity="center_vertical"
+            android:textColor="@color/main_item_text_color"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/account_security_change_password"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="40dp">
+
+        <ImageView
+            android:background="@mipmap/xiugai_mima"
+            android:layout_width="25dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_gravity="center_vertical"
+            android:layout_height="25dp"/>
+        <TextView
+            android:textSize="14sp"
+            android:text="修改密码"
+            android:layout_gravity="center_vertical"
+            android:textColor="@color/main_item_text_color"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/order_toolbar"
+        android:background="@color/main_item_text_color_p"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"/>
+    <LinearLayout
+        android:id="@+id/order_recharge"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="40dp">
+
+        <ImageView
+            android:background="@mipmap/xiaofeijilu"
+            android:layout_width="25dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_gravity="center_vertical"
+            android:layout_height="25dp"/>
+        <TextView
+            android:textSize="14sp"
+            android:text="消费记录"
+            android:layout_gravity="center_vertical"
+            android:textColor="@color/main_item_text_color"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"/>
+        <ImageView
+            android:layout_width="15dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="10dp"
+            android:background="@mipmap/ic_arrow_right"
+            android:layout_height="15dp"/>
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/order_consume"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="40dp">
+
+        <ImageView
+            android:background="@mipmap/chongzhijilu"
+            android:layout_width="25dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_gravity="center_vertical"
+            android:layout_height="25dp"/>
+        <TextView
+            android:textSize="14sp"
+            android:text="充值记录"
+            android:layout_gravity="center_vertical"
+            android:textColor="@color/main_item_text_color"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"/>
+        <ImageView
+            android:layout_width="15dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="10dp"
+            android:background="@mipmap/ic_arrow_right"
+            android:layout_height="15dp"/>
+    </LinearLayout>
+
+
+</LinearLayout>

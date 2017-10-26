@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/help_toolbar"
+        android:layout_width="match_parent"
+        android:background="@color/main_item_text_color_p"
+        android:layout_height="55dp"/>
+    <com.i76game.view.PowerWebView
+        android:layout_weight="1"
+        android:id="@+id/help_web_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"/>
+</LinearLayout>

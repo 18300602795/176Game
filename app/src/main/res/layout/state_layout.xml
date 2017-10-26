@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" android:background="@color/white">
+    
+    <ProgressBar 
+        android:id="@+id/loadingView"
+        style="@android:style/Widget.ProgressBar"
+        android:indeterminateDrawable="@drawable/progress_medium_white"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_gravity="center"/>
+    
+    <LinearLayout 
+        android:id="@+id/failView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:layout_gravity="center"
+        android:visibility="gone">
+        
+        <ImageView 
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@mipmap/ic_error_page"/>
+        
+        <TextView 
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#CACACA"
+            android:text="加载失败，点击重试"
+            android:padding="6dp"
+            android:layout_marginTop="6dp"
+            android:background="@drawable/btn_normal"/>
+        
+    </LinearLayout>
+    
+    <TextView
+        android:id="@+id/emptyView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawableTop="@mipmap/ic_empty_page"
+        android:layout_gravity="center"
+        android:text="暂无数据"
+        android:gravity="center"
+        />
+
+</FrameLayout>
+
+
+
+
+
+
+
+
+
+

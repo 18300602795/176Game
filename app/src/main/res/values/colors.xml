@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+
+    <color name="main_item_text_color">#444111</color>
+    <color name="main_item_text_color_p">#79dfb1</color>
+    <color name="server_btn_color">#6bc99e</color>
+    <color name="blue">#46d2c9</color>
+
+    <color name="transparent">#9000</color>
+    <color name="red">#f52525</color>
+
+    <!--自定义伸缩view的颜色-->
+    <color name="color_gray_light_content_text">#5d5d5d</color>
+    <color name="zixun_text_2">#323232</color>
+
+    <color name="white">#ffffff</color>
+
+
+    <color name="popup_bg">#ca5e5c5c</color>
+
+    <color name="line_gray">#bebec4</color>
+</resources>

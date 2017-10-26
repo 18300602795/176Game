@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:orientation="vertical"
+              android:clipChildren="false"
+              android:layout_height="match_parent">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:id="@+id/main_tool_layout"
+        android:background="@color/main_item_text_color_p"
+        android:layout_height="50dp">
+
+        <ImageView
+            android:id="@+id/main_img_mine"
+            android:layout_width="30dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@mipmap/ic_head_image"
+            android:layout_gravity="center_vertical"
+            android:layout_height="30dp"/>
+
+        <RelativeLayout
+            android:id="@+id/main_search_layout"
+            android:background="@drawable/main_search_bg"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_gravity="center_vertical"
+            android:layout_height="32dp">
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:layout_width="18dp"
+                    android:layout_marginRight="5dp"
+                    android:background="@mipmap/ic_search"
+                    android:layout_height="18dp"/>
+
+                <TextView
+                    android:textColor="#c1c6c6"
+                    android:text="输入游戏名搜索"
+                    android:textSize="12sp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+        </RelativeLayout>
+
+        <ImageView
+            android:id="@+id/main_download"
+            android:layout_width="25dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@mipmap/ic_download"
+            android:layout_gravity="center_vertical"
+            android:layout_height="27dp"/>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/main_title_layout"
+        android:visibility="gone"
+        android:background="@color/main_item_text_color_p"
+        android:layout_width="match_parent"
+        android:layout_height="55dp">
+        <TextView
+            android:id="@+id/main_title_text"
+            android:layout_centerHorizontal="true"
+            android:textColor="#ffffff"
+            android:layout_centerVertical="true"
+            android:layout_width="wrap_content"
+            android:textSize="18sp"
+            android:layout_height="wrap_content"/>
+    </RelativeLayout>
+
+
+    <FrameLayout
+        android:id="@+id/main_frame_layout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="48dp">
+        <LinearLayout
+            android:id="@+id/main_home_layout"
+            android:gravity="center_horizontal|bottom"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_height="48dp">
+            <ImageView
+                android:id="@+id/main_home_image"
+                android:background="@mipmap/ic_main_home"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <TextView
+                android:text="首页"
+                android:id="@+id/main_home_text"
+                style="@style/main_item_text"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/main_home_server"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:gravity="center_horizontal|bottom"
+            android:orientation="vertical"
+            android:layout_height="48dp">
+            <ImageView
+                android:id="@+id/main_server_image"
+                android:background="@mipmap/ic_main_server"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <TextView
+                android:text="开服表"
+                android:id="@+id/main_server_text"
+                style="@style/main_item_text"/>
+
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/main_home_fanli"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_gravity="bottom"
+            android:gravity="center_horizontal"
+            android:layout_height="65dp">
+            <ImageView
+                android:background="@mipmap/ic_tab_fanli_p"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <TextView
+                android:text="申请返利"
+                android:id="@+id/main_fanli_text"
+                style="@style/main_item_text"/>
+
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/main_home_message"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center_horizontal|bottom"
+            android:layout_height="48dp">
+            <ImageView
+                android:id="@+id/main_message_image"
+                android:background="@mipmap/ic_main_message"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <TextView
+                android:text="消息"
+                android:id="@+id/main_message_text"
+                style="@style/main_item_text"/>
+
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/main_home_mine"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center_horizontal|bottom"
+            android:layout_height="48dp">
+            <ImageView
+                android:id="@+id/main_mine_image"
+                android:background="@mipmap/ic_main_mine"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <TextView
+                android:text="我的"
+                android:id="@+id/main_mine_text"
+                style="@style/main_item_text"/>
+
+        </LinearLayout>
+        
+    </LinearLayout>
+
+</LinearLayout>
