@@ -7,7 +7,7 @@ android {
         applicationId "com.i76game"
         minSdkVersion 15
         targetSdkVersion 25
-        versionCode 1
+        versionCode 294
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }

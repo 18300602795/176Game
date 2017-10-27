@@ -3,21 +3,16 @@ package com.i76game.update;
 import android.app.Activity;
 import android.content.Intent;
 import android.support.v4.util.ArrayMap;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.i76game.bean.NewVersionBean;
 import com.i76game.utils.Global;
 import com.i76game.utils.HttpServer;
+import com.i76game.utils.LogUtils;
 import com.i76game.utils.OkHttpUtil;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
+import com.i76game.utils.StringUtils;
 
 import java.io.IOException;
-
-import javax.security.auth.login.LoginException;
 
 import io.reactivex.Observable;
 import io.reactivex.Observer;
@@ -75,6 +70,7 @@ public class VersionUpdateManager {
 
         Observable<NewVersionBean> observable = retrofit.create(
                 HttpServer.NewVersionService.class).listResponse(map);
+        LogUtils.iUrl(StringUtils.getCompUrlFromParams(Global.Hot_GAME_URL, map));
         observable.subscribeOn(Schedulers.io())// 指定被观察者发生在 IO 线程
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<NewVersionBean>() {
@@ -86,11 +82,13 @@ public class VersionUpdateManager {
                     @Override
                     public void onNext(@NonNull final NewVersionBean newVersionBean) {
                         int code=newVersionBean.getCode();
+                        LogUtils.i("VersionUpdateManager code：" + code);
+                        LogUtils.i("VersionUpdateManager msg“" + newVersionBean.getMsg());
                         if (code == 404&&newVersionBean.getData()==null) {
 
                             return;
                         }
-
+                        LogUtils.i("VersionUpdateManager url：" + newVersionBean.getData().getNewurl());
                         showUpdateDialog(newVersionBean, mContext);
                     }
 

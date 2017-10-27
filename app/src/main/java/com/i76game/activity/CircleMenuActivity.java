@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import com.i76game.R;
 import com.i76game.view.Circle;
@@ -19,9 +18,9 @@ import com.i76game.view.Circle;
  */
 
 public class CircleMenuActivity extends Activity {
-    private int[] images = {R.mipmap.ic_mine_gift, R.mipmap.ic_information, R.mipmap.ic_tab_fanli_p,
-            R.mipmap.ic_launcher, R.mipmap.ic_launcher, R.mipmap.ic_launcher};
-    private String[] texts = {"礼包", "资讯", "返利", "礼包4", "礼包5", "礼包6"};
+    private int[] images = {R.mipmap.ic_mine_fanli, R.mipmap.ic_mine_gift, R.mipmap.ic_mine_huodong,
+            R.mipmap.ic_mine_gonglue, R.mipmap.ic_mine_kefu1, R.mipmap.ic_mine_luntan};
+    private String[] texts = {"返利", "礼包", "活动", "攻略", "客服", "论坛"};
     private Circle mCircleMenu;
 
     @Override

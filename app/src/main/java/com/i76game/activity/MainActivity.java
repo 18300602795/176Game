@@ -41,7 +41,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         initView();
         //默认选中第一个
         mHomeImage.setImageResource(R.mipmap.ic_main_home_p);
@@ -161,7 +160,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             case R.id.main_search_layout:
                 startActivity(new Intent(this,SearchActivity.class));
                 break;
-
         }
     }
 
