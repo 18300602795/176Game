@@ -1,116 +1,138 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <RelativeLayout
-        android:background="@mipmap/bg_kefu"
         android:layout_width="match_parent"
-        android:layout_height="320dp">
+        android:layout_height="320dp"
+        android:background="@mipmap/bg_kefu">
+
+        <ImageView
+            android:id="@+id/back_return"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:padding="10dp"
+            android:src="@mipmap/ic_back" />
 
         <LinearLayout
-            android:orientation="horizontal"
-            android:background="@color/white"
             android:layout_width="match_parent"
             android:layout_height="110dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true">
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:background="@color/white"
+            android:orientation="horizontal">
+
             <LinearLayout
-                android:orientation="vertical"
-                android:layout_weight="1"
                 android:layout_width="0dp"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
                 <ImageView
-                    android:layout_marginTop="5dp"
                     android:layout_width="35dp"
+                    android:layout_height="35dp"
                     android:layout_gravity="center_horizontal"
-                    android:background="@mipmap/ic_kefu_service"
-                    android:layout_height="35dp"/>
+                    android:layout_marginTop="5dp"
+                    android:background="@mipmap/ic_kefu_service" />
+
                 <TextView
                     android:layout_width="wrap_content"
-                    android:text="客服妖妖"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:layout_height="wrap_content"/>
+                    android:text="客服妖妖" />
+
                 <TextView
                     android:id="@+id/customer_service_text_connection"
                     android:layout_width="wrap_content"
-                    android:text="709423355"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:layout_height="wrap_content"/>
+                    android:text="709423355" />
 
                 <Button
                     android:id="@+id/customer_service_btn_connection"
+                    android:layout_width="55dp"
+                    android:layout_height="26dp"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@drawable/customer_service_btn_bg"
                     android:text="交谈"
-                    android:textColor="@color/white"
-                    android:background="@drawable/customer_service_btn_bg"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_width="55dp"
-                    android:layout_height="26dp"/>
+                    android:textColor="@color/white" />
             </LinearLayout>
+
             <LinearLayout
-                android:orientation="vertical"
-                android:layout_weight="1"
                 android:layout_width="0dp"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
                 <ImageView
-                    android:layout_marginTop="5dp"
                     android:layout_width="35dp"
+                    android:layout_height="35dp"
                     android:layout_gravity="center_horizontal"
-                    android:background="@mipmap/ic_kefu_qq"
-                    android:layout_height="35dp"/>
+                    android:layout_marginTop="5dp"
+                    android:background="@mipmap/ic_kefu_qq" />
+
                 <TextView
                     android:layout_width="wrap_content"
-                    android:text="客服妖妖"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:layout_height="wrap_content"/>
+                    android:text="客服妖妖" />
+
                 <TextView
                     android:layout_width="wrap_content"
-                    android:text="709423355"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:layout_height="wrap_content"/>
+                    android:text="709423355" />
+
                 <Button
-                    android:textColor="@color/white"
-                    android:text="加入"
-                    android:background="@drawable/customer_service_btn_bg"
-                    android:layout_gravity="center_horizontal"
                     android:layout_width="55dp"
-                    android:layout_height="26dp"/>
+                    android:layout_height="26dp"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@drawable/customer_service_btn_bg"
+                    android:text="加入"
+                    android:textColor="@color/white" />
 
             </LinearLayout>
+
             <LinearLayout
-                android:orientation="vertical"
-                android:layout_weight="1"
                 android:layout_width="0dp"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
                 <ImageView
-                    android:layout_marginTop="5dp"
                     android:layout_width="35dp"
+                    android:layout_height="35dp"
                     android:layout_gravity="center_horizontal"
-                    android:background="@mipmap/ic_kefu_telphone"
-                    android:layout_height="35dp"/>
+                    android:layout_marginTop="5dp"
+                    android:background="@mipmap/ic_kefu_telphone" />
+
                 <TextView
                     android:layout_width="wrap_content"
-                    android:text="客服电话"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:layout_height="wrap_content"/>
+                    android:text="客服电话" />
+
                 <TextView
                     android:id="@+id/customer_service_text_phone"
                     android:layout_width="wrap_content"
-                    android:text="709423355"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:layout_height="wrap_content"/>
+                    android:text="709423355" />
+
                 <Button
                     android:id="@+id/customer_service_btn_phone"
-                    android:textColor="@color/white"
-                    android:text="联系"
-                    android:background="@drawable/customer_service_btn_bg"
-                    android:layout_gravity="center_horizontal"
                     android:layout_width="55dp"
-                    android:layout_height="26dp"/>
+                    android:layout_height="26dp"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@drawable/customer_service_btn_bg"
+                    android:text="联系"
+                    android:textColor="@color/white" />
             </LinearLayout>
         </LinearLayout>
 

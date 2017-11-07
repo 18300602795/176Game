@@ -2,15 +2,10 @@ package com.i76game.activity;
 
 import android.Manifest;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.os.Build;
-import android.os.Bundle;
 import android.support.v4.util.ArrayMap;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -28,7 +23,6 @@ import com.i76game.download.DownloadInfo;
 import com.i76game.download.DownloadService;
 import com.i76game.utils.ApkUtils;
 import com.i76game.utils.GetTypeUtils;
-import com.i76game.utils.GlideUtil;
 import com.i76game.utils.Global;
 import com.i76game.utils.HttpServer;
 import com.i76game.utils.RetrofitUtil;
@@ -73,7 +67,7 @@ public class GameContentActivity extends BaseActivity implements View.OnClickLis
     @Override
     public void initData() {
         mDownloadAPKManager = DownloadService.getDownloadManager(MyApplication.getContextObject());
-        Intent intent=getIntent();
+        Intent intent = getIntent();
         int gameId = intent.getIntExtra(Global.GAME_ID, 0);
         final ArrayMap<String, String> map = new ArrayMap<>();
         map.put("gameid", gameId + "");
@@ -97,7 +91,7 @@ public class GameContentActivity extends BaseActivity implements View.OnClickLis
 
                 if (Build.VERSION.SDK_INT > 20) {
                     finishAfterTransition();
-                }else {
+                } else {
                     finish();
                 }
             }
@@ -107,7 +101,7 @@ public class GameContentActivity extends BaseActivity implements View.OnClickLis
         mAdapter = new GameCountAdapter(this);
         mRecyclerView.setAdapter(mAdapter);
         mGameIcon = (ImageView) findViewById(R.id.home_rv_icon);
-        if (Global.drawable!=null){
+        if (Global.drawable != null) {
             mGameIcon.setImageDrawable(Global.drawable);
         }
         mGameName = (TextView) findViewById(R.id.game_content_name);
@@ -192,9 +186,9 @@ public class GameContentActivity extends BaseActivity implements View.OnClickLis
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.game_content_download_layout:
-                if(hasPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)){
+                if (hasPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                     writePermission();
-                }else{
+                } else {
                     requestPermission(Global.WRITE_READ_EXTERNAL_CODE,
                             Manifest.permission.WRITE_EXTERNAL_STORAGE);
                 }
@@ -204,59 +198,63 @@ public class GameContentActivity extends BaseActivity implements View.OnClickLis
 
     @Override
     public void writePermission() {
-        if (mData != null) {
-            String target = MyApplication.apkdownload_path + mGameName.getText() + ".apk";
+        try {
+            if (mData != null) {
+                String target = MyApplication.apkdownload_path + mGameName.getText() + ".apk";
+                DownloadInfo downloadInfo = mDownloadAPKManager.getDownloadInfoByAppId(mData.getGameid() + "");
 
-            DownloadInfo downloadInfo = mDownloadAPKManager.getDownloadInfoByAppId(mData.getGameid() + "");
-
-            if (downloadInfo == null) {
-                // 如果原来没有下载过，则添加一个新的下载
-                if (mData.getGameid() != null) {
-                    try {
-                        mDownloadAPKManager.addNewDownload(
-                                mData.getGameid() + "",
-                                mData.getDownlink(),
-                                mData.getGamename(),
-                                target,
-                                true, // 如果目标文件存在，接着未完成的部分继续下载。服务器不支持RANGE时将从新下载。
-                                false, // 如果从请求返回信息中获取到文件名，下载完成后自动重命名。
-                                mData.getIcon(),  //传入的是图片地址，因为服务器暂时没有，这里先写死、
-                                null,
-                                downloadStateListener);
-                    } catch (DbException e) {
-                        e.printStackTrace();
+                if (downloadInfo == null) {
+                    // 如果原来没有下载过，则添加一个新的下载
+                    if (mData.getGameid() != null) {
+                        try {
+                            mDownloadAPKManager.addNewDownload(
+                                    mData.getGameid() + "",
+                                    mData.getDownlink(),
+                                    mData.getGamename(),
+                                    target,
+                                    true, // 如果目标文件存在，接着未完成的部分继续下载。服务器不支持RANGE时将从新下载。
+                                    false, // 如果从请求返回信息中获取到文件名，下载完成后自动重命名。
+                                    mData.getIcon(),  //传入的是图片地址，因为服务器暂时没有，这里先写死、
+                                    null,
+                                    downloadStateListener);
+                        } catch (DbException e) {
+                            e.printStackTrace();
+                        }
                     }
+                    return;
+
                 }
-                return;
+                HttpHandler.State state = downloadInfo.getState();
 
+                switch (state) {
+                    case WAITING:
+                    case STARTED:
+                    case LOADING:
+                        try {
+                            mDownloadAPKManager.stopDownload(downloadInfo);
+                        } catch (DbException e) {
+                            LogUtils.e(e.getMessage(), e);
+                        }
+                        break;
+                    case CANCELLED:
+                    case FAILURE:
+                        try {
+                            mDownloadAPKManager.resumeDownload(downloadInfo, downloadStateListener);
+                        } catch (DbException e) {
+                            LogUtils.e(e.getMessage(), e);
+                        }
+                        break;
+                    case SUCCESS:
+                        ApkUtils.install(downloadInfo);
+                        break;
+                    default:
+                        break;
+                }
             }
-            HttpHandler.State state = downloadInfo.getState();
-
-            switch (state) {
-                case WAITING:
-                case STARTED:
-                case LOADING:
-                    try {
-                        mDownloadAPKManager.stopDownload(downloadInfo);
-                    } catch (DbException e) {
-                        LogUtils.e(e.getMessage(), e);
-                    }
-                    break;
-                case CANCELLED:
-                case FAILURE:
-                    try {
-                        mDownloadAPKManager.resumeDownload(downloadInfo, downloadStateListener);
-                    } catch (DbException e) {
-                        LogUtils.e(e.getMessage(), e);
-                    }
-                    break;
-                case SUCCESS:
-                    ApkUtils.install(downloadInfo);
-                    break;
-                default:
-                    break;
-            }
+        } catch (Exception e) {
+            Toast.makeText(this, "下载地址错误", Toast.LENGTH_SHORT).show();
         }
+
     }
 
 
@@ -378,7 +376,7 @@ public class GameContentActivity extends BaseActivity implements View.OnClickLis
 
     @Override
     protected void onDestroy() {
-        Global.drawable=null;
+        Global.drawable = null;
         if (Build.VERSION.SDK_INT > 20) {
             finishAfterTransition();
         }

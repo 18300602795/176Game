@@ -31,6 +31,8 @@
         <activity android:name=".activity.DownloadActivity" />
         <!--游戏详情页面-->
         <activity android:name=".activity.GameContentActivity" />
+        <!--游戏详情页面-->
+        <activity android:name=".activity.GameInfoActivity" />
         <!--游戏列表页面-->
         <activity android:name=".activity.GameListActivity" />
         <!--圆形页面-->

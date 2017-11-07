@@ -1,26 +1,20 @@
 package com.i76game.activity;
 
-import android.content.Intent;
 import android.support.v4.util.ArrayMap;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.i76game.R;
+import com.i76game.adapter.InformationAdapter;
 import com.i76game.bean.InformationRVBean;
-import com.i76game.utils.GlideUtil;
 import com.i76game.utils.Global;
 import com.i76game.utils.HttpServer;
+import com.i76game.utils.LogUtils;
 import com.i76game.utils.RetrofitUtil;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observer;
@@ -37,7 +31,9 @@ public class InformationActivity extends BaseActivity {
 
     private List<InformationRVBean.DataBean.NewsListBean> mInformationList;
     private InformationAdapter mAdapter;
-
+    private String type, title;
+    private XRecyclerView recyclerView;
+    private int currentPage=1;
     @Override
     protected int setLayoutResID() {
         return R.layout.activity_information;
@@ -45,23 +41,42 @@ public class InformationActivity extends BaseActivity {
 
     @Override
     public void initView() {
-        setToolbar("资讯中心",R.id.information_toolbar);
-        XRecyclerView recyclerView= (XRecyclerView) findViewById(R.id.information_rv);
+        type = getIntent().getStringExtra("type");
+        title = getIntent().getStringExtra("title");
+        setToolbar(title, R.id.information_toolbar);
+        recyclerView = (XRecyclerView) findViewById(R.id.information_rv);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mAdapter = new InformationAdapter();
+        mInformationList = new ArrayList<>();
+        mAdapter = new InformationAdapter(mInformationList, this);
         recyclerView.setAdapter(mAdapter);
         recyclerView.addItemDecoration(new DividerItemDecoration(this,
                 DividerItemDecoration.VERTICAL));
+        getDate();
+        recyclerView.setLoadingListener(new XRecyclerView.LoadingListener() {
+            @Override
+            public void onRefresh() {
+                getDate();
+            }
 
-        ArrayMap<String,String> map=new ArrayMap<>();
+            @Override
+            public void onLoadMore() {
+                currentPage += 1;
+                getDate();
+            }
+        });
+    }
+
+    private void getDate() {
+        ArrayMap<String, String> map = new ArrayMap<>();
         map.put("appid", Global.appid);
         map.put("clientid", Global.clientid);
         map.put("agent", "");
         map.put("from", "3");
-        map.put("page", "1");
-        map.put("offset", "30");
-        map.put("catalog","0");
-
+        map.put("page", String.valueOf(currentPage));
+        map.put("offset", "10");
+        map.put("catalog", "0");
+        map.put("post_type", type);
+        LogUtils.i("" + currentPage);
         RetrofitUtil.getInstance().create(HttpServer.InformationService.class)
                 .listResponse(map)
                 .subscribeOn(Schedulers.io())// 指定被观察者发生在 IO 线程
@@ -75,11 +90,22 @@ public class InformationActivity extends BaseActivity {
 
                     @Override
                     public void onNext(@NonNull InformationRVBean informationRVBean) {
-                        if (informationRVBean != null && informationRVBean.getCode() == 200) {
+                        try{
+                            LogUtils.i("msg：" + informationRVBean.getMsg());
+                            LogUtils.i("code：" + informationRVBean.getCode());
+                        }catch (Exception e){
+                            LogUtils.e(e.toString());
+                        }
+                        if (informationRVBean != null && informationRVBean.getCode() == 200 && informationRVBean.getData().getNews_list().size() > 0) {
                             mInformationList = informationRVBean.getData().getNews_list();
-                            mAdapter.notifyDataSetChanged();
+                            mAdapter.addDate(mInformationList);
                         } else {
-                            showToast("暂无数据哦", Toast.LENGTH_SHORT);
+                            if (currentPage == 1){
+                                showToast("暂无数据哦", Toast.LENGTH_SHORT);
+                            }else {
+                                showToast("没有更多数据哦", Toast.LENGTH_SHORT);
+                            }
+
                         }
                     }
 
@@ -90,56 +116,14 @@ public class InformationActivity extends BaseActivity {
 
                     @Override
                     public void onComplete() {
-
+                        hideDialog();
                     }
                 });
-
     }
-
-    class InformationAdapter extends RecyclerView.Adapter<InformationHolder> {
-
-        @Override
-        public InformationHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-           View view= LayoutInflater.from(InformationActivity.this)
-                   .inflate(R.layout.information_rv_layout,parent,false);
-            return new InformationHolder(view);
-        }
-
-        @Override
-        public void onBindViewHolder(InformationHolder holder, int position) {
-            final InformationRVBean.DataBean.NewsListBean informationBean = mInformationList.get(position);
-            GlideUtil.loadImage(InformationActivity.this, informationBean.getImg(), holder.mImageView,
-                    R.mipmap.load_icon);
-
-            holder.mTitleText.setText(informationBean.getTitle());
-            holder.mTimeText.setText(informationBean.getPudate());
-            holder.mImageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int id=informationBean.getId();
-                    Intent intent=new Intent(InformationActivity.this,InformationContentActivity.class);
-                    intent.putExtra("id",id);
-                    startActivity(intent);
-                }
-            });
-        }
-
-        @Override
-        public int getItemCount() {
-            return mInformationList==null?0:mInformationList.size();
-        }
-    }
-
-
-    class InformationHolder extends RecyclerView.ViewHolder{
-        TextView mTimeText;
-        ImageView mImageView;
-        TextView mTitleText;
-        public InformationHolder(View itemView) {
-            super(itemView);
-            mImageView= (ImageView) itemView.findViewById(R.id.information_rv_image);
-            mTitleText= (TextView) itemView.findViewById(R.id.information_rv_title);
-            mTimeText= (TextView) itemView.findViewById(R.id.information_rv_time);
-        }
+    /**
+     * 隐藏对话框
+     */
+    private void hideDialog() {
+        recyclerView.refreshComplete();
     }
 }

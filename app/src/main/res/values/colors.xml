@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="green_bg">#f0f0f0</color>
+    <!-- material design black font color -->
+    <color name="font_black_0">#212121</color>
+    <color name="font_black_1">#424242</color>
+    <color name="font_black_2">#616161</color>
+    <color name="font_black_3">#757575</color>
+    <color name="font_black_4">#9e9e9e</color>
+    <color name="font_black_5">#bdbdbd</color>
+    <color name="font_black_6">#e0e0e0</color>
+    <color name="half_transparent">#8f000000</color>
+
+
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
@@ -10,6 +22,7 @@
     <color name="blue">#46d2c9</color>
 
     <color name="transparent">#9000</color>
+    <color name="transparent2">#00000000</color>
     <color name="red">#f52525</color>
 
     <!--自定义伸缩view的颜色-->

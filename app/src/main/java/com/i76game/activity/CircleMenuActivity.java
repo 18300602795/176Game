@@ -32,13 +32,25 @@ public class CircleMenuActivity extends Activity {
         mCircleMenu.setOnMenuItemClickListener(new Circle.OnMenuItemClickListener() {
             @Override
             public void itemClick(View view, int pos) {
+                Intent intent = new Intent();
                 if (pos == 0) {
-                    startActivity(new Intent(CircleMenuActivity.this, GiftListActivity.class));
+                    intent.setClass(CircleMenuActivity.this, BackActivity.class);
                 } else if (pos == 1) {
-                    startActivity(new Intent(CircleMenuActivity.this, InformationActivity.class));
+                    intent.setClass(CircleMenuActivity.this, GiftListActivity.class);
                 } else if (pos == 2) {
-                    startActivity(new Intent(CircleMenuActivity.this, BackActivity.class));
+                    intent.setClass(CircleMenuActivity.this, InformationActivity.class);
+                    intent.putExtra("type", "2");
+                    intent.putExtra("title", "活动中心");
+                }else if (pos == 3) {
+                    intent.setClass(CircleMenuActivity.this, InformationActivity.class);
+                    intent.putExtra("type", "3");
+                    intent.putExtra("title", "攻略中心");
+                }else if (pos == 4) {
+                    intent.setClass(CircleMenuActivity.this, CustomerServiceActivity.class);
+                }else if (pos == 5) {
+                    intent.setClass(CircleMenuActivity.this, CustomerServiceActivity.class);
                 }
+                startActivity(intent);
             }
 
             @Override

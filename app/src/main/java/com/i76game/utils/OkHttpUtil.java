@@ -1,7 +1,6 @@
 package com.i76game.utils;
 
 import android.content.Context;
-import android.content.Entity;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Environment;

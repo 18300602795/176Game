@@ -1,11 +1,12 @@
 package com.i76game.activity;
 
-import android.app.Dialog;
 import android.graphics.Bitmap;
-import android.util.Log;
+import android.view.View;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ProgressBar;
 
 import com.i76game.R;
 import com.i76game.utils.Global;
@@ -20,7 +21,7 @@ public class InformationContentActivity extends BaseActivity {
     private LoadDialog mLoadDialog;
     private PowerWebView mWebView;
     private String mPath;
-
+    private ProgressBar progressBar1;
     @Override
     protected int setLayoutResID() {
         return R.layout.activity_information_content;
@@ -31,6 +32,7 @@ public class InformationContentActivity extends BaseActivity {
         setToolbar("精彩资讯", R.id.information_content_toolbar);
         mWebView = (PowerWebView) findViewById(R.id.information_content_webview);
         int id = getIntent().getIntExtra("id",0);
+        progressBar1 = (ProgressBar) findViewById(R.id.progressBar1);
         mPath= Global.INFORMATION_CONTENT+id+"?"+Global.clientid+"&"+Global.appid+"&"+Global.agent;
 
     }
@@ -73,7 +75,7 @@ public class InformationContentActivity extends BaseActivity {
                 if (mLoadDialog==null){
                     mLoadDialog = new LoadDialog(InformationContentActivity.this,true,"100倍加速中");
                 }
-                mLoadDialog.show();
+//                mLoadDialog.show();
             }
 
             @Override
@@ -82,5 +84,20 @@ public class InformationContentActivity extends BaseActivity {
                 mLoadDialog.dismiss();
             }
         });
+
+        mWebView.setWebChromeClient(new WebChromeClient(){
+            @Override
+            public void onProgressChanged(WebView view, int newProgress) {
+                super.onProgressChanged(view, newProgress);
+                if(newProgress==100){
+                    progressBar1.setVisibility(View.GONE);//加载完网页进度条消失
+                }
+                else{
+                    progressBar1.setVisibility(View.VISIBLE);//开始加载网页时显示进度条
+                    progressBar1.setProgress(newProgress);//设置进度值
+                }
+            }
+        });
+
     }
 }

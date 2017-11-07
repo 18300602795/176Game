@@ -32,5 +32,11 @@ public class StringUtils {
         }
         return url;
     }
-
+    /**
+     * String转String(加小数点后两位)
+     */
+   public static String stringToDouble(String remain){
+       double money = Double.valueOf(remain);
+       return String.format("%.2f", money);
+   }
 }

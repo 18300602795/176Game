@@ -1,13 +1,11 @@
 package com.i76game.activity;
 
-import android.annotation.TargetApi;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.i76game.R;
@@ -16,9 +14,10 @@ import com.i76game.R;
  * 客服界面
  */
 
-public class CustomerServiceActivity  extends  BaseActivity implements View.OnClickListener{
+public class CustomerServiceActivity extends BaseActivity implements View.OnClickListener {
     private TextView mQQText;
     private TextView mPhoneText;
+    private ImageView back_return;
 
     @Override
     protected int setLayoutResID() {
@@ -31,10 +30,11 @@ public class CustomerServiceActivity  extends  BaseActivity implements View.OnCl
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             setTranslucentStatus(true);
         }
-
-        Button connection= (Button) findViewById(R.id.customer_service_btn_connection);
+        back_return = (ImageView) findViewById(R.id.back_return);
+        back_return.setOnClickListener(this);
+        Button connection = (Button) findViewById(R.id.customer_service_btn_connection);
         connection.setOnClickListener(this);
-        Button phone= (Button) findViewById(R.id.customer_service_btn_phone);
+        Button phone = (Button) findViewById(R.id.customer_service_btn_phone);
         phone.setOnClickListener(this);
 
         mQQText = (TextView) findViewById(R.id.customer_service_text_connection);
@@ -44,17 +44,20 @@ public class CustomerServiceActivity  extends  BaseActivity implements View.OnCl
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.customer_service_btn_connection:
-                String url="mqqwpa://im/chat?chat_type=wpa&uin="+mQQText.getText().toString();
+                String url = "mqqwpa://im/chat?chat_type=wpa&uin=" + mQQText.getText().toString();
                 startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
                 break;
 
             case R.id.customer_service_btn_phone:
-                Intent intent = new Intent(Intent.ACTION_DIAL,Uri.parse("tel:"+
+                Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" +
                         mPhoneText.getText().toString()));
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
+                break;
+            case R.id.back_return:
+                finish();
                 break;
         }
     }

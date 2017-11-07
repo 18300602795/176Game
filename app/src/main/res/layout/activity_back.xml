@@ -4,12 +4,32 @@
               android:layout_height="match_parent"
               android:background="#f1f1f1"
               android:orientation="vertical">
-
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="160dp"
         android:background="@mipmap/bg_rank_top"/>
-
+    <ImageView
+        android:id="@+id/back_return"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:layout_marginTop="20dp"
+        android:src="@mipmap/ic_back"/>
+    <TextView
+        android:id="@+id/back_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="返利申请"
+        android:layout_marginTop="20dp"
+        android:layout_centerHorizontal="true"
+        android:padding="10dp"
+        android:textSize="20sp"
+        android:textColor="@android:color/white"
+       />
+</RelativeLayout>
     <EditText
         android:id="@+id/back_select_date"
         android:layout_width="match_parent"

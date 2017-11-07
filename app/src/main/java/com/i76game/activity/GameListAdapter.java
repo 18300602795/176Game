@@ -3,8 +3,6 @@ package com.i76game.activity;
 import android.app.Activity;
 import android.app.ActivityOptions;
 import android.content.Intent;
-import android.graphics.drawable.BitmapDrawable;
-import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -85,7 +83,7 @@ public class GameListAdapter extends RecyclerView.Adapter<GameListAdapter.HomeRV
      * 启动游戏详情界面
      */
     private void startContentActivity(HomeRVBean.DataBean.GameListBean gameListBean, HomeRVHolder holder) {
-        Intent intent=new Intent(mContext,GameContentActivity.class);
+        Intent intent=new Intent(mContext,GameInfoActivity.class);
         intent.putExtra(Global.GAME_ID,gameListBean.getGameid());
         holder.mIcon.getDrawingCache(true);
         Global.drawable=holder.mIcon.getDrawable();

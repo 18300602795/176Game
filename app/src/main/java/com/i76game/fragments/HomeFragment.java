@@ -4,38 +4,30 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.util.ArrayMap;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.i76game.R;
 import com.i76game.activity.GameListActivity;
 import com.i76game.activity.GameListAdapter;
-import com.i76game.R;
 import com.i76game.bean.HomeRVBean;
-import com.i76game.utils.Global;
 import com.i76game.utils.HttpServer;
-
+import com.i76game.utils.LogUtils;
 import com.i76game.utils.RetrofitUtil;
 import com.i76game.view.LoadDialog;
-import com.jcodecraeer.xrecyclerview.ItemTouchHelperAdapter;
 import com.jcodecraeer.xrecyclerview.ProgressStyle;
-import com.jcodecraeer.xrecyclerview.SimpleItemTouchHelperCallback;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
@@ -54,6 +46,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     private XRecyclerView mRecyclerView;
     private List<HomeRVBean.DataBean.GameListBean> mGameListBean = new ArrayList<>();
     private ArrayMap<String, String> mMap;
+    private int currentPage=1;
 
     @Nullable
     @Override
@@ -68,7 +61,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         headGameList.setOnClickListener(this);
         mRecyclerView.addHeaderView(headView);
         mRecyclerView.setAdapter(mAdapter);
-        mRecyclerView.setLoadingMoreEnabled(false);
         mRecyclerView.setRefreshProgressStyle(ProgressStyle.BallPulse);
         refreshListener();
 
@@ -80,7 +72,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         mMap.put("clientid", "49");
         mMap.put("classify", "1");
         mMap.put("from", "3");
-        mMap.put("page", "1");
+        mMap.put("page", String.valueOf(currentPage));
         request(mMap);
 
         return view;
@@ -96,7 +88,9 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
             @Override
             public void onLoadMore() {
-
+                currentPage += 1;
+                mMap.put("page", String.valueOf(currentPage));
+                request(mMap);
             }
         });
     }
@@ -121,12 +115,22 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
                     @Override
                     public void onNext(@NonNull HomeRVBean homeRVBean) {
+                        try{
+                            LogUtils.i("msg：" + homeRVBean.getMsg());
+                            LogUtils.i("code：" + homeRVBean.getCode());
+                        }catch (Exception e){
+                            LogUtils.e(e.toString());
+                        }
                         if (homeRVBean != null && homeRVBean.getCode() == 200) {
                             mGameListBean = homeRVBean.getData().getGame_list();
                             mAdapter.addData(mGameListBean);
                             mAdapter.notifyDataSetChanged();
                         } else {
-                            Toast.makeText(mActivity, "暂无数据哦", Toast.LENGTH_SHORT).show();
+                            if (currentPage == 1){
+                                showToast("暂无数据哦", Toast.LENGTH_SHORT);
+                            }else {
+                                showToast("没有更多数据哦", Toast.LENGTH_SHORT);
+                            }
                         }
                     }
 
@@ -160,6 +164,16 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             mLoadDialog.dismiss();
         }
         mRecyclerView.refreshComplete();
+    }
+
+    private Toast toast = null;
+    protected void showToast(String msg, int length) {
+        if (toast == null) {
+            toast = Toast.makeText(getActivity(), msg, length);
+        } else {
+            toast.setText(msg);
+        }
+        toast.show();
     }
 
 }

@@ -6,7 +6,6 @@ import android.os.Build;
 import android.os.Environment;
 import android.os.StrictMode;
 import android.support.v4.util.ArrayMap;
-import android.util.Log;
 
 import com.i76game.utils.Global;
 import com.i76game.utils.OkHttpUtil;
@@ -30,9 +29,12 @@ public class MyApplication extends Application {
     private static Context mContext;
     public static String apkdownload_path="";
     public static int time = 0;
+    public static String gameID = "syc_60123";
+    public static String agentID = "399";
     @Override
-    public void onCreate() {
+    public void onCreate(){
         //获取Context
+        super.onCreate();
         mContext = getApplicationContext();
         StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();StrictMode.setVmPolicy(builder.build());
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {

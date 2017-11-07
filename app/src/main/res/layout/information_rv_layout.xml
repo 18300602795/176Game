@@ -19,7 +19,7 @@
         android:id="@+id/information_rv_image"
         android:layout_width="match_parent"
         android:scaleType="fitXY"
-        android:layout_height="210dp"/>
+        android:layout_height="200dp"/>
     <TextView
         android:layout_width="wrap_content"
         android:maxLines="1"

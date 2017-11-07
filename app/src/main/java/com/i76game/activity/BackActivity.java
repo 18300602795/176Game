@@ -7,9 +7,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 
 import com.i76game.R;
-import com.i76game.utils.OkHttpUtil;
 
 import java.util.Calendar;
 
@@ -19,7 +19,7 @@ import java.util.Calendar;
 public class BackActivity extends BaseActivity implements View.OnClickListener{
 
     private EditText mSelectDateBtn;
-
+    private ImageView back_return;
     @Override
     protected int setLayoutResID() {
         return R.layout.activity_back;
@@ -32,6 +32,8 @@ public class BackActivity extends BaseActivity implements View.OnClickListener{
         }
         Button postBtn= (Button) findViewById(R.id.back_post);
         mSelectDateBtn = (EditText) findViewById(R.id.back_select_date);
+        back_return = (ImageView) findViewById(R.id.back_return);
+        back_return.setOnClickListener(this);
         mSelectDateBtn.setFocusable(false);//使其不能编辑
         postBtn.setOnClickListener(this);
         mSelectDateBtn.setOnClickListener(this);
@@ -46,6 +48,9 @@ public class BackActivity extends BaseActivity implements View.OnClickListener{
                 break;
             case R.id.back_post:
                 postData();
+                break;
+            case R.id.back_return:
+                finish();
                 break;
         }
 

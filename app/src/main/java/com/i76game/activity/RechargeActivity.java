@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
@@ -13,15 +12,14 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.ImageView;
-import android.widget.TextView;
 
+import com.i76game.R;
 import com.i76game.pay.AndroidJSInterfaceForWeb;
 import com.i76game.pay.OnPaymentListener;
 import com.i76game.pay.PaymentCallbackInfo;
 import com.i76game.pay.PaymentErrorMsg;
-import com.i76game.R;
 import com.i76game.utils.Global;
+import com.i76game.utils.LogUtils;
 import com.i76game.utils.OkHttpUtil;
 import com.i76game.view.LoadDialog;
 
@@ -144,6 +142,7 @@ public class RechargeActivity extends BaseActivity {
         String from = Global.from;
         url = url + "?clientid=" + clientid + "&appid=" + appid + "&agent="
                 + agent + "&from=" + from;
+        LogUtils.iUrl("充值页面网页："  + url);
         mWebView.loadUrl(url, header);
     }
 
@@ -206,6 +205,7 @@ public class RechargeActivity extends BaseActivity {
             errorMsg.money = amount;
             errorMsg.msg = toast == null ? "支付失败" : toast;
             paymentListener.paymentError(errorMsg);
+            finish();
         }
     }
 }

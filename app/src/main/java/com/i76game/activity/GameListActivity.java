@@ -6,8 +6,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.util.ArrayMap;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -35,7 +33,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
@@ -356,7 +353,11 @@ public class GameListActivity extends BaseActivity implements View.OnClickListen
 
                             mAdapter.notifyDataSetChanged();
                         } else {
-                            showToast("暂无数据哦", Toast.LENGTH_SHORT);
+                            if (mPageIndex == 1){
+                                showToast("暂无数据哦", Toast.LENGTH_SHORT);
+                            }else {
+                                showToast("没有更多数据哦", Toast.LENGTH_SHORT);
+                            }
                         }
                     }
 

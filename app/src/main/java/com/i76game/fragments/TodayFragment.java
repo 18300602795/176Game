@@ -5,10 +5,10 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.i76game.R;
 import com.i76game.adapter.TableListAdapter;
@@ -17,6 +17,7 @@ import com.i76game.utils.Global;
 import com.i76game.utils.JsonUtil;
 import com.i76game.utils.Utils;
 import com.i76game.view.LoadDialog;
+import com.jcodecraeer.xrecyclerview.XRecyclerView;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -35,7 +36,7 @@ import okhttp3.Request;
 
 public class TodayFragment extends Fragment {
     private View view;
-    private RecyclerView listView;
+    private XRecyclerView listView;
     private TableListAdapter mAdapter;
     private String mWay;
     public int today_pager;
@@ -51,7 +52,7 @@ public class TodayFragment extends Fragment {
                     hideDialog();
                     layoutNoData.setVisibility(View.GONE);
                     List<KaifubiaoBean> beans = (List<KaifubiaoBean>) msg.obj;
-                    if (mAdapter.getDateList().size() != 0) {
+                    if (mAdapter.getDateList().size() == 0) {
                         mAdapter.addData((List<KaifubiaoBean>) msg.obj);
                     } else {
                         mAdapter = new TableListAdapter(beans, getActivity());
@@ -74,7 +75,7 @@ public class TodayFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_kaifubiao, null);
-        listView = (RecyclerView) view.findViewById(R.id.table_rv);
+        listView = (XRecyclerView) view.findViewById(R.id.table_rv);
         listView.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
         layoutNoData = view.findViewById(R.id.layout_noData);
         mAdapter = new TableListAdapter(null, getActivity());
@@ -84,6 +85,18 @@ public class TodayFragment extends Fragment {
         }
         mLoadDialog.show();
         getDate();
+        listView.setLoadingListener(new XRecyclerView.LoadingListener() {
+            @Override
+            public void onRefresh() {
+                getDate();
+            }
+
+            @Override
+            public void onLoadMore() {
+                hideDialog();
+                showToast("没有更多数据哦", Toast.LENGTH_SHORT);
+            }
+        });
         return view;
     }
 
@@ -215,6 +228,17 @@ public class TodayFragment extends Fragment {
         if (mLoadDialog!=null){
             mLoadDialog.dismiss();
         }
+        listView.refreshComplete();
+    }
+
+    private Toast toast = null;
+    protected void showToast(String msg, int length) {
+        if (toast == null) {
+            toast = Toast.makeText(getActivity(), msg, length);
+        } else {
+            toast.setText(msg);
+        }
+        toast.show();
     }
 
 }

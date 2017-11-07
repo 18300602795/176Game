@@ -12,6 +12,8 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
+import com.i76game.utils.LogUtils;
+
 /**
  * Created by Administrator on 2017/6/5.
  */
@@ -27,6 +29,7 @@ public class VersionUpdateService extends Service{
         manager = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
         receiver = new DownloadCompleteReceiver();
         //设置下载地址
+        LogUtils.iUrl("url：" + url);
         DownloadManager.Request down = new DownloadManager.Request(
                 Uri.parse(url));
         // 设置允许使用的网络类型，这里是移动网络和wifi都可以

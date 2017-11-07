@@ -7,6 +7,7 @@ import android.widget.Toast;
 
 import com.i76game.MyApplication;
 import com.i76game.utils.ApkUtils;
+import com.i76game.utils.LogUtils;
 import com.i76game.utils.SharePrefUtil;
 import com.lidroid.xutils.DbUtils;
 import com.lidroid.xutils.HttpUtils;
@@ -177,8 +178,7 @@ public class DownloadAPKManager {
         }
 
         downloadInfo.setDownloadUrl(url);
-        Log.e("-----------", "addNewDownload: "+url);
-
+        LogUtils.iUrl("addNewDownload: "+url);
         downloadInfo.setAutoRename(autoRename);
         downloadInfo.setAutoResume(autoResume);
         downloadInfo.setFileName(fileName);

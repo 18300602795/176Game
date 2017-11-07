@@ -5,11 +5,11 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.i76game.R;
 import com.i76game.adapter.TableListAdapter;
@@ -18,6 +18,7 @@ import com.i76game.utils.Global;
 import com.i76game.utils.JsonUtil;
 import com.i76game.utils.Utils;
 import com.i76game.view.LoadDialog;
+import com.jcodecraeer.xrecyclerview.XRecyclerView;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -36,7 +37,7 @@ import okhttp3.Request;
 
 public class YesterdayFragment extends Fragment {
     private View view;
-    private RecyclerView listView;
+    private XRecyclerView listView;
     private TableListAdapter mAdapter;
     private String mWay;
     public int yesterday_pager;
@@ -52,7 +53,7 @@ public class YesterdayFragment extends Fragment {
                     hideDialog();
                     layoutNoData.setVisibility(View.GONE);
                     List<KaifubiaoBean> beans = (List<KaifubiaoBean>) msg.obj;
-                    if (mAdapter.getDateList().size() != 0) {
+                    if (mAdapter.getDateList().size() == 0) {
                         mAdapter.addData((List<KaifubiaoBean>) msg.obj);
                     } else {
                         mAdapter = new TableListAdapter(beans, getActivity());
@@ -75,16 +76,28 @@ public class YesterdayFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_kaifubiao, null);
-        listView = (RecyclerView) view.findViewById(R.id.table_rv);
-        listView.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
+        listView = (XRecyclerView) view.findViewById(R.id.table_rv);
+        listView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         layoutNoData = view.findViewById(R.id.layout_noData);
         mAdapter = new TableListAdapter(null, getActivity());
         listView.setAdapter(mAdapter);
-        if (mLoadDialog==null){
-            mLoadDialog = new LoadDialog(getActivity(),true,"100倍加速中");
+        if (mLoadDialog == null) {
+            mLoadDialog = new LoadDialog(getActivity(), true, "100倍加速中");
         }
         mLoadDialog.show();
         getDate();
+        listView.setLoadingListener(new XRecyclerView.LoadingListener() {
+            @Override
+            public void onRefresh() {
+                getDate();
+            }
+
+            @Override
+            public void onLoadMore() {
+                hideDialog();
+                showToast("没有更多数据哦", Toast.LENGTH_SHORT);
+            }
+        });
         return view;
     }
 
@@ -95,13 +108,13 @@ public class YesterdayFragment extends Fragment {
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeZone(TimeZone.getTimeZone("GMT+8:00"));
         Log.e("333", "开始获取数据");
-        OkHttpClient client=new OkHttpClient();
+        OkHttpClient client = new OkHttpClient();
         Map<String, String> params = new HashMap<>();
         params.put("key", "3");
         params.put("to", "app");
         String url = Utils.getCompUrlFromParams(Global.SERVER_URL, params);
         Log.e("333", url);
-        Request request=new Request.Builder().url(url).build();
+        Request request = new Request.Builder().url(url).build();
         okhttp3.Call call = client.newCall(request);
         call.enqueue(new okhttp3.Callback() {
             @Override
@@ -121,6 +134,7 @@ public class YesterdayFragment extends Fragment {
         });
 
     }
+
     private void analysisDate(int j, String str) {
 //        List<TableBean> mBeanList = new ArrayList<>();
         List<KaifubiaoBean> kaidus = new ArrayList<>();
@@ -214,10 +228,21 @@ public class YesterdayFragment extends Fragment {
     /**
      * 隐藏对话框
      */
-    private void hideDialog(){
-        if (mLoadDialog!=null){
+    private void hideDialog() {
+        if (mLoadDialog != null) {
             mLoadDialog.dismiss();
         }
+        listView.refreshComplete();
+    }
+
+    private Toast toast = null;
+    protected void showToast(String msg, int length) {
+        if (toast == null) {
+            toast = Toast.makeText(getActivity(), msg, length);
+        } else {
+            toast.setText(msg);
+        }
+        toast.show();
     }
 
 }

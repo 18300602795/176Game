@@ -9,6 +9,14 @@
         android:background="@color/main_item_text_color_p"
         android:layout_width="match_parent"
         android:layout_height="55dp"/>
+    <ProgressBar
+        android:id="@+id/progressBar1"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="3dip"
+        android:progressDrawable="@drawable/pg"
+        android:visibility="gone"
+        />
     <com.i76game.view.PowerWebView
         android:id="@+id/information_content_webview"
         android:layout_width="match_parent"
