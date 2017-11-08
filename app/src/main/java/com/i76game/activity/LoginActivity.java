@@ -2,6 +2,7 @@ package com.i76game.activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -84,7 +85,9 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         btnLogin.setOnClickListener(this);
         mVisibilityImage = (ImageView) findViewById(R.id.login_password_invisible);
         mVisibilityImage.setOnClickListener(this);
-
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            setTranslucentStatus(true);
+        }
 
         TextView forgetPassword= (TextView) findViewById(R.id.login_forget_password);
         TextView userRegister= (TextView) findViewById(R.id.login_user_register);

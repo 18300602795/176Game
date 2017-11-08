@@ -1,23 +1,26 @@
 package com.i76game.activity;
 
+import android.os.Build;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.i76game.R;
+import com.i76game.adapter.GameListAdapter;
 import com.i76game.bean.HomeRVBean;
 import com.i76game.utils.Global;
 import com.i76game.utils.HttpServer;
 import com.i76game.utils.RetrofitUtil;
+import com.i76game.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
@@ -32,6 +35,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
     private Map<String, String> mMap;
     private RecyclerView mRecyclerView;
     private GameListAdapter mAdapter;
+    private LinearLayout title_ll;
 
     @Override
     protected int setLayoutResID() {
@@ -43,7 +47,11 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
         SearchView searchView = (SearchView) findViewById(R.id.search_search_view);
         ImageView back = (ImageView) findViewById(R.id.search_back);
         back.setOnClickListener(this);
-
+        title_ll = (LinearLayout) findViewById(R.id.title_ll);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            title_ll.setPadding(0, Utils.dip2px(this, 10), 0, 0);
+            setTranslucentStatus(true);
+        }
         mGameList = new ArrayList<>();
         mRecyclerView = (RecyclerView) findViewById(R.id.search_rv);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -74,7 +82,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
         mMap.put("q", "");
         mMap.put("appid", Global.appid);
         mMap.put("agent", Global.agent);
-        mMap.put("clientid", "12");
+//        mMap.put("clientid", "12");
         mMap.put("from", Global.from);
         mMap.put("catalog", "");
         mMap.put("clientid", Global.clientid);
@@ -99,7 +107,9 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                     @Override
                     public void onNext(@NonNull HomeRVBean homeRVBean) {
                         if (homeRVBean != null && homeRVBean.getCode() == 200) {
-                            mAdapter.setData(homeRVBean.getData().getGame_list());
+//                            mAdapter.setData(homeRVBean.getData().getGame_list());
+                            mAdapter = new GameListAdapter(SearchActivity.this, homeRVBean.getData().getGame_list());
+                            mRecyclerView.setAdapter(mAdapter);
                             mRecyclerView.setVisibility(View.VISIBLE);
                         } else {
                             mRecyclerView.setVisibility(View.GONE);

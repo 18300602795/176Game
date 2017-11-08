@@ -1,8 +1,8 @@
 package com.i76game.activity;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.graphics.Color;
+import android.os.Build;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
@@ -11,13 +11,13 @@ import android.widget.TextView;
 
 import com.i76game.R;
 import com.i76game.utils.SharePrefUtil;
+import com.i76game.utils.Utils;
 
 /**
  * Created by Administrator on 2017/5/31.
  */
 
 public class SettingActivity extends BaseActivity implements View.OnClickListener{
-
 
     @Override
     protected int setLayoutResID() {
@@ -39,7 +39,10 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 finish();
             }
         });
-
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            toolbar.setPadding(0, Utils.dip2px(this, 10), 0, 0);
+            setTranslucentStatus(true);
+        }
         RelativeLayout relativeLayout= (RelativeLayout) findViewById(R.id.setting_up_layout);
         relativeLayout.setOnClickListener(this);
         Button outLogin= (Button) findViewById(R.id.setting_out_login);

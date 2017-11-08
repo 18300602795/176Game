@@ -17,6 +17,7 @@ import com.i76game.R;
 import com.i76game.activity.ImagePagerActivity;
 import com.i76game.adapter.RecommendAdapter;
 import com.i76game.bean.GameContentBean;
+import com.i76game.utils.LogUtils;
 import com.i76game.view.TextViewExpandableAnimation;
 
 import java.util.ArrayList;
@@ -63,6 +64,7 @@ public class GameDetailFragment extends Fragment {
 
     private void initDate() {
         if (mData != null) {
+            LogUtils.i("game_id" + mData.getGameid());
             mExpandableAnimation.setText(mData.getDisc());
             welfare_game.setText(mData.getDisc());
             welfare_recharge.setText(mData.getDisc());

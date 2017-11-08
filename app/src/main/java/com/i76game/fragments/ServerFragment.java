@@ -21,7 +21,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.i76game.R;
-import com.i76game.activity.GameContentActivity;
+import com.i76game.activity.GameInfoActivity;
 import com.i76game.bean.ServerBean;
 import com.i76game.utils.Global;
 import com.i76game.view.LoadDialog;
@@ -251,7 +251,6 @@ public class ServerFragment extends Fragment implements View.OnClickListener{
             holder.gameName.setText(serverBean.getGameName());
             holder.area.setText(serverBean.getGameArea());
             if (!serverBean.getIconUrl().equals("")&&serverBean.getGameId()!=0){
-
                 mManager.load(serverBean.getIconUrl()).placeholder(R.mipmap.load_icon)
                         .error(R.mipmap.load_icon).into(holder.icon);
                 holder.state.setOnClickListener(new View.OnClickListener() {
@@ -278,7 +277,7 @@ public class ServerFragment extends Fragment implements View.OnClickListener{
          * 启动游戏详情界面
          */
         private void startContentActivity(ServerBean tableBean, TableListHolder holder) {
-            Intent intent=new Intent(getActivity(),GameContentActivity.class);
+            Intent intent=new Intent(getActivity(),GameInfoActivity.class);
             intent.putExtra(Global.GAME_ID, tableBean.getGameId());
             holder.icon.getDrawingCache(true);
             Global.drawable=holder.icon.getDrawable();

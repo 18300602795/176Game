@@ -3,6 +3,7 @@ package com.i76game.activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
+import android.os.Build;
 import android.support.design.widget.TabLayout;
 import android.support.v4.util.ArrayMap;
 import android.support.v7.widget.LinearLayoutManager;
@@ -19,11 +20,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.i76game.R;
+import com.i76game.adapter.GameListAdapter;
 import com.i76game.bean.HomeRVBean;
 import com.i76game.bean.TypeBean;
 import com.i76game.utils.Global;
 import com.i76game.utils.HttpServer;
 import com.i76game.utils.RetrofitUtil;
+import com.i76game.utils.Utils;
 import com.i76game.view.LoadDialog;
 import com.jcodecraeer.xrecyclerview.ProgressStyle;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
@@ -62,6 +65,7 @@ public class GameListActivity extends BaseActivity implements View.OnClickListen
     private LoadDialog mLoadDialog;
     private int mPageIndex = 1;//加载更多的页数
     private View mLastView;
+    private LinearLayout tool_ll;
 
     @Override
     protected int setLayoutResID() {
@@ -70,6 +74,7 @@ public class GameListActivity extends BaseActivity implements View.OnClickListen
 
     @Override
     public void initView() {
+        tool_ll = (LinearLayout) findViewById(R.id.tool_ll);
         mRecyclerView = (XRecyclerView) findViewById(R.id.game_list_rv);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mTabLayout = (TabLayout) findViewById(R.id.game_list_table_layout);
@@ -111,6 +116,10 @@ public class GameListActivity extends BaseActivity implements View.OnClickListen
         RelativeLayout searchLayout = (RelativeLayout) findViewById(R.id.game_list_search_layout);
         searchLayout.setOnClickListener(this);
         tabListener();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            tool_ll.setPadding(0, Utils.dip2px(this, 10), 0, 0);
+            setTranslucentStatus(true);
+        }
     }
 
     private void tabListener() {

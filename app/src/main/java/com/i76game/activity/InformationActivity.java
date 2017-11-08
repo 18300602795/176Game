@@ -1,8 +1,10 @@
 package com.i76game.activity;
 
+import android.os.Build;
 import android.support.v4.util.ArrayMap;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.Toolbar;
 import android.widget.Toast;
 
 import com.i76game.R;
@@ -12,6 +14,7 @@ import com.i76game.utils.Global;
 import com.i76game.utils.HttpServer;
 import com.i76game.utils.LogUtils;
 import com.i76game.utils.RetrofitUtil;
+import com.i76game.utils.Utils;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 
 import java.util.ArrayList;
@@ -34,6 +37,7 @@ public class InformationActivity extends BaseActivity {
     private String type, title;
     private XRecyclerView recyclerView;
     private int currentPage=1;
+    private Toolbar information_toolbar;
     @Override
     protected int setLayoutResID() {
         return R.layout.activity_information;
@@ -44,6 +48,7 @@ public class InformationActivity extends BaseActivity {
         type = getIntent().getStringExtra("type");
         title = getIntent().getStringExtra("title");
         setToolbar(title, R.id.information_toolbar);
+        information_toolbar = (Toolbar) findViewById(R.id.information_toolbar);
         recyclerView = (XRecyclerView) findViewById(R.id.information_rv);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         mInformationList = new ArrayList<>();
@@ -51,6 +56,10 @@ public class InformationActivity extends BaseActivity {
         recyclerView.setAdapter(mAdapter);
         recyclerView.addItemDecoration(new DividerItemDecoration(this,
                 DividerItemDecoration.VERTICAL));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            information_toolbar.setPadding(0, Utils.dip2px(this, 10), 0, 0);
+            setTranslucentStatus(true);
+        }
         getDate();
         recyclerView.setLoadingListener(new XRecyclerView.LoadingListener() {
             @Override

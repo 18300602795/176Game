@@ -8,7 +8,7 @@
         android:id="@+id/information_content_toolbar"
         android:background="@color/main_item_text_color_p"
         android:layout_width="match_parent"
-        android:layout_height="55dp"/>
+        android:layout_height="65dp"/>
     <ProgressBar
         android:id="@+id/progressBar1"
         style="?android:attr/progressBarStyleHorizontal"

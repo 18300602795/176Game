@@ -6,9 +6,11 @@ import android.os.Build;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.i76game.R;
+import com.i76game.utils.Utils;
 
 /**
  * 客服界面
@@ -18,6 +20,7 @@ public class CustomerServiceActivity extends BaseActivity implements View.OnClic
     private TextView mQQText;
     private TextView mPhoneText;
     private ImageView back_return;
+    private RelativeLayout title_rl;
 
     @Override
     protected int setLayoutResID() {
@@ -26,10 +29,7 @@ public class CustomerServiceActivity extends BaseActivity implements View.OnClic
 
     @Override
     public void initView() {
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            setTranslucentStatus(true);
-        }
+        title_rl = (RelativeLayout) findViewById(R.id.title_rl);
         back_return = (ImageView) findViewById(R.id.back_return);
         back_return.setOnClickListener(this);
         Button connection = (Button) findViewById(R.id.customer_service_btn_connection);
@@ -39,6 +39,10 @@ public class CustomerServiceActivity extends BaseActivity implements View.OnClic
 
         mQQText = (TextView) findViewById(R.id.customer_service_text_connection);
         mPhoneText = (TextView) findViewById(R.id.customer_service_text_phone);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            title_rl.setPadding(0, Utils.dip2px(this, 10), 0, 0);
+            setTranslucentStatus(true);
+        }
     }
 
 

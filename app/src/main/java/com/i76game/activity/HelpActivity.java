@@ -4,8 +4,8 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.CookieManager;
@@ -19,6 +19,7 @@ import android.webkit.WebViewClient;
 import com.i76game.R;
 import com.i76game.utils.Global;
 import com.i76game.utils.OkHttpUtil;
+import com.i76game.utils.Utils;
 import com.i76game.view.LoadDialog;
 import com.i76game.view.PowerWebView;
 
@@ -49,7 +50,6 @@ public class HelpActivity extends BaseActivity {
     public static final String HELP_8_FORGET_PASSWORD="help_8_forget_password";
 
     public static final String HELP_9_URL="help_9_url";
-
     @Override
     protected int setLayoutResID() {
         return R.layout.activity_help;
@@ -57,6 +57,7 @@ public class HelpActivity extends BaseActivity {
 
     @Override
     public void initView() {
+
         mWebView = (PowerWebView) findViewById(R.id.help_web_view);
         mToolbar = (Toolbar) findViewById(R.id.help_toolbar);
         mToolbar.setTitle("安全中心");
@@ -76,6 +77,10 @@ public class HelpActivity extends BaseActivity {
         setTitle(type);
         mLunbotuUrl = getIntent().getStringExtra(URL_TO_HELP);
         getWebViewData();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            mToolbar.setPadding(0, Utils.dip2px(this, 10), 0, 0);
+            setTranslucentStatus(true);
+        }
     }
 
     private String url;

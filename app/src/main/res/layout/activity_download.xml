@@ -4,12 +4,13 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent">
     <RelativeLayout
+        android:id="@+id/tool_rl"
         android:layout_width="match_parent"
-        android:layout_height="55dp">
+        android:background="@color/main_item_text_color_p"
+        android:layout_height="65dp">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/download_toolbar"
-            android:background="@color/main_item_text_color_p"
             android:layout_width="match_parent"
             android:layout_height="55dp"/>
 

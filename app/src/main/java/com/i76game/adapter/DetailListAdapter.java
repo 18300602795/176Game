@@ -81,7 +81,7 @@ public class DetailListAdapter extends BaseAdapter {
                 break;
             case 2:
                 if (strategyFragment == null) {
-                    strategyFragment = new StrategyFragment();
+                    strategyFragment = new StrategyFragment(String.valueOf(mData.getGameid()));
                     transaction.add(R.id.content_f, strategyFragment);
                     fragments.add(strategyFragment);
                 }
@@ -89,7 +89,7 @@ public class DetailListAdapter extends BaseAdapter {
                 break;
             case 3:
                 if (strategyFragment == null) {
-                    strategyFragment = new StrategyFragment();
+                    strategyFragment = new StrategyFragment(String.valueOf(mData.getGameid()));
                     transaction.add(R.id.content_f, strategyFragment);
                     fragments.add(strategyFragment);
                 }
@@ -97,7 +97,7 @@ public class DetailListAdapter extends BaseAdapter {
                 break;
             case 4:
                 if (giftFragment == null) {
-                    giftFragment = new GiftFragment();
+                    giftFragment = new GiftFragment(String.valueOf(mData.getGameid()));
                     transaction.add(R.id.content_f, giftFragment);
                     fragments.add(giftFragment);
                 }

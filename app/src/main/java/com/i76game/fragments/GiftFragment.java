@@ -62,7 +62,10 @@ public class GiftFragment extends Fragment {
     private int mPageIndex = 1;
     private LoadDialog mLoadDialog;
     public CustomLinearLayoutManager linearLayoutManager;
-
+    private String app_id;
+    public GiftFragment(String app_id){
+        this.app_id = app_id;
+    }
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
@@ -75,7 +78,7 @@ public class GiftFragment extends Fragment {
     public void initView() {
         mGiftList = new ArrayList<>();
         final ArrayMap<String, String> map = new ArrayMap<>();
-        map.put("appid", Global.appid);
+        map.put("appid", app_id);
         map.put("clientid", Global.clientid);
         map.put("agent", Global.agent);
         map.put("from", Global.from);

@@ -5,8 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Color;
-import android.support.v7.widget.Toolbar;
+import android.os.Build;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +15,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.i76game.MyApplication;
@@ -28,6 +28,7 @@ import com.i76game.download.DownloadService;
 import com.i76game.utils.ApkUtils;
 import com.i76game.utils.GlideUtil;
 import com.i76game.utils.SharePrefUtil;
+import com.i76game.utils.Utils;
 import com.lidroid.xutils.exception.DbException;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.HttpHandler;
@@ -50,6 +51,7 @@ public class DownloadActivity extends BaseActivity {
     private DownloadAPKManager mDownloadAPKManager;
     private MyDownloadListAdapter mDownloadListAdapter;
     private boolean mIsDelete=false;
+    private RelativeLayout tool_rl;
 
     @Override
     protected int setLayoutResID() {
@@ -60,7 +62,11 @@ public class DownloadActivity extends BaseActivity {
     public void initView() {
         mListView= (ListView) findViewById(R.id.download_rv);
         setToolbar("我的下载",R.id.download_toolbar);
-
+        tool_rl = (RelativeLayout) findViewById(R.id.tool_rl);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            tool_rl.setPadding(0, Utils.dip2px(this, 10), 0, 0);
+            setTranslucentStatus(true);
+        }
         final IntentFilter filter = new IntentFilter("android.intent.action.PACKAGE_ADDED");
         registerReceiver(receiver_download, filter);
         mDownloadAPKManager = DownloadService.getDownloadManager(MyApplication.getContextObject());

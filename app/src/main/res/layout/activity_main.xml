@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:id="@+id/main_tool_layout"
         android:background="@color/main_item_text_color_p"
-        android:layout_height="50dp">
+        android:layout_height="65dp">
 
         <ImageView
             android:id="@+id/main_img_mine"

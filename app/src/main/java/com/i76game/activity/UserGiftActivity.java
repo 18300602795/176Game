@@ -2,11 +2,10 @@ package com.i76game.activity;
 
 import android.content.ClipboardManager;
 import android.content.Context;
-import android.graphics.Color;
+import android.os.Build;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +20,7 @@ import com.i76game.utils.GlideUtil;
 import com.i76game.utils.Global;
 import com.i76game.utils.HttpServer;
 import com.i76game.utils.OkHttpUtil;
+import com.i76game.utils.Utils;
 import com.i76game.view.LoadDialog;
 
 import java.io.IOException;
@@ -50,6 +50,7 @@ public class UserGiftActivity extends BaseActivity {
     private List<UserGiftCodeBean.DataBean.GiftListBean> mGiftList;
     private RecyclerView mRecyclerView;
     private UserGiftAdapter mAdapter;
+    private Toolbar gift_toolbar;
 
     @Override
     protected int setLayoutResID() {
@@ -60,7 +61,11 @@ public class UserGiftActivity extends BaseActivity {
     public void initView() {
 
         setToolbar("我的礼包",R.id.gift_toolbar);
-
+        gift_toolbar = (Toolbar) findViewById(R.id.gift_toolbar);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            gift_toolbar.setPadding(0, Utils.dip2px(this, 10), 0, 0);
+            setTranslucentStatus(true);
+        }
         mRecyclerView = (RecyclerView) findViewById(R.id.gift_rv);
         mAdapter = new UserGiftAdapter();
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));

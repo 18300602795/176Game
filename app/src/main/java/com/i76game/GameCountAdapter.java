@@ -8,9 +8,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.i76game.utils.GlideUtil;
+import com.i76game.utils.LogUtils;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Administrator on 2017/6/9.
@@ -38,6 +38,7 @@ public class GameCountAdapter extends RecyclerView.Adapter<GameCountAdapter.Game
 
     @Override
     public void onBindViewHolder(GameCountHolder holder, final int position) {
+        LogUtils.i("url：" + mImageUrls.get(position));
         GlideUtil.loadImage(mImageUrls.get(position),holder.mImageView,R.mipmap.load_icon_vertical);
         holder.mImageView.setOnClickListener(new View.OnClickListener() {
             @Override

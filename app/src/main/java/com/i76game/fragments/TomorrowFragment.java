@@ -63,6 +63,7 @@ public class TomorrowFragment extends Fragment {
                     if (mAdapter.getDateList().size() == 0) {
                         layoutNoData.setVisibility(View.VISIBLE);
                     } else {
+
                     }
 
                     break;

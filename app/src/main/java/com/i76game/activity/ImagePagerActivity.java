@@ -3,9 +3,12 @@ package com.i76game.activity;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.i76game.R;
@@ -27,11 +30,28 @@ public class ImagePagerActivity extends Activity {
     private int pagerPosition;
     private TextView indicator;
 
+    /**
+     * 设置状态栏透明
+     *
+     * @param on
+     */
+    public void setTranslucentStatus(boolean on) {
+        Window win = getWindow();
+        WindowManager.LayoutParams winParams = win.getAttributes();
+        final int bits = WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS;
+        if (on) {
+            winParams.flags |= bits;
+        } else {
+            winParams.flags &= ~bits;
+        }
+        win.setAttributes(winParams);
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_pager);
-        mPager= (ViewPager) findViewById(R.id.image_pager);
+        mPager = (ViewPager) findViewById(R.id.image_pager);
 
         pagerPosition = getIntent().getIntExtra(EXTRA_IMAGE_INDEX, 0);
         ArrayList<String> urls = getIntent().getStringArrayListExtra(EXTRA_IMAGE_URLS);
@@ -39,7 +59,9 @@ public class ImagePagerActivity extends Activity {
         ImagePagerAdapter mAdapter = new ImagePagerAdapter(getFragmentManager(), urls);
         mPager.setAdapter(mAdapter);
         indicator = (TextView) findViewById(R.id.image_text);
-
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            setTranslucentStatus(true);
+        }
 //        CharSequence text = getString(R.string.viewpager_indicator, 1, mPager.getAdapter().getCount());
 //        indicator.setText(text);
         // 更新下标

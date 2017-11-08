@@ -8,7 +8,7 @@
         android:id="@+id/order_toolbar"
         android:background="@color/main_item_text_color_p"
         android:layout_width="match_parent"
-        android:layout_height="60dp"/>
+        android:layout_height="65dp"/>
     <LinearLayout
         android:id="@+id/order_recharge"
         android:orientation="horizontal"

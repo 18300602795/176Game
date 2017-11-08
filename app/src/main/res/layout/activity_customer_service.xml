@@ -5,6 +5,7 @@
     android:orientation="vertical">
 
     <RelativeLayout
+        android:id="@+id/title_rl"
         android:layout_width="match_parent"
         android:layout_height="320dp"
         android:background="@mipmap/bg_kefu">
@@ -13,7 +14,7 @@
             android:id="@+id/back_return"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:padding="10dp"
             android:src="@mipmap/ic_back" />
 

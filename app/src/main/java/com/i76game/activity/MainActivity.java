@@ -4,10 +4,13 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -21,6 +24,7 @@ import com.i76game.fragments.MessageFragment;
 import com.i76game.fragments.MineFragment;
 import com.i76game.fragments.ServerFragment2;
 import com.i76game.update.VersionUpdateManager;
+import com.i76game.utils.Utils;
 
 public class MainActivity extends FragmentActivity implements View.OnClickListener {
     private ImageView mHomeImage;
@@ -89,7 +93,27 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         mSearchLayout.setOnClickListener(this);
         ImageView downloadBtn = (ImageView) findViewById(R.id.main_download);
         downloadBtn.setOnClickListener(this);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            mToolLayout.setPadding(0, Utils.dip2px(this, 10), 0, 0);
+            setTranslucentStatus(true);
+        }
     }
+    /**
+     * 设置状态栏透明
+     * @param on
+     */
+    public void setTranslucentStatus(boolean on) {
+        Window win = getWindow();
+        WindowManager.LayoutParams winParams = win.getAttributes();
+        final int bits = WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS;
+        if (on) {
+            winParams.flags |= bits;
+        } else {
+            winParams.flags &= ~bits;
+        }
+        win.setAttributes(winParams);
+    }
+
 
     @Override
     public void onClick(View v) {

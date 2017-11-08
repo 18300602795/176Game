@@ -1,6 +1,8 @@
 package com.i76game.activity;
 
 import android.graphics.Bitmap;
+import android.os.Build;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
@@ -10,6 +12,7 @@ import android.widget.ProgressBar;
 
 import com.i76game.R;
 import com.i76game.utils.Global;
+import com.i76game.utils.Utils;
 import com.i76game.view.LoadDialog;
 import com.i76game.view.PowerWebView;
 
@@ -22,6 +25,7 @@ public class InformationContentActivity extends BaseActivity {
     private PowerWebView mWebView;
     private String mPath;
     private ProgressBar progressBar1;
+    private Toolbar information_content_toolbar;
     @Override
     protected int setLayoutResID() {
         return R.layout.activity_information_content;
@@ -30,6 +34,11 @@ public class InformationContentActivity extends BaseActivity {
     @Override
     public void initView() {
         setToolbar("精彩资讯", R.id.information_content_toolbar);
+        information_content_toolbar = (Toolbar) findViewById(R.id.information_content_toolbar);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            information_content_toolbar.setPadding(0, Utils.dip2px(this, 10), 0, 0);
+            setTranslucentStatus(true);
+        }
         mWebView = (PowerWebView) findViewById(R.id.information_content_webview);
         int id = getIntent().getIntExtra("id",0);
         progressBar1 = (ProgressBar) findViewById(R.id.progressBar1);

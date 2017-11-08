@@ -1,12 +1,12 @@
 package com.i76game.activity;
 
-import android.app.Dialog;
+import android.os.Build;
 import android.os.Message;
 import android.support.v4.util.ArrayMap;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,14 +20,13 @@ import android.widget.Toast;
 import com.i76game.MyApplication;
 import com.i76game.R;
 import com.i76game.bean.GiftBean;
-import com.i76game.bean.HomeRVBean;
-import com.i76game.bean.MineRVBean;
 import com.i76game.utils.GlideUtil;
 import com.i76game.utils.Global;
 import com.i76game.utils.HttpServer;
 import com.i76game.utils.OkHttpUtil;
 import com.i76game.utils.RetrofitUtil;
 import com.i76game.utils.SharePrefUtil;
+import com.i76game.utils.Utils;
 import com.i76game.view.GiftDialog;
 import com.i76game.view.LoadDialog;
 import com.jcodecraeer.xrecyclerview.ProgressStyle;
@@ -37,7 +36,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -63,6 +61,7 @@ public class GiftListActivity extends BaseActivity {
     private XRecyclerView mRecyclerView;
     private int mPageIndex = 1;
     private LoadDialog mLoadDialog;
+    private Toolbar gift_list_toolbar;
 
     @Override
     protected int setLayoutResID() {
@@ -72,6 +71,11 @@ public class GiftListActivity extends BaseActivity {
     @Override
     public void initView() {
         setToolbar("礼包中心", R.id.gift_list_toolbar);
+        gift_list_toolbar = (Toolbar) findViewById(R.id.gift_list_toolbar);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            gift_list_toolbar.setPadding(0, Utils.dip2px(this, 10), 0, 0);
+            setTranslucentStatus(true);
+        }
         mGiftList = new ArrayList<>();
         final ArrayMap<String, String> map = new ArrayMap<>();
         map.put("appid", Global.appid);

@@ -40,7 +40,10 @@ public class StrategyFragment extends Fragment {
     public XRecyclerView recyclerView;
     private int currentPage = 1;
     public CustomLinearLayoutManager linearLayoutManager;
-
+    private String app_id;
+    public StrategyFragment(String app_id){
+        this.app_id =app_id;
+    }
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -76,7 +79,7 @@ public class StrategyFragment extends Fragment {
 
     private void getDate() {
         ArrayMap<String, String> map = new ArrayMap<>();
-        map.put("appid", Global.appid);
+        map.put("appid", app_id);
         map.put("clientid", Global.clientid);
         map.put("agent", "");
         map.put("from", "3");

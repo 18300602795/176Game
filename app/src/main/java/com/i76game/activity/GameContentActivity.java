@@ -8,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
@@ -26,6 +27,7 @@ import com.i76game.utils.GetTypeUtils;
 import com.i76game.utils.Global;
 import com.i76game.utils.HttpServer;
 import com.i76game.utils.RetrofitUtil;
+import com.i76game.utils.Utils;
 import com.i76game.view.TextViewExpandableAnimation;
 import com.lidroid.xutils.exception.DbException;
 import com.lidroid.xutils.exception.HttpException;
@@ -56,6 +58,7 @@ public class GameContentActivity extends BaseActivity implements View.OnClickLis
     private TextView mGameSize;
     private TextViewExpandableAnimation mExpandableAnimation;
     private RecyclerView mRecyclerView;
+    private LinearLayout linearLayout;
 
     private ProgressBar mDownloadProgress;
     private GameContentBean.DataBean mData;
@@ -116,6 +119,11 @@ public class GameContentActivity extends BaseActivity implements View.OnClickLis
         mDownloadLayout.setOnClickListener(this);
         mDownloadProgress = (ProgressBar) findViewById(R.id.game_content_download_progress);
         mScrollView = (ScrollView) findViewById(R.id.game_content_scroll_layout);
+        linearLayout = (LinearLayout) findViewById(R.id.linearLayout);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            linearLayout.setPadding(0, Utils.dip2px(this, 10), 0, 0);
+            setTranslucentStatus(true);
+        }
     }
 
     private void httpRequest(ArrayMap<String, String> map) {

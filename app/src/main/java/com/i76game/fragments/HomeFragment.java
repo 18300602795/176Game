@@ -15,7 +15,7 @@ import android.widget.Toast;
 
 import com.i76game.R;
 import com.i76game.activity.GameListActivity;
-import com.i76game.activity.GameListAdapter;
+import com.i76game.adapter.GameListAdapter;
 import com.i76game.bean.HomeRVBean;
 import com.i76game.utils.HttpServer;
 import com.i76game.utils.LogUtils;

@@ -26,7 +26,6 @@
             android:background="@color/transparent"
             android:orientation="horizontal"
             android:gravity="center_vertical"
-            android:paddingTop="10dp"
             android:visibility="visible">
 
             <ImageView

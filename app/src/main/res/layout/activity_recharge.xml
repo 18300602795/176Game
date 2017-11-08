@@ -8,7 +8,7 @@
         android:background="@color/main_item_text_color_p"
         android:id="@+id/recharge_toolbar"
         android:layout_width="match_parent"
-        android:layout_height="55dp"/>
+        android:layout_height="65dp"/>
 
     <WebView
         android:id="@+id/recharge_web_view"

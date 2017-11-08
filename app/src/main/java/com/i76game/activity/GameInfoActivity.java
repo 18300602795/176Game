@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Handler;
 import android.support.v4.util.ArrayMap;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.ImageView;
@@ -73,6 +74,8 @@ public class GameInfoActivity extends BaseActivity implements SmoothListView.ISm
     private ImageView home_rv_icon;
     private LinearLayout ll_banner;
     private ImageView back_return;
+    private boolean isTop = false;
+    private boolean isBack = false;
 
     private Context mContext;
     private Activity mActivity;
@@ -89,7 +92,7 @@ public class GameInfoActivity extends BaseActivity implements SmoothListView.ISm
     private int titleViewHeight = 65; // 标题栏的高度
 
     private View itemHeaderBannerView; // 从ListView获取的广告子View
-    private int bannerViewHeight = 180; // 广告视图的高度
+    private int bannerViewHeight = 130; // 广告视图的高度
     private int bannerViewTopMargin; // 广告视图距离顶部的距离
 
     private View itemHeaderFilterView; // 从ListView获取的筛选子View
@@ -130,6 +133,7 @@ public class GameInfoActivity extends BaseActivity implements SmoothListView.ISm
         // ListView数据
         travelingList = ModelUtil.getTravelingData();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            rlBar.setPadding(0, Utils.dip2px(this, 10), 0, 0);
             setTranslucentStatus(true);
         }
         mDownloadLayout = (RelativeLayout) findViewById(R.id.game_content_download_layout);
@@ -216,9 +220,23 @@ public class GameInfoActivity extends BaseActivity implements SmoothListView.ISm
                 smoothListView.smoothScrollToPositionFromTop(filterViewPosition, DensityUtil.dip2px(mContext, titleViewHeight));
             }
         });
-
-
         smoothListView.setSmoothListViewListener(this);
+        smoothListView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                switch (motionEvent.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        break;
+                    case MotionEvent.ACTION_MOVE:
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        com.i76game.utils.LogUtils.i("抬起");
+                        handleTitleBarColorEvaluate(true);
+                        break;
+                }
+                return false;
+            }
+        });
         smoothListView.setOnScrollListener(new SmoothListView.OnSmoothScrollListener() {
             @Override
             public void onSmoothScrolling(View view) {
@@ -263,8 +281,16 @@ public class GameInfoActivity extends BaseActivity implements SmoothListView.ISm
                     realFilterView.show(filterPosition);
                 }
 
+                if (isTop) {
+                    isStickyTop = true;
+                }
+
+                if (isBack) {
+                    bannerViewTopMargin = 0;
+                }
+
                 // 处理标题栏颜色渐变
-                handleTitleBarColorEvaluate();
+                handleTitleBarColorEvaluate(false);
             }
         });
     }
@@ -322,15 +348,35 @@ public class GameInfoActivity extends BaseActivity implements SmoothListView.ISm
 
 
     // 处理标题栏颜色渐变
-    private void handleTitleBarColorEvaluate() {
+    private void handleTitleBarColorEvaluate(boolean isUp) {
+        isTop = false;
+        isBack = false;
         float fraction;
-        game_title.setVisibility(View.VISIBLE);
-        com.i76game.utils.LogUtils.i("bannerViewTopMargin：" + bannerViewTopMargin);
         hideInfo();
+        game_title.setVisibility(View.VISIBLE);
+//        if (isUp) {
+//            if (bannerViewTopMargin != 0) {
+//                if (bannerViewTopMargin <= -titleViewHeight / 2 && bannerViewTopMargin > -titleViewHeight) {
+//                    isTop = true;
+//                    com.i76game.utils.LogUtils.i("显示标题栏");
+//                    smoothListView.setSelection(1);
+//                    smoothListView.scrollTo(0, Utils.dip2px(this, titleViewHeight));
+////                    ObjectAnimator.ofFloat(headerBannerView.infomation_ll, "translationY", Utils.dip2px(this, (bannerViewHeight - bannerViewTopMargin) * 1 / 2)).setDuration(300).start();
+////                    ObjectAnimator.ofFloat(headerBannerView.infomation_ll, "translationX", Utils.dip2px(this, -(bannerViewHeight - bannerViewTopMargin) * 1 / 2)).setDuration(300).start();
+//                    isStickyTop = true;
+//                } else if (bannerViewTopMargin > -titleViewHeight / 2) {
+//                    isStickyTop = false;
+//                    isBack = true;
+//                    com.i76game.utils.LogUtils.i("返回");
+//                    smoothListView.scrollTo(0, Utils.dip2px(this,  0));
+//                    smoothListView.setSelection(1);
+//                    bannerViewTopMargin = 0;
+//                }
+//            }
+//        }else {
         ObjectAnimator.ofFloat(headerBannerView.infomation_ll, "translationY", Utils.dip2px(this, -bannerViewTopMargin * 1 / 2)).setDuration(0).start();
         ObjectAnimator.ofFloat(headerBannerView.infomation_ll, "translationX", Utils.dip2px(this, bannerViewTopMargin * 1 / 2)).setDuration(0).start();
-
-
+//        }
         if (bannerViewTopMargin > 0) {
             fraction = 1f - bannerViewTopMargin * 1f / 60;
             if (fraction < 0f) fraction = 0f;
@@ -344,6 +390,7 @@ public class GameInfoActivity extends BaseActivity implements SmoothListView.ISm
         if (fraction > 1f) fraction = 1f;
 //        rlBar.setAlpha(1f);
         if (fraction >= 1f || isStickyTop) {
+//            com.i76game.utils.LogUtils.i("标题栏");
             isStickyTop = true;
             rlBar.setBackgroundColor(mContext.getResources().getColor(R.color.blue));
 //            rlBar.setBackgroundResource(R.mipmap.bg_game_detail);
@@ -351,6 +398,7 @@ public class GameInfoActivity extends BaseActivity implements SmoothListView.ISm
             open();
         } else {
             if (bannerViewTopMargin == 0) {
+//                com.i76game.utils.LogUtils.i("返回原位");
                 showInfo();
                 headerBannerView.ll_banner.setBackgroundResource(R.mipmap.bg_game_detail);
                 close();
@@ -484,7 +532,6 @@ public class GameInfoActivity extends BaseActivity implements SmoothListView.ISm
                         } else {
                             Toast.makeText(GameInfoActivity.this, "网络似乎出问题了", Toast.LENGTH_SHORT).show();
                         }
-
                     }
 
                     @Override

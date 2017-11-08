@@ -6,8 +6,11 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.RelativeLayout;
 
 import com.i76game.R;
@@ -23,10 +26,30 @@ public class CircleMenuActivity extends Activity {
     private String[] texts = {"返利", "礼包", "活动", "攻略", "客服", "论坛"};
     private Circle mCircleMenu;
 
+    /**
+     * 设置状态栏透明
+     *
+     * @param on
+     */
+    public void setTranslucentStatus(boolean on) {
+        Window win = getWindow();
+        WindowManager.LayoutParams winParams = win.getAttributes();
+        final int bits = WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS;
+        if (on) {
+            winParams.flags |= bits;
+        } else {
+            winParams.flags &= ~bits;
+        }
+        win.setAttributes(winParams);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_circle_menu);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            setTranslucentStatus(true);
+        }
         mCircleMenu = (Circle) findViewById(R.id.main_circle_menu);
         mCircleMenu.setMenuItemIconsAndTexts(images, texts);
         mCircleMenu.setOnMenuItemClickListener(new Circle.OnMenuItemClickListener() {
@@ -41,13 +64,13 @@ public class CircleMenuActivity extends Activity {
                     intent.setClass(CircleMenuActivity.this, InformationActivity.class);
                     intent.putExtra("type", "2");
                     intent.putExtra("title", "活动中心");
-                }else if (pos == 3) {
+                } else if (pos == 3) {
                     intent.setClass(CircleMenuActivity.this, InformationActivity.class);
                     intent.putExtra("type", "3");
                     intent.putExtra("title", "攻略中心");
-                }else if (pos == 4) {
+                } else if (pos == 4) {
                     intent.setClass(CircleMenuActivity.this, CustomerServiceActivity.class);
-                }else if (pos == 5) {
+                } else if (pos == 5) {
                     intent.setClass(CircleMenuActivity.this, CustomerServiceActivity.class);
                 }
                 startActivity(intent);
@@ -58,7 +81,6 @@ public class CircleMenuActivity extends Activity {
                 finishAnimator();
             }
         });
-
 
         //圆形菜单出来的动画
         ObjectAnimator animationScaleY = ObjectAnimator.ofFloat(mCircleMenu, "scaleY", 0.3f, 1);

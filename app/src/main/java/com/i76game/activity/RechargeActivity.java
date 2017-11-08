@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.webkit.CookieManager;
@@ -21,6 +22,7 @@ import com.i76game.pay.PaymentErrorMsg;
 import com.i76game.utils.Global;
 import com.i76game.utils.LogUtils;
 import com.i76game.utils.OkHttpUtil;
+import com.i76game.utils.Utils;
 import com.i76game.view.LoadDialog;
 
 import java.util.HashMap;
@@ -68,7 +70,10 @@ public class RechargeActivity extends BaseActivity {
                 handleResult();
             }
         });
-
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            toolbar.setPadding(0, Utils.dip2px(this, 10), 0, 0);
+            setTranslucentStatus(true);
+        }
         mWebView = (WebView) findViewById(R.id.recharge_web_view);
         mWebView.setWebViewClient(new WebViewClient() {
             @Override

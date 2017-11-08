@@ -7,7 +7,7 @@
         android:id="@+id/setting_toolbar"
         android:background="@color/main_item_text_color_p"
         android:layout_width="match_parent"
-        android:layout_height="55dp"/>
+        android:layout_height="65dp"/>
     <RelativeLayout
         android:layout_below="@id/setting_toolbar"
         android:id="@+id/setting_up_layout"

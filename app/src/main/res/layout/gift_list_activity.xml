@@ -7,7 +7,7 @@
         android:id="@+id/gift_list_toolbar"
         android:background="@color/main_item_text_color_p"
         android:layout_width="match_parent"
-        android:layout_height="60dp"/>
+        android:layout_height="65dp"/>
     <com.jcodecraeer.xrecyclerview.XRecyclerView
         android:layout_width="match_parent"
         android:layout_height="0dp"

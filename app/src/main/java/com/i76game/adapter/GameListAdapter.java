@@ -1,4 +1,4 @@
-package com.i76game.activity;
+package com.i76game.adapter;
 
 import android.app.Activity;
 import android.app.ActivityOptions;
@@ -14,6 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.i76game.R;
+import com.i76game.activity.GameInfoActivity;
 import com.i76game.bean.HomeRVBean;
 import com.i76game.utils.GetTypeUtils;
 import com.i76game.utils.GlideUtil;

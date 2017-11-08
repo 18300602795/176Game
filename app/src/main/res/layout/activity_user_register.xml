@@ -5,12 +5,13 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent">
     <RelativeLayout
+        android:id="@+id/title_rl"
         android:layout_width="match_parent"
-        android:layout_height="55dp">
+        android:background="@color/main_item_text_color_p"
+        android:layout_height="65dp">
 
         <android.support.design.widget.TabLayout
             android:id="@+id/register_tab_layout"
-            android:background="@color/main_item_text_color_p"
             app:tabTextColor="@color/white"
             app:tabGravity="center"
             android:layout_width="match_parent"

@@ -15,9 +15,10 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.i76game.R;
-import com.i76game.activity.GameContentActivity;
+import com.i76game.activity.GameInfoActivity;
 import com.i76game.bean.KaifubiaoBean;
 import com.i76game.utils.Global;
+import com.i76game.utils.LogUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -73,7 +74,7 @@ public class TableListAdapter extends RecyclerView.Adapter<TableListHolder>{
         holder.gameName.setText(tableBean.B);
         holder.area.setText(tableBean.C);
         if (!tableBean.gamedata.icon.equals("")&&Integer.valueOf(tableBean.gamedata.id)!=0){
-
+            LogUtils.i("url：" + tableBean.gamedata.icon);
             mManager.load(tableBean.gamedata.icon).placeholder(R.mipmap.load_icon)
                     .error(R.mipmap.load_icon).into(holder.icon);
             holder.state.setOnClickListener(new View.OnClickListener() {
@@ -100,7 +101,7 @@ public class TableListAdapter extends RecyclerView.Adapter<TableListHolder>{
      * 启动游戏详情界面
      */
     private void startContentActivity(KaifubiaoBean tableBean, TableListHolder holder) {
-        Intent intent=new Intent(mActivity,GameContentActivity.class);
+        Intent intent=new Intent(mActivity,GameInfoActivity.class);
         intent.putExtra(Global.GAME_ID, Integer.valueOf(tableBean.gamedata.id));
         holder.icon.getDrawingCache(true);
         Global.drawable=holder.icon.getDrawable();

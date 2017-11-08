@@ -8,7 +8,7 @@
         android:id="@+id/information_toolbar"
         android:layout_width="match_parent"
         android:background="@color/main_item_text_color_p"
-        android:layout_height="55dp">
+        android:layout_height="65dp">
 
     </android.support.v7.widget.Toolbar>
     <com.jcodecraeer.xrecyclerview.XRecyclerView
