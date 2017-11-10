@@ -12,9 +12,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
 
-import com.i76game.GameCountAdapter;
 import com.i76game.R;
 import com.i76game.activity.ImagePagerActivity;
+import com.i76game.adapter.GameCountAdapter;
 import com.i76game.adapter.RecommendAdapter;
 import com.i76game.bean.GameContentBean;
 import com.i76game.utils.LogUtils;
@@ -30,15 +30,10 @@ public class GameDetailFragment extends Fragment {
     private View view;
     private RecyclerView mRecyclerView;
     private TextViewExpandableAnimation mExpandableAnimation, welfare_game, welfare_recharge;
-    private GameContentBean.DataBean mData;
+    public GameContentBean.DataBean mData;
     private GameCountAdapter mAdapter;
     private GridView recommend_gv;
     private RecommendAdapter gvAdapter;
-
-    public GameDetailFragment(GameContentBean.DataBean mData) {
-        this.mData = mData;
-    }
-
 
     @Nullable
     @Override

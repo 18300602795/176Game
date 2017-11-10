@@ -40,10 +40,8 @@ public class StrategyFragment extends Fragment {
     public XRecyclerView recyclerView;
     private int currentPage = 1;
     public CustomLinearLayoutManager linearLayoutManager;
-    private String app_id;
-    public StrategyFragment(String app_id){
-        this.app_id =app_id;
-    }
+    public String app_id;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

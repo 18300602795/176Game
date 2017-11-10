@@ -27,7 +27,6 @@ import com.i76game.download.DownloadInfo;
 import com.i76game.download.DownloadService;
 import com.i76game.utils.ApkUtils;
 import com.i76game.utils.GlideUtil;
-import com.i76game.utils.SharePrefUtil;
 import com.i76game.utils.Utils;
 import com.lidroid.xutils.exception.DbException;
 import com.lidroid.xutils.exception.HttpException;
@@ -50,7 +49,7 @@ public class DownloadActivity extends BaseActivity {
     private ListView mListView;
     private DownloadAPKManager mDownloadAPKManager;
     private MyDownloadListAdapter mDownloadListAdapter;
-    private boolean mIsDelete=false;
+    private boolean mIsDelete = false;
     private RelativeLayout tool_rl;
 
     @Override
@@ -60,8 +59,8 @@ public class DownloadActivity extends BaseActivity {
 
     @Override
     public void initView() {
-        mListView= (ListView) findViewById(R.id.download_rv);
-        setToolbar("我的下载",R.id.download_toolbar);
+        mListView = (ListView) findViewById(R.id.download_rv);
+        setToolbar("我的下载", R.id.download_toolbar);
         tool_rl = (RelativeLayout) findViewById(R.id.tool_rl);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             tool_rl.setPadding(0, Utils.dip2px(this, 10), 0, 0);
@@ -73,20 +72,21 @@ public class DownloadActivity extends BaseActivity {
         getUnInstallApk();
         mDownloadListAdapter = new MyDownloadListAdapter();
         mListView.setAdapter(mDownloadListAdapter);
-        TextView manager= (TextView) findViewById(R.id.download_manager);
+        TextView manager = (TextView) findViewById(R.id.download_manager);
         manager.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!mIsDelete){
-                    mIsDelete=true;
-                }else{
-                    mIsDelete=false;
+                if (!mIsDelete) {
+                    mIsDelete = true;
+                } else {
+                    mIsDelete = false;
                 }
                 mDownloadListAdapter.notifyDataSetChanged();
             }
         });
 
     }
+
     private List<DownloadInfo> unInstallList;
 
 
@@ -98,17 +98,17 @@ public class DownloadActivity extends BaseActivity {
             if (downloadInfo != null) {
                 String packageNameByApkFile = ApkUtils.getPackageNameByApkFile(
                         MyApplication.getContextObject(), downloadInfo.getFileSavePath());
-                    downloadInfo.setPackageName(packageNameByApkFile);
-                    unInstallList.add(downloadInfo);
+                downloadInfo.setPackageName(packageNameByApkFile);
+                unInstallList.add(downloadInfo);
             }
         }
     }
 
-        /**
-         * 注册广播接收者
-         *
-         * @return
-         */
+    /**
+     * 注册广播接收者
+     *
+     * @return
+     */
     private BroadcastReceiver receiver_download = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -130,12 +130,13 @@ public class DownloadActivity extends BaseActivity {
 
     /**
      * 根据游戏包名返回一个downloadInfo
+     *
      * @param packagename
      * @return
      */
-    public DownloadInfo getDownloadInfoByPackagename(String packagename){
+    public DownloadInfo getDownloadInfoByPackagename(String packagename) {
         for (DownloadInfo downinfo : unInstallList) {
-            if(downinfo.getBaoming().equals(packagename)){
+            if (downinfo.getBaoming().equals(packagename)) {
                 return downinfo;
             }
         }
@@ -210,7 +211,7 @@ public class DownloadActivity extends BaseActivity {
         public View getView(int position, View convertView, ViewGroup parent) {
             DownloadRVHolder vh;
             if (null == convertView) {
-                convertView = inflater.inflate(R.layout.download_rv_layout, parent,false);
+                convertView = inflater.inflate(R.layout.download_rv_layout, parent, false);
                 vh = new DownloadRVHolder(unInstallList.get(position), convertView);
                 convertView.setTag(vh);
             } else {
@@ -218,22 +219,22 @@ public class DownloadActivity extends BaseActivity {
                 vh.update(unInstallList.get(position));
             }
 
-            GlideUtil.loadImage(unInstallList.get(position).getImageurl(),vh.mImageIcon,
+            GlideUtil.loadImage(unInstallList.get(position).getImageurl(), vh.mImageIcon,
                     R.mipmap.load_icon);
             HttpHandler<File> handler = unInstallList.get(position).getHandler();
             if (handler != null) {
                 RequestCallBack callBack = handler.getRequestCallBack();
-                if (callBack instanceof  DownloadAPKManager.ManagerCallBack) {
+                if (callBack instanceof DownloadAPKManager.ManagerCallBack) {
                     DownloadAPKManager.ManagerCallBack managerCallBack = (DownloadAPKManager.ManagerCallBack) callBack;
                     managerCallBack.setBaseCallBack(new DownloadRequestCallBack());
                 }
                 callBack.setUserTag(new WeakReference<DownloadRVHolder>(vh));
             }
 
-            if (mIsDelete){
+            if (mIsDelete) {
                 vh.mBtnDelete.setVisibility(View.VISIBLE);
                 vh.mBtnState.setVisibility(View.GONE);
-            }else{
+            } else {
                 vh.mBtnDelete.setVisibility(View.GONE);
                 vh.mBtnState.setVisibility(View.VISIBLE);
             }
@@ -246,7 +247,7 @@ public class DownloadActivity extends BaseActivity {
     }
 
 
-    class DownloadRVHolder implements View.OnClickListener{
+    class DownloadRVHolder implements View.OnClickListener {
         TextView mTextProgress;
         TextView mTextState;
         ProgressBar mProgressBar;
@@ -255,16 +256,18 @@ public class DownloadActivity extends BaseActivity {
         TextView mTextName;
         Button mBtnDelete;
         private DownloadInfo mDownloadInfo;
-        public DownloadRVHolder(DownloadInfo downloadInfo,View itemView) {
+
+        public DownloadRVHolder(DownloadInfo downloadInfo, View itemView) {
             this.mDownloadInfo = downloadInfo;
-            mBtnDelete= (Button) itemView.findViewById(R.id.download_rv_btn_delete);
-            mTextName= (TextView) itemView.findViewById(R.id.download_rv_game_name);
-            mBtnState= (Button) itemView.findViewById(R.id.download_rv_btn_state);
-            mImageIcon= (ImageView) itemView.findViewById(R.id.download_rv_icon);
-            mTextProgress= (TextView) itemView.findViewById(R.id.download_rv_text_progress);
-            mTextState= (TextView) itemView.findViewById(R.id.download_rv_text_state);
-            mProgressBar= (ProgressBar) itemView.findViewById(R.id.download_rv_progress);
+            mBtnDelete = (Button) itemView.findViewById(R.id.download_rv_btn_delete);
+            mTextName = (TextView) itemView.findViewById(R.id.download_rv_game_name);
+            mBtnState = (Button) itemView.findViewById(R.id.download_rv_btn_state);
+            mImageIcon = (ImageView) itemView.findViewById(R.id.download_rv_icon);
+            mTextProgress = (TextView) itemView.findViewById(R.id.download_rv_text_progress);
+            mTextState = (TextView) itemView.findViewById(R.id.download_rv_text_state);
+            mProgressBar = (ProgressBar) itemView.findViewById(R.id.download_rv_progress);
         }
+
         /**
          * 刷新下载进度
          */
@@ -276,10 +279,10 @@ public class DownloadActivity extends BaseActivity {
                 case STARTED:
                 case LOADING:
                     mBtnState.setText("暂停");
-                    String speed=ApkUtils.getFormatSize(mDownloadInfo.getProgress() - mDownloadInfo.getProgress()) + "/s";
-                    if(speed.equals(".00/s")){
+                    String speed = ApkUtils.getFormatSize(mDownloadInfo.getProgress() - mDownloadInfo.getProgress()) + "/s";
+                    if (speed.equals(".00/s")) {
                         mTextState.setText("0/s");
-                    }else{
+                    } else {
                         mTextState.setText(speed);
                     }
                     break;
@@ -299,7 +302,7 @@ public class DownloadActivity extends BaseActivity {
                 default:
                     break;
             }
-            if (mDownloadInfo.isDownloadComplete&&mDownloadInfo.getIsInstallSuccess()==1){
+            if (mDownloadInfo.isDownloadComplete && mDownloadInfo.getIsInstallSuccess() == 1) {
                 mBtnState.setText("打开");
             }
 
@@ -307,11 +310,11 @@ public class DownloadActivity extends BaseActivity {
             mBtnState.setOnClickListener(this);
             mTextName.setText(mDownloadInfo.getFileName());
             long fileLength = mDownloadInfo.getFileLength();
-            if(fileLength<=0){
+            if (fileLength <= 0) {
                 mTextProgress.setText("未知大小");//设置文件大小
-            }else{
+            } else {
                 //设置文件大小
-                Log.e("=======", ""+ mDownloadInfo.getFileLength());
+                Log.e("=======", "" + mDownloadInfo.getFileLength());
                 mTextProgress.setText(ApkUtils.getFormatSize(mDownloadInfo.getFileLength()));
             }
             if (mDownloadInfo.getFileLength() > 0) {
@@ -340,7 +343,11 @@ public class DownloadActivity extends BaseActivity {
                     mBtnState.setText("安装");//执行安装
                     mTextState.setText("已完成");
                     EventBus.getDefault().post(new DownStateChange(Integer.parseInt(mDownloadInfo.getAppId())));
-                    ApkUtils.install(mDownloadInfo);
+                    if (mDownloadInfo != null) {
+                        if (!ApkUtils.install(mDownloadInfo)) {
+                            deleteInfo(mDownloadInfo);
+                        }
+                    }
                     break;
                 case FAILURE:
                     mBtnState.setText("重试");
@@ -350,28 +357,28 @@ public class DownloadActivity extends BaseActivity {
                 default:
                     break;
             }
-            if (mDownloadInfo.isDownloadComplete&&mDownloadInfo.getIsInstallSuccess()==1){
+            if (mDownloadInfo.isDownloadComplete && mDownloadInfo.getIsInstallSuccess() == 1) {
                 mBtnState.setText("打开");
             }
             mTextName.setText(mDownloadInfo.getFileName());
             mBtnDelete.setOnClickListener(this);
             mBtnState.setOnClickListener(this);
             long fileLength = mDownloadInfo.getFileLength();
-            if(fileLength<=0){
+            if (fileLength <= 0) {
                 mTextProgress.setText("未知大小");//设置文件大小
-            }else{
+            } else {
                 //设置文件大小
                 mTextProgress.setText(ApkUtils.getFormatSize(mDownloadInfo.getFileLength()));
             }
-            if(mTextState.getTag()!=null){
+            if (mTextState.getTag() != null) {
                 SpeedBean tag = (SpeedBean) mTextState.getTag();
-                long chaTime = (System.currentTimeMillis() - tag.getCurrentTime())/1000;
-                if(chaTime>0){
+                long chaTime = (System.currentTimeMillis() - tag.getCurrentTime()) / 1000;
+                if (chaTime > 0) {
                     mTextState.setText(ApkUtils.getFormatSize((mDownloadInfo.getProgress()
-                            - tag.getCurrentSize())/chaTime) + "/s");
+                            - tag.getCurrentSize()) / chaTime) + "/s");
                 }
             }
-            mTextState.setTag(new SpeedBean(mDownloadInfo.getProgress(),System.currentTimeMillis()));
+            mTextState.setTag(new SpeedBean(mDownloadInfo.getProgress(), System.currentTimeMillis()));
             if (mDownloadInfo.getFileLength() > 0) {
                 mProgressBar.setProgress((int)
                         (mDownloadInfo.getProgress() * 100 / mDownloadInfo.getFileLength()));
@@ -413,7 +420,11 @@ public class DownloadActivity extends BaseActivity {
                             mDownloadListAdapter.notifyDataSetChanged();
                             break;
                         case SUCCESS:
-                            ApkUtils.install(mDownloadInfo);
+                            if (mDownloadInfo != null) {
+                                if (!ApkUtils.install(mDownloadInfo)) {
+                                    deleteInfo(mDownloadInfo);
+                                }
+                            }
                             break;
                         default:
                             break;
@@ -421,16 +432,7 @@ public class DownloadActivity extends BaseActivity {
                     break;
 
                 case R.id.download_rv_btn_delete:
-                    SharePrefUtil.saveBoolean(MyApplication.getContextObject(),SharePrefUtil.KEY.ISDELETE,false);
-                    try {
-                        ApkUtils.deleteDownloadApk(MyApplication.getContextObject(), mDownloadInfo.getFileName());//delete file apk from sdcard!
-                        mDownloadAPKManager.removeDownload(mDownloadInfo);
-                        unInstallList.remove(mDownloadInfo);
-                        mDownloadListAdapter.notifyDataSetChanged();
-                    } catch (DbException e) {
-                        LogUtils.e(e.getMessage(), e);
-                    }
-
+                    deleteInfo(mDownloadInfo);
                     break;
                 default:
                     break;
@@ -438,6 +440,17 @@ public class DownloadActivity extends BaseActivity {
             EventBus.getDefault().post(new DownStateChange(Integer.parseInt(mDownloadInfo.getAppId())));
         }
 
+    }
+
+    private void deleteInfo(DownloadInfo downloadInfo) {
+        try {
+            ApkUtils.deleteDownloadApk(MyApplication.getContextObject(), downloadInfo.getFileName());//delete file apk from sdcard!
+            mDownloadAPKManager.removeDownload(downloadInfo);
+            unInstallList.remove(downloadInfo);
+            mDownloadListAdapter.notifyDataSetChanged();
+        } catch (DbException e) {
+            LogUtils.e(e.getMessage(), e);
+        }
     }
 
     @Override

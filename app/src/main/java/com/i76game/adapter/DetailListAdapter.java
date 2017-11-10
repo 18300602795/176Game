@@ -73,7 +73,8 @@ public class DetailListAdapter extends BaseAdapter {
         switch (type) {
             case 1:
                 if (gameDrtailFragment == null) {
-                    gameDrtailFragment = new GameDetailFragment(mData);
+                    gameDrtailFragment = new GameDetailFragment();
+                    gameDrtailFragment.mData = mData;
                     transaction.add(R.id.content_f, gameDrtailFragment);
                     fragments.add(gameDrtailFragment);
                 }
@@ -81,7 +82,8 @@ public class DetailListAdapter extends BaseAdapter {
                 break;
             case 2:
                 if (strategyFragment == null) {
-                    strategyFragment = new StrategyFragment(String.valueOf(mData.getGameid()));
+                    strategyFragment = new StrategyFragment();
+                    strategyFragment.app_id = String.valueOf(mData.getGameid());
                     transaction.add(R.id.content_f, strategyFragment);
                     fragments.add(strategyFragment);
                 }
@@ -89,7 +91,8 @@ public class DetailListAdapter extends BaseAdapter {
                 break;
             case 3:
                 if (strategyFragment == null) {
-                    strategyFragment = new StrategyFragment(String.valueOf(mData.getGameid()));
+                    strategyFragment = new StrategyFragment();
+                    strategyFragment.app_id = String.valueOf(mData.getGameid());
                     transaction.add(R.id.content_f, strategyFragment);
                     fragments.add(strategyFragment);
                 }
@@ -97,7 +100,8 @@ public class DetailListAdapter extends BaseAdapter {
                 break;
             case 4:
                 if (giftFragment == null) {
-                    giftFragment = new GiftFragment(String.valueOf(mData.getGameid()));
+                    giftFragment = new GiftFragment();
+                    giftFragment.app_id = String.valueOf(mData.getGameid());
                     transaction.add(R.id.content_f, giftFragment);
                     fragments.add(giftFragment);
                 }

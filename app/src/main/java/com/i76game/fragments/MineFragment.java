@@ -37,6 +37,7 @@ import com.i76game.utils.LogUtils;
 import com.i76game.utils.OkHttpUtil;
 import com.i76game.utils.SharePrefUtil;
 import com.i76game.utils.StringUtils;
+import com.i76game.utils.Utils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -99,26 +100,29 @@ public class MineFragment extends Fragment implements View.OnClickListener {
                     startActivity(new Intent(mActivity, BackActivity.class));
                 } else if (position == 1) {
                     //申请记录
-                } else if (position == 2) {
-                    //邀请好友
-                } else if (position == 3) {
-                    //客服中心
-                    startActivity(new Intent(mActivity, CustomerServiceActivity.class));
-                } else if (position == 4) {
-                    //我的消息
-                } else if (position == 5) {
-                    //我的礼包
-                    goActivity(new Intent(mActivity, UserGiftActivity.class));
-                } else if (position == 6) {
-                    //消费明细
-                    goActivity(new Intent(mActivity, OrderActivity.class));
-                } else if (position == 7) {
-                    //帐号安全
-                    goActivity(new Intent(mActivity, AccountSecurityActivity.class));
-                } else if (position == 8) {
-                    //设置中心
-                    Intent intent = new Intent(mActivity, SettingActivity.class);
-                    startActivityForResult(intent, settingCode);
+                } else {
+                    if (position == 2) {
+                        //邀请好友
+                        Utils.showShare(getActivity(), "欢迎下载176Game", "", "", "http://down.shouyoucun.cn/sdkgame/syc_60123/syc_60123.apk");
+                    } else if (position == 3) {
+                        //客服中心
+                        startActivity(new Intent(mActivity, CustomerServiceActivity.class));
+                    } else if (position == 4) {
+                        //我的消息
+                    } else if (position == 5) {
+                        //我的礼包
+                        goActivity(new Intent(mActivity, UserGiftActivity.class));
+                    } else if (position == 6) {
+                        //消费明细
+                        goActivity(new Intent(mActivity, OrderActivity.class));
+                    } else if (position == 7) {
+                        //帐号安全
+                        goActivity(new Intent(mActivity, AccountSecurityActivity.class));
+                    } else if (position == 8) {
+                        //设置中心
+                        Intent intent = new Intent(mActivity, SettingActivity.class);
+                        startActivityForResult(intent, settingCode);
+                    }
                 }
             }
         });

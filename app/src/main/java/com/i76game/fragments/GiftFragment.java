@@ -62,10 +62,8 @@ public class GiftFragment extends Fragment {
     private int mPageIndex = 1;
     private LoadDialog mLoadDialog;
     public CustomLinearLayoutManager linearLayoutManager;
-    private String app_id;
-    public GiftFragment(String app_id){
-        this.app_id = app_id;
-    }
+    public String app_id;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {

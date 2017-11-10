@@ -15,9 +15,9 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.i76game.GameCountAdapter;
 import com.i76game.MyApplication;
 import com.i76game.R;
+import com.i76game.adapter.GameCountAdapter;
 import com.i76game.bean.GameContentBean;
 import com.i76game.download.DownloadAPKManager;
 import com.i76game.download.DownloadInfo;

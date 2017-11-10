@@ -10,6 +10,7 @@ import android.support.v4.util.ArrayMap;
 import com.i76game.utils.Global;
 import com.i76game.utils.OkHttpUtil;
 import com.i76game.utils.SharePrefUtil;
+import com.mob.MobSDK;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -36,6 +37,7 @@ public class MyApplication extends Application {
         //获取Context
         super.onCreate();
         mContext = getApplicationContext();
+        MobSDK.init(mContext, "223f8bf400810", "9138658894f1356bb66dea019c3daa16");
         StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();StrictMode.setVmPolicy(builder.build());
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
             builder.detectFileUriExposure();

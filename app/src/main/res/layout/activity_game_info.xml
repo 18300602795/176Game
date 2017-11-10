@@ -24,8 +24,8 @@
             android:layout_width="match_parent"
             android:layout_height="65dp"
             android:background="@color/transparent"
-            android:orientation="horizontal"
             android:gravity="center_vertical"
+            android:orientation="horizontal"
             android:visibility="visible">
 
             <ImageView
@@ -44,6 +44,25 @@
                 android:textColor="#fff"
                 android:textSize="18sp"
                 android:textStyle="bold" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1" />
+
+            <ImageView
+                android:id="@+id/share_iv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="30dp"
+                android:src="@mipmap/ic_share_white_24dp" />
+
+            <ImageView
+                android:id="@+id/download_iv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="15dp"
+                android:src="@mipmap/ic_file_download_white_24dp" />
         </LinearLayout>
 
         <LinearLayout

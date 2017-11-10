@@ -74,6 +74,8 @@ public class GameInfoActivity extends BaseActivity implements SmoothListView.ISm
     private ImageView home_rv_icon;
     private LinearLayout ll_banner;
     private ImageView back_return;
+    private ImageView share_iv;
+    private ImageView download_iv;
     private boolean isTop = false;
     private boolean isBack = false;
 
@@ -118,7 +120,10 @@ public class GameInfoActivity extends BaseActivity implements SmoothListView.ISm
         game_title = (TextView) findViewById(R.id.game_content_name);
         game_title.setVisibility(View.GONE);
         mScreenHeight = DensityUtil.getWindowHeight(this);
-
+        share_iv = (ImageView) findViewById(R.id.share_iv);
+        share_iv.setOnClickListener(this);
+        download_iv = (ImageView) findViewById(R.id.download_iv);
+        download_iv.setOnClickListener(this);
         // 筛选数据
         filterData = new FilterData();
         filterData.setCategory(ModelUtil.getCategoryData());
@@ -230,8 +235,8 @@ public class GameInfoActivity extends BaseActivity implements SmoothListView.ISm
                     case MotionEvent.ACTION_MOVE:
                         break;
                     case MotionEvent.ACTION_UP:
-                        com.i76game.utils.LogUtils.i("抬起");
-                        handleTitleBarColorEvaluate(true);
+//                        com.i76game.utils.LogUtils.i("抬起");
+//                        handleTitleBarColorEvaluate(true);
                         break;
                 }
                 return false;
@@ -249,7 +254,7 @@ public class GameInfoActivity extends BaseActivity implements SmoothListView.ISm
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-//                if (isScrollIdle && bannerViewTopMargin < 0) ;
+//                if (isScrollIdle && bannerViewTopMargin < 0) return;
 
                 // 获取广告头部View、自身的高度、距离顶部的高度
                 if (itemHeaderBannerView == null) {
@@ -471,6 +476,12 @@ public class GameInfoActivity extends BaseActivity implements SmoothListView.ISm
                     finish();
                 }
                 break;
+            case R.id.share_iv:
+                Utils.showShare(this, "一起来玩" + mData.getGamename(), mData.getIcon(), "", String.valueOf(mData.getGameid()));
+                break;
+            case R.id.download_iv:
+                startActivity(new Intent(this, DownloadActivity.class));
+                break;
             case R.id.detail_ll:
                 clear();
                 realFilterView.detail_tv.setTextColor(getResources().getColor(R.color.blue));
@@ -620,7 +631,11 @@ public class GameInfoActivity extends BaseActivity implements SmoothListView.ISm
                         }
                         break;
                     case SUCCESS:
-                        ApkUtils.install(downloadInfo);
+                        if (downloadInfo != null) {
+                            if (!ApkUtils.install(downloadInfo)) {
+                                deleteInfo(downloadInfo);
+                            }
+                        }
                         break;
                     default:
                         break;
@@ -629,7 +644,15 @@ public class GameInfoActivity extends BaseActivity implements SmoothListView.ISm
         } catch (Exception e) {
             Toast.makeText(this, "下载地址错误", Toast.LENGTH_SHORT).show();
         }
+    }
 
+    private void deleteInfo(DownloadInfo downloadInfo) {
+        try {
+            ApkUtils.deleteDownloadApk(MyApplication.getContextObject(), downloadInfo.getFileName());//delete file apk from sdcard!
+            mDownloadAPKManager.removeDownload(downloadInfo);
+        } catch (DbException e) {
+            LogUtils.e(e.getMessage(), e);
+        }
     }
 
 

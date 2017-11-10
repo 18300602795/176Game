@@ -1,4 +1,4 @@
-package com.i76game;
+package com.i76game.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.i76game.R;
 import com.i76game.utils.GlideUtil;
 import com.i76game.utils.LogUtils;
 
