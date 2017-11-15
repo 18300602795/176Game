@@ -201,6 +201,7 @@ public class GameInfoActivity extends BaseActivity implements SmoothListView.ISm
         }, 100);
         mAdapter = new DetailListAdapter(null, this, 1);
         smoothListView.setAdapter(mAdapter);
+        smoothListView.setLoadMoreEnable(false);
         back_return.setOnClickListener(this);
     }
 
@@ -538,7 +539,7 @@ public class GameInfoActivity extends BaseActivity implements SmoothListView.ISm
                                 refreshUI();
                                 refreshUi();
                             } catch (Exception e) {
-                                com.i76game.utils.LogUtils.e(e.toString());
+                                LogUtils.e(e.toString());
                             }
                         } else {
                             Toast.makeText(GameInfoActivity.this, "网络似乎出问题了", Toast.LENGTH_SHORT).show();
@@ -574,7 +575,7 @@ public class GameInfoActivity extends BaseActivity implements SmoothListView.ISm
             if (Global.drawable == null) {
                 ImgUtil.getBitmapUtils(GameInfoActivity.this).display(headerBannerView.home_rv_icon, mData.getIcon() + "");
                 ImgUtil.loadImage(mData.getIcon() + "", headerBannerView.home_rv_icon);
-                com.i76game.utils.LogUtils.i("图片url：" + mData.getIcon());
+                LogUtils.i("图片url：" + mData.getIcon());
             }
         }
 //        if (Global.drawable != null) {

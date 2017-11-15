@@ -9,7 +9,6 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
 
-import com.i76game.MyApplication;
 import com.i76game.R;
 import com.i76game.utils.GlideUtil;
 

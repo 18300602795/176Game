@@ -19,7 +19,7 @@ import android.widget.Toast;
 
 import com.i76game.R;
 import com.i76game.fragments.FanliFragment;
-import com.i76game.fragments.HomeFragment;
+import com.i76game.fragments.HomeFragment2;
 import com.i76game.fragments.MessageFragment;
 import com.i76game.fragments.MineFragment;
 import com.i76game.fragments.ServerFragment2;
@@ -125,7 +125,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                     currentFragment = newHomeFragment();
                     mHomeImage.setImageResource(R.mipmap.ic_main_home_p);
                     mTitleLayout.setVisibility(View.GONE);
-                    mToolLayout.setVisibility(View.VISIBLE);
+                    mToolLayout.setVisibility(View.GONE);
                     mHomeText.setTextColor(getResources().getColor(R.color.main_item_text_color_p));
                 }
 
@@ -233,7 +233,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     private Fragment newHomeFragment() {
         if (mHomeFragment == null) {
-            mHomeFragment = new HomeFragment();
+            mHomeFragment = new HomeFragment2();
             return mHomeFragment;
         } else {
             return mHomeFragment;

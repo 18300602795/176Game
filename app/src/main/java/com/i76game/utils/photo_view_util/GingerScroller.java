@@ -19,8 +19,6 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.widget.OverScroller;
 
-import com.i76game.utils.photo_view_util.ScrollerProxy;
-
 @TargetApi(9)
 public class GingerScroller extends ScrollerProxy {
 

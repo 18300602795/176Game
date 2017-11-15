@@ -37,6 +37,13 @@ public class ImgUtil {
 
     private static RequestManager mManager;
 
+    public static void loadImage(String url, int icon_horizontal, ImageView imageView, android.app.Fragment fragment) {
+        if (mManager == null) {
+            mManager = Glide.with(MyApplication.getContextObject());
+        }
+        mManager.load(url).placeholder(icon_horizontal).into(imageView);
+    }
+
     public static void loadImage(String url, ImageView imageView) {
         if (mManager == null) {
             mManager = Glide.with(MyApplication.getContextObject());

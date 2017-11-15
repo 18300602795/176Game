@@ -13,8 +13,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
-import com.i76game.utils.photo_view_util.PhotoViewAttacher;
 import com.i76game.R;
+import com.i76game.utils.photo_view_util.PhotoViewAttacher;
 
 /**
  * Created by Administrator on 2017/6/7.

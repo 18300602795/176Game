@@ -9,7 +9,6 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
-import com.bumptech.glide.request.target.Target;
 import com.i76game.MyApplication;
 
 

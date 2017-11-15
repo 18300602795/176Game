@@ -53,7 +53,7 @@ public class Utils {
         return (int) (pxValue / scale + 0.5f);
     }
 
-    public static void showShare(Context context, String text, String imageUrl, String imagePath, String url) {
+    public static void showShare(final Context context, String text, String imageUrl, String imagePath, String url) {
         OnekeyShare oks = new OnekeyShare();
         //关闭sso授权
         oks.disableSSOWhenAuthorize();
@@ -81,7 +81,22 @@ public class Utils {
         oks.setSite("aaa");
         // siteUrl是分享此内容的网站地址，仅在QQ空间使用
         oks.setSiteUrl(url);
-
+//        oks.setCallback(new PlatformActionListener() {
+//            @Override
+//            public void onComplete(Platform platform, int i, HashMap<String, Object> hashMap) {
+//                Toast.makeText(context, "分享成功", Toast.LENGTH_SHORT).show();
+//            }
+//
+//            @Override
+//            public void onError(Platform platform, int i, Throwable throwable) {
+//                Toast.makeText(context, "分享失败", Toast.LENGTH_SHORT).show();
+//            }
+//
+//            @Override
+//            public void onCancel(Platform platform, int i) {
+//                Toast.makeText(context, "分享取消", Toast.LENGTH_SHORT).show();
+//            }
+//        });
         // 启动分享GUI
         oks.show(context);
     }

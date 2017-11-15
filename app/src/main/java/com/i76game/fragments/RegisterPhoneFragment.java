@@ -2,18 +2,14 @@ package com.i76game.fragments;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.util.ArrayMap;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.InputType;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +21,6 @@ import android.widget.Toast;
 import com.i76game.MyApplication;
 import com.i76game.R;
 import com.i76game.utils.AuthCodeUtil;
-import com.i76game.utils.Code;
 import com.i76game.utils.Global;
 import com.i76game.utils.OkHttpUtil;
 import com.i76game.utils.SharePrefUtil;
@@ -34,8 +29,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 

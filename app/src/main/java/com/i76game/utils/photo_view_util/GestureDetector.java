@@ -17,8 +17,6 @@ package com.i76game.utils.photo_view_util;
 
 import android.view.MotionEvent;
 
-import com.i76game.utils.photo_view_util.OnGestureListener;
-
 public interface GestureDetector {
 
     public boolean onTouchEvent(MotionEvent ev);

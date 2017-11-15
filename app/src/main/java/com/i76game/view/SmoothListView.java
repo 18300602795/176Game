@@ -37,6 +37,8 @@ public class SmoothListView extends ListView implements OnScrollListener {
     private boolean mPullRefreshing = false; // is refreashing.
 
     // -- footer view
+    // -- footer view
+    public SmoothListViewFooter mFooterView;
     private boolean mEnablePullLoad;
     private boolean mPullLoading;
     private boolean mIsFooterReady = false;
@@ -87,7 +89,7 @@ public class SmoothListView extends ListView implements OnScrollListener {
         addHeaderView(mHeaderView);
 
         // init footer view
-
+        mFooterView = new SmoothListViewFooter(context);
         // init header height
         mHeaderView.getViewTreeObserver().addOnGlobalLayoutListener(
                 new OnGlobalLayoutListener() {
@@ -104,6 +106,7 @@ public class SmoothListView extends ListView implements OnScrollListener {
         // make sure XListViewFooter is the last footer view, and only add once.
         if (mIsFooterReady == false) {
             mIsFooterReady = true;
+            addFooterView(mFooterView);
         }
         super.setAdapter(adapter);
     }
@@ -130,13 +133,23 @@ public class SmoothListView extends ListView implements OnScrollListener {
     public void setLoadMoreEnable(boolean enable) {
         mEnablePullLoad = enable;
         if (!mEnablePullLoad) {
+            mFooterView.hide();
+            mFooterView.setOnClickListener(null);
             //make sure "pull up" don't show a line in bottom when listview with one page
             setFooterDividersEnabled(false);
         } else {
             mPullLoading = false;
+            mFooterView.show();
+            mFooterView.setState(SmoothListViewFooter.STATE_NORMAL);
             //make sure "pull up" don't show a line in bottom when listview with one page
             setFooterDividersEnabled(true);
             // both "pull up" and "click" will invoke load more.
+            mFooterView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startLoadMore();
+                }
+            });
         }
     }
 
@@ -155,6 +168,7 @@ public class SmoothListView extends ListView implements OnScrollListener {
     public void stopLoadMore() {
         if (mPullLoading == true) {
             mPullLoading = false;
+            mFooterView.setState(SmoothListViewFooter.STATE_NORMAL);
         }
     }
 
@@ -175,10 +189,33 @@ public class SmoothListView extends ListView implements OnScrollListener {
     }
 
 
+    private void updateFooterHeight(float delta) {
+        int height = mFooterView.getBottomMargin() + (int) delta;
+        if (mEnablePullLoad && !mPullLoading) {
+            if (height > PULL_LOAD_MORE_DELTA) { // height enough to invoke load
+                // more.
+                mFooterView.setState(SmoothListViewFooter.STATE_READY);
+            } else {
+                mFooterView.setState(SmoothListViewFooter.STATE_NORMAL);
+            }
+        }
+        mFooterView.setBottomMargin(height);
 
+//		setSelection(mTotalItemCount - 1); // scroll to bottom
+    }
+
+    private void resetFooterHeight() {
+        int bottomMargin = mFooterView.getBottomMargin();
+        if (bottomMargin > 0) {
+            mScrollBack = SCROLLBACK_FOOTER;
+            mScroller.startScroll(0, bottomMargin, 0, -bottomMargin, SCROLL_DURATION);
+            invalidate();
+        }
+    }
 
     private void startLoadMore() {
         mPullLoading = true;
+        mFooterView.setState(SmoothListViewFooter.STATE_LOADING);
         if (mListViewListener != null) {
             mListViewListener.onLoadMore();
         }
@@ -201,6 +238,10 @@ public class SmoothListView extends ListView implements OnScrollListener {
                         && (deltaY > 0)) {
                     // the first item is showing, header has shown or pull down.
                     invokeOnScrolling();
+                }else if (getLastVisiblePosition() == mTotalItemCount - 1
+                        && (mFooterView.getBottomMargin() > 0 || deltaY < 0)) {
+                    // last item, already pulled up or want to pull up.
+                    updateFooterHeight(-deltaY / OFFSET_RADIO);
                 }
                 break;
             default:
@@ -209,6 +250,12 @@ public class SmoothListView extends ListView implements OnScrollListener {
                     // invoke refresh
                 } else if (getLastVisiblePosition() == mTotalItemCount - 1) {
                     // invoke load more.
+                    if (mEnablePullLoad
+                            && mFooterView.getBottomMargin() > PULL_LOAD_MORE_DELTA
+                            && !mPullLoading) {
+                        startLoadMore();
+                    }
+                    resetFooterHeight();
                 }
                 break;
         }
@@ -220,6 +267,7 @@ public class SmoothListView extends ListView implements OnScrollListener {
         if (mScroller.computeScrollOffset()) {
             if (mScrollBack == SCROLLBACK_HEADER) {
             } else {
+                mFooterView.setBottomMargin(mScroller.getCurrY());
             }
             postInvalidate();
             invokeOnScrolling();

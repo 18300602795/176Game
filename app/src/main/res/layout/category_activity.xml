@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/category_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="65dp"
+        android:background="@color/main_item_text_color_p" />
+
+    <com.jcodecraeer.xrecyclerview.XRecyclerView
+        android:id="@+id/home_rv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1" />
+
+
+</LinearLayout>

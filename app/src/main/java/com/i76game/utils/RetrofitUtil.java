@@ -1,12 +1,5 @@
 package com.i76game.utils;
 
-import com.i76game.bean.HomeRVBean;
-
-import java.util.Map;
-
-import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;

@@ -1,10 +1,10 @@
 package com.i76game.utils;
 
-import com.bumptech.glide.RequestManager;
 import com.i76game.bean.GameContentBean;
 import com.i76game.bean.GiftBean;
 import com.i76game.bean.HomeRVBean;
 import com.i76game.bean.InformationRVBean;
+import com.i76game.bean.LunboImgViewBean;
 import com.i76game.bean.NewVersionBean;
 import com.i76game.bean.TypeBean;
 import com.i76game.bean.UserGiftCodeBean;
@@ -28,6 +28,14 @@ public interface HttpServer {
     interface GameContentServer {
         @GET("game/detail")
         Observable<GameContentBean> listResponse(@QueryMap Map<String,String> queryMap);
+    }
+
+    /**
+     * 游戏详情
+     */
+    interface SlideShow {
+        @GET("slide/list")
+        Observable<LunboImgViewBean> listResponse(@QueryMap Map<String,String> queryMap);
     }
 
     /**

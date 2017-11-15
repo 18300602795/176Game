@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <string name="app_name">I76Game</string>
     <string name="action_settings">Settings</string>
 
@@ -16,5 +16,7 @@
     <string name="smoothlistview_header_last_time">上次更新时间：</string>
     <string name="smoothlistview_footer_hint_normal">查看更多</string>
     <string name="smoothlistview_footer_hint_ready">松开载入更多</string>
+    <string name="smoothlistview_footer_no_more">没有更多数据了</string>
+    <string name="smoothlistview_footer_zero">暂无数据</string>
 
 </resources>

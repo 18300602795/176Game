@@ -21,9 +21,6 @@ import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.ViewConfiguration;
 
-import com.i76game.utils.photo_view_util.GestureDetector;
-import com.i76game.utils.photo_view_util.OnGestureListener;
-
 public class CupcakeGestureDetector implements GestureDetector {
 
     protected OnGestureListener mListener;

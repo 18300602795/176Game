@@ -5,8 +5,6 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.widget.ImageView;
 
-import com.i76game.utils.photo_view_util.PhotoViewAttacher;
-
 /**
  * Provided default implementation of GestureDetector.OnDoubleTapListener, to be overriden with custom behavior, if needed
  * <p>&nbsp;</p>

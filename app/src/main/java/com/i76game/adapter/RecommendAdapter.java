@@ -17,7 +17,6 @@ import com.i76game.R;
 import com.i76game.activity.GameInfoActivity;
 import com.i76game.utils.Global;
 
-import static com.i76game.R.id.item_icon;
 
 /**
  * Created by Administrator on 2017/11/7.
@@ -52,7 +51,7 @@ public class RecommendAdapter extends BaseAdapter {
             view = LayoutInflater.from(activity).inflate(R.layout.recommend_item, null);
             holder.item_ll = (LinearLayout) view.findViewById(R.id.item_ll);
             holder.item_bt = (Button) view.findViewById(R.id.item_bt);
-            holder.item_icon = (ImageView) view.findViewById(item_icon);
+            holder.item_icon = (ImageView) view.findViewById(R.id.item_icon);
             holder.item_name = (TextView) view.findViewById(R.id.item_name);
             holder.item_num = (TextView) view.findViewById(R.id.item_num);
             view.setTag(holder);

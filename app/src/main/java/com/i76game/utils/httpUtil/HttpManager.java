@@ -1,20 +1,11 @@
 package com.i76game.utils.httpUtil;
 
-import android.content.Context;
-import android.os.Build;
-import android.util.ArrayMap;
-
 import com.i76game.utils.Global;
-
-import org.reactivestreams.Subscriber;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import io.reactivex.Observable;
-import io.reactivex.Observer;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;

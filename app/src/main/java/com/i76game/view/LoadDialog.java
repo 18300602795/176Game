@@ -5,7 +5,6 @@ import android.app.Dialog;
 import android.content.Context;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
-import android.view.Display;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
@@ -14,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.i76game.R;
+
 
 /**
  * Created by Administrator on 2017/5/24.

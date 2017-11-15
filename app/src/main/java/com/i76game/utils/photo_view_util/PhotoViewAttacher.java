@@ -22,7 +22,6 @@ import android.graphics.Matrix.ScaleToFit;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
-import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnLongClickListener;
@@ -117,8 +116,8 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     private WeakReference<ImageView> mImageView;
 
     // Gesture Detectors
-    private GestureDetector mGestureDetector;
-    private com.i76game.utils.photo_view_util.GestureDetector mScaleDragDetector;
+    private android.view.GestureDetector mGestureDetector;
+    private GestureDetector mScaleDragDetector;
 
     // These are set so we don't keep allocating them on the heap
     private final Matrix mBaseMatrix = new Matrix();
@@ -160,8 +159,8 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
         mScaleDragDetector = VersionedGestureDetector.newInstance(
                 imageView.getContext(), this);
 
-        mGestureDetector = new GestureDetector(imageView.getContext(),
-                new GestureDetector.SimpleOnGestureListener() {
+        mGestureDetector = new android.view.GestureDetector(imageView.getContext(),
+                new android.view.GestureDetector.SimpleOnGestureListener() {
 
                     // forward long click listener
                     @Override
@@ -179,7 +178,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     }
 
     @Override
-    public void setOnDoubleTapListener(GestureDetector.OnDoubleTapListener newOnDoubleTapListener) {
+    public void setOnDoubleTapListener(android.view.GestureDetector.OnDoubleTapListener newOnDoubleTapListener) {
         if (newOnDoubleTapListener != null)
             this.mGestureDetector.setOnDoubleTapListener(newOnDoubleTapListener);
         else

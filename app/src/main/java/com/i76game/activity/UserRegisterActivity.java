@@ -16,8 +16,6 @@ import com.i76game.utils.Utils;
 
 import java.util.ArrayList;
 
-import static com.i76game.R.id.gift_toolbar;
-
 
 /**
  * 用户注册

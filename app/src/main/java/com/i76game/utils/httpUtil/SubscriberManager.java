@@ -1,18 +1,10 @@
 package com.i76game.utils.httpUtil;
 
-import android.os.Build;
-import android.support.annotation.RequiresApi;
-import android.util.ArrayMap;
-
-import org.reactivestreams.Subscriber;
-import org.reactivestreams.Subscription;
-
 import java.util.HashMap;
 import java.util.Map;
 
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.internal.observers.SubscriberCompletableObserver;
 
 /**
  * Created by Administrator on 2017/7/4.

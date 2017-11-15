@@ -1,8 +1,6 @@
 package com.i76game.activity;
 
 import android.annotation.TargetApi;
-import android.app.Activity;
-import android.app.Application;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
@@ -12,7 +10,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -20,8 +17,6 @@ import android.widget.Toast;
 
 import com.i76game.R;
 import com.i76game.utils.Global;
-
-import javax.security.auth.login.LoginException;
 
 /**
  * Created by Administrator on 2017/5/19.

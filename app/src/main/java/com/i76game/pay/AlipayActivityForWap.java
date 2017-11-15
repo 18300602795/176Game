@@ -12,7 +12,6 @@ import android.widget.Toast;
 
 import com.alipay.sdk.app.PayTask;
 import com.i76game.R;
-import com.i76game.activity.AccountSecurityActivity;
 import com.i76game.activity.RechargeActivity;
 
 import java.io.UnsupportedEncodingException;
