@@ -122,7 +122,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 break;
 
             case R.id.login_user_register:
-                Intent intent = new Intent(this, UserRegisterActivity.class);
+                Intent intent = new Intent(this, RegisterPhoneActivity.class);
                 startActivityForResult(intent,userRegisterCode);
                 break;
         }

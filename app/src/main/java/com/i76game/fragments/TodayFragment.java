@@ -38,10 +38,10 @@ public class TodayFragment extends Fragment {
     private View view;
     private XRecyclerView listView;
     private TableListAdapter mAdapter;
-    private String mWay;
     public int today_pager;
     private View layoutNoData;
     private LoadDialog mLoadDialog;
+    private boolean isShow;
 
     private Handler hanler = new Handler() {
         @Override
@@ -72,18 +72,35 @@ public class TodayFragment extends Fragment {
         }
     };
 
+    /**
+     * 在这里实现Fragment数据的缓加载.
+     * @param isVisibleToUser
+     */
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if(getUserVisibleHint()) {
+            isShow = true;
+        } else {
+            isShow = false;
+        }
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_kaifubiao, null);
         listView = (XRecyclerView) view.findViewById(R.id.table_rv);
-        listView.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
+        listView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         layoutNoData = view.findViewById(R.id.layout_noData);
         mAdapter = new TableListAdapter(null, getActivity());
         listView.setAdapter(mAdapter);
-        if (mLoadDialog==null){
-            mLoadDialog = new LoadDialog(getActivity(),true,"100倍加速中");
+        if (mLoadDialog == null) {
+            mLoadDialog = new LoadDialog(getActivity(), true, "100倍加速中");
         }
-        mLoadDialog.show();
+
+        if (isShow){
+            mLoadDialog.show();
+        }
         getDate();
         listView.setLoadingListener(new XRecyclerView.LoadingListener() {
             @Override
@@ -107,12 +124,12 @@ public class TodayFragment extends Fragment {
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeZone(TimeZone.getTimeZone("GMT+8:00"));
 
-        OkHttpClient client=new OkHttpClient();
+        OkHttpClient client = new OkHttpClient();
         Map<String, String> params = new HashMap<>();
         params.put("key", "1");
         params.put("to", "app");
         String url = Utils.getCompUrlFromParams(Global.SERVER_URL, params);
-        Request request=new Request.Builder().url(url).build();
+        Request request = new Request.Builder().url(url).build();
         okhttp3.Call call = client.newCall(request);
         call.enqueue(new okhttp3.Callback() {
             @Override
@@ -131,6 +148,7 @@ public class TodayFragment extends Fragment {
         });
 
     }
+
     private void analysisDate(int j, String str) {
 //        List<TableBean> mBeanList = new ArrayList<>();
         List<KaifubiaoBean> kaidus = new ArrayList<>();
@@ -197,41 +215,18 @@ public class TodayFragment extends Fragment {
     }
 
 
-    private boolean isOneDay(String week) {
-        String way = "星期日";
-        if (mWay.equals("1")) {
-            way = "星期日";
-        } else if (mWay.equals("2")) {
-            way = "星期一";
-        } else if (mWay.equals("3")) {
-            way = "星期二";
-        } else if (mWay.equals("4")) {
-            way = "星期三";
-        } else if (mWay.equals("5")) {
-            way = "星期四";
-        } else if (mWay.equals("6")) {
-            way = "星期五";
-        } else if (mWay.equals("7")) {
-            way = "星期六";
-        }
-
-        if (week.equals(way)) {
-            return true;
-        }
-        return false;
-    }
-
     /**
      * 隐藏对话框
      */
-    private void hideDialog(){
-        if (mLoadDialog!=null){
+    private void hideDialog() {
+        if (mLoadDialog != null) {
             mLoadDialog.dismiss();
         }
         listView.refreshComplete();
     }
 
     private Toast toast = null;
+
     protected void showToast(String msg, int length) {
         if (toast == null) {
             toast = Toast.makeText(getActivity(), msg, length);

@@ -32,10 +32,12 @@ public class MyApplication extends Application {
     public static int time = 0;
     public static String gameID = "syc_60123";
     public static String agentID = "399";
+    public static int item;
     @Override
     public void onCreate(){
         //获取Context
         super.onCreate();
+        item = 1;
         mContext = getApplicationContext();
         MobSDK.init(mContext, "223f8bf400810", "9138658894f1356bb66dea019c3daa16");
         StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();StrictMode.setVmPolicy(builder.build());

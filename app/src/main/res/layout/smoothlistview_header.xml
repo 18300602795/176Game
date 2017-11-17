@@ -62,5 +62,4 @@
             android:layout_marginLeft="-40dp"
             android:visibility="invisible"/>
     </RelativeLayout>
-
 </LinearLayout>

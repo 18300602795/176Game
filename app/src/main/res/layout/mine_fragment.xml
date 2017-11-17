@@ -26,15 +26,7 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true">
 
-           <!--<android.support.v4.widget.CircleImageView-->
-                <!--android:layout_width="55dp"-->
-                <!--android:background="@color/blue"-->
-                <!--android:layout_height="55dp"-->
-                <!--android:layout_marginTop="15dp"-->
-                <!--android:id="@+id/mine_icon"-->
-                <!--android:layout_alignParentTop="true"-->
-                <!--android:layout_centerHorizontal="true"/>-->
-            <ImageView
+            <com.i76game.view.CircleImageView
                 android:layout_marginTop="30dp"
                 android:layout_width="65dp"
                 android:background="@mipmap/ic_head_image"

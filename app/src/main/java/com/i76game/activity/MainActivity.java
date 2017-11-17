@@ -1,12 +1,11 @@
 package com.i76game.activity;
 
 import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.view.ViewPager;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
@@ -18,13 +17,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.i76game.R;
-import com.i76game.fragments.FanliFragment;
+import com.i76game.adapter.MainPagerAdapter;
 import com.i76game.fragments.HomeFragment2;
-import com.i76game.fragments.MessageFragment;
+import com.i76game.fragments.InformationFragment;
 import com.i76game.fragments.MineFragment;
 import com.i76game.fragments.ServerFragment2;
+import com.i76game.inter.Imylistener;
 import com.i76game.update.VersionUpdateManager;
 import com.i76game.utils.Utils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends FragmentActivity implements View.OnClickListener {
     private ImageView mHomeImage;
@@ -36,8 +39,10 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private TextView mMessageText;
     private TextView mMineText;
     private TextView mFanliText;
-    private FragmentManager mFragmentManager;
+    private MainPagerAdapter pagerAdapter;
+    private List<Fragment> fragments;
 
+    private ViewPager main_pager;
     private TextView mTitleText;
     private RelativeLayout mTitleLayout;//标题
     private RelativeLayout mSearchLayout;//搜索
@@ -48,15 +53,40 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initView();
+        initDate();
         //默认选中第一个
         mHomeImage.setImageResource(R.mipmap.ic_main_home_p);
         mHomeText.setTextColor(getResources().getColor(R.color.main_item_text_color_p));
-
-        replaceFragment(newHomeFragment());
-        currentFragment = newHomeFragment();
+        main_pager = (ViewPager) findViewById(R.id.main_pager);
 
         //检查更新
         new VersionUpdateManager(this);
+    }
+
+    private void initDate() {
+        fragments = new ArrayList<>();
+        addFragment();
+        pagerAdapter = new MainPagerAdapter(getFragmentManager(), fragments);
+        main_pager.setAdapter(pagerAdapter);
+    }
+
+    private void addFragment() {
+        HomeFragment2 homeFragment2 = new HomeFragment2();
+        homeFragment2.setListener(new Imylistener() {
+            @Override
+            public void Onclick() {
+                reset(3);
+                main_pager.setCurrentItem(3);
+            }
+        });
+        ServerFragment2 mServerFragment2 = new ServerFragment2();
+        InformationFragment mMessageFragment = new InformationFragment();
+        MineFragment mMineFragment = new MineFragment();
+        fragments.add(homeFragment2);
+        fragments.add(mServerFragment2);
+        fragments.add(mMessageFragment);
+        fragments.add(mMineFragment);
+
     }
 
     /**
@@ -68,6 +98,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         LinearLayout fanliLayout = (LinearLayout) findViewById(R.id.main_home_fanli);
         LinearLayout messageLayout = (LinearLayout) findViewById(R.id.main_home_message);
         LinearLayout mineLayout = (LinearLayout) findViewById(R.id.main_home_mine);
+        main_pager = (ViewPager) findViewById(R.id.main_pager);
         homeLayout.setOnClickListener(this);
         serverLayout.setOnClickListener(this);
         fanliLayout.setOnClickListener(this);
@@ -97,9 +128,27 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             mToolLayout.setPadding(0, Utils.dip2px(this, 10), 0, 0);
             setTranslucentStatus(true);
         }
+        main_pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                reset(position);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
     }
+
     /**
      * 设置状态栏透明
+     *
      * @param on
      */
     public void setTranslucentStatus(boolean on) {
@@ -119,28 +168,12 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.main_home_layout:
-                if (currentFragment != mHomeFragment) {
-                    reset();
-                    replaceFragment(newHomeFragment());
-                    currentFragment = newHomeFragment();
-                    mHomeImage.setImageResource(R.mipmap.ic_main_home_p);
-                    mTitleLayout.setVisibility(View.GONE);
-                    mToolLayout.setVisibility(View.GONE);
-                    mHomeText.setTextColor(getResources().getColor(R.color.main_item_text_color_p));
-                }
-
+                main_pager.setCurrentItem(0);
+                reset(0);
                 break;
             case R.id.main_home_server:
-                if (currentFragment != mServerFragment) {
-                    reset();
-                    replaceFragment(newServerFragment());
-                    currentFragment = newServerFragment();
-                    mServerImage.setImageResource(R.mipmap.ic_main_server_p);
-                    mToolLayout.setVisibility(View.GONE);
-                    mTitleLayout.setVisibility(View.VISIBLE);
-                    mTitleText.setText("开服表");
-                    mServerText.setTextColor(getResources().getColor(R.color.main_item_text_color_p));
-                }
+                reset(1);
+                main_pager.setCurrentItem(1);
                 break;
             case R.id.main_home_fanli:
 //                reset();
@@ -155,29 +188,14 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
                 break;
             case R.id.main_home_message:
-                if (currentFragment != mMessageFragment) {
-                    reset();
-                    replaceFragment(newMessageFragment());
-                    currentFragment = newMessageFragment();
-                    mToolLayout.setVisibility(View.GONE);
-                    mTitleLayout.setVisibility(View.VISIBLE);
-                    mTitleText.setText("我的消息");
-                    mMessageImage.setImageResource(R.mipmap.ic_main_message_p);
-                    mMessageText.setTextColor(getResources().getColor(R.color.main_item_text_color_p));
-                }
+                reset(2);
+                main_pager.setCurrentItem(2);
                 break;
 
             case R.id.main_img_mine:
             case R.id.main_home_mine:
-                if (currentFragment != mMineFragment) {
-                    reset();
-                    replaceFragment(newMineFragment());
-                    currentFragment = newMineFragment();
-                    mToolLayout.setVisibility(View.GONE);
-                    mTitleLayout.setVisibility(View.GONE);
-                    mMineImage.setImageResource(R.mipmap.ic_main_mine_p);
-                    mMineText.setTextColor(getResources().getColor(R.color.main_item_text_color_p));
-                }
+                reset(3);
+                main_pager.setCurrentItem(3);
                 break;
 
             case R.id.main_download:
@@ -190,10 +208,11 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         }
     }
 
+
     /**
      * 重置各个item
      */
-    private void reset() {
+    private void reset(int i) {
         mMineImage.setImageResource(R.mipmap.ic_main_mine);
         mMessageImage.setImageResource(R.mipmap.ic_main_message);
         mServerImage.setImageResource(R.mipmap.ic_main_server);
@@ -203,78 +222,37 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         mMessageText.setTextColor(getResources().getColor(R.color.main_item_text_color));
         mHomeText.setTextColor(getResources().getColor(R.color.main_item_text_color));
         mFanliText.setTextColor(getResources().getColor(R.color.main_item_text_color));
-    }
-
-    private Fragment currentFragment;
-
-    public void replaceFragment(Fragment fragment) {
-        if (mFragmentManager == null) {
-            mFragmentManager = getFragmentManager();
-        }
-
-        FragmentTransaction transaction = mFragmentManager.beginTransaction();
-        if (fragment.isAdded()) {
-            transaction.show(fragment);
-        } else {
-            transaction.add(R.id.main_frame_layout, fragment);
-        }
-        if (currentFragment != null) {
-            transaction.hide(currentFragment);
-        }
-        currentFragment = fragment;
-        transaction.commit();
-    }
-
-    private Fragment mHomeFragment;
-    private Fragment mMineFragment;
-    private Fragment mServerFragment;
-    private Fragment mMessageFragment;
-    private Fragment mFanliFragment;
-
-    private Fragment newHomeFragment() {
-        if (mHomeFragment == null) {
-            mHomeFragment = new HomeFragment2();
-            return mHomeFragment;
-        } else {
-            return mHomeFragment;
+        switch (i){
+            case 0:
+                mHomeImage.setImageResource(R.mipmap.ic_main_home_p);
+                mTitleLayout.setVisibility(View.GONE);
+                mToolLayout.setVisibility(View.GONE);
+                mHomeText.setTextColor(getResources().getColor(R.color.main_item_text_color_p));
+                break;
+            case 1:
+                mServerImage.setImageResource(R.mipmap.ic_main_server_p);
+                mToolLayout.setVisibility(View.GONE);
+                mTitleLayout.setVisibility(View.VISIBLE);
+                mTitleText.setText("开服表");
+                mServerText.setTextColor(getResources().getColor(R.color.main_item_text_color_p));
+                break;
+            case 2:
+                main_pager.setCurrentItem(2);
+                mToolLayout.setVisibility(View.GONE);
+                mTitleLayout.setVisibility(View.VISIBLE);
+                mTitleText.setText("我的消息");
+                mMessageImage.setImageResource(R.mipmap.ic_main_message_p);
+                mMessageText.setTextColor(getResources().getColor(R.color.main_item_text_color_p));
+                break;
+            case 3:
+                mToolLayout.setVisibility(View.GONE);
+                mTitleLayout.setVisibility(View.GONE);
+                mMineImage.setImageResource(R.mipmap.ic_main_mine_p);
+                mMineText.setTextColor(getResources().getColor(R.color.main_item_text_color_p));
+                break;
         }
     }
 
-    private Fragment newMineFragment() {
-        if (mMineFragment == null) {
-            mMineFragment = new MineFragment();
-            return mMineFragment;
-        } else {
-            return mMineFragment;
-        }
-    }
-
-    private Fragment newServerFragment() {
-        if (mServerFragment == null) {
-            mServerFragment = new ServerFragment2();
-            return mServerFragment;
-        } else {
-            return mServerFragment;
-        }
-    }
-
-    private Fragment newMessageFragment() {
-        if (mMessageFragment == null) {
-            mMessageFragment = new MessageFragment();
-            return mMessageFragment;
-        } else {
-            return mMessageFragment;
-        }
-    }
-
-    private Fragment newFanliFragment() {
-        if (mFanliFragment == null) {
-            mFanliFragment = new FanliFragment();
-            return mFanliFragment;
-        } else {
-            return mFanliFragment;
-        }
-    }
 
     /**
      * 点击2次退出程序

@@ -41,6 +41,7 @@ public class TomorrowFragment extends Fragment {
     public int tomorrow_pager;
     private View layoutNoData;
     private LoadDialog mLoadDialog;
+    private boolean isShow;
     private Handler hanler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -70,19 +71,34 @@ public class TomorrowFragment extends Fragment {
             }
         }
     };
-
+    /**
+     * 在这里实现Fragment数据的缓加载.
+     * @param isVisibleToUser
+     */
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if(getUserVisibleHint()) {
+            isShow = true;
+        } else {
+            isShow = false;
+        }
+    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_kaifubiao, null);
         listView = (XRecyclerView) view.findViewById(R.id.table_rv);
-        listView.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
+        listView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         layoutNoData = view.findViewById(R.id.layout_noData);
         mAdapter = new TableListAdapter(null, getActivity());
         listView.setAdapter(mAdapter);
-        if (mLoadDialog==null){
-            mLoadDialog = new LoadDialog(getActivity(),true,"100倍加速中");
+        if (mLoadDialog == null) {
+            mLoadDialog = new LoadDialog(getActivity(), true, "100倍加速中");
         }
-        mLoadDialog.show();
+        if (isShow) {
+            mLoadDialog.show();
+        }
+
         getDate();
         listView.setLoadingListener(new XRecyclerView.LoadingListener() {
             @Override
@@ -106,12 +122,12 @@ public class TomorrowFragment extends Fragment {
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeZone(TimeZone.getTimeZone("GMT+8:00"));
 
-        OkHttpClient client=new OkHttpClient();
+        OkHttpClient client = new OkHttpClient();
         Map<String, String> params = new HashMap<>();
         params.put("key", "2");
         params.put("to", "app");
         String url = Utils.getCompUrlFromParams(Global.SERVER_URL, params);
-        Request request=new Request.Builder().url(url).build();
+        Request request = new Request.Builder().url(url).build();
         okhttp3.Call call = client.newCall(request);
         call.enqueue(new okhttp3.Callback() {
             @Override
@@ -193,16 +209,19 @@ public class TomorrowFragment extends Fragment {
 
         }
     }
+
     /**
      * 隐藏对话框
      */
-    private void hideDialog(){
-        if (mLoadDialog!=null){
+    private void hideDialog() {
+        if (mLoadDialog != null) {
             mLoadDialog.dismiss();
         }
         listView.refreshComplete();
     }
+
     private Toast toast = null;
+
     protected void showToast(String msg, int length) {
         if (toast == null) {
             toast = Toast.makeText(getActivity(), msg, length);

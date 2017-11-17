@@ -22,9 +22,11 @@ import com.i76game.MyApplication;
 import com.i76game.R;
 import com.i76game.activity.CustomerServiceActivity;
 import com.i76game.activity.DownloadActivity;
+import com.i76game.activity.EarnActivity;
 import com.i76game.activity.FenLeiActivity;
 import com.i76game.activity.GameListActivity;
 import com.i76game.activity.InformationActivity;
+import com.i76game.activity.InviteActivity;
 import com.i76game.activity.SearchActivity;
 import com.i76game.adapter.GameListAdapter2;
 import com.i76game.adapter.mvViewPagerAdapter;
@@ -32,6 +34,7 @@ import com.i76game.bean.HomeRVBean;
 import com.i76game.bean.LunboImgViewBean;
 import com.i76game.download.DownloadAPKManager;
 import com.i76game.download.DownloadService;
+import com.i76game.inter.Imylistener;
 import com.i76game.model.FilterData;
 import com.i76game.utils.ColorUtil;
 import com.i76game.utils.DensityUtil;
@@ -60,6 +63,8 @@ import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
+import static com.i76game.R.id.main_img_mine;
+
 
 /**
  * Created by Administrator on 2017/5/8.
@@ -76,13 +81,12 @@ public class HomeFragment2 extends Fragment implements View.OnClickListener, Smo
     private List<LunboImgViewBean.DataBean.ListBean> listbean;// 装载着轮播图的
     private VpSwipeRefreshLayout home_refresh;
     private RelativeLayout mSearchLayout;//搜索
-    public ImageView mineImage;
+    private ImageView mineImage;
+    private Imylistener imylisterer;
 
     FilterView_home realFilterView;
     LinearLayout rlBar;
     private DownloadAPKManager mDownloadAPKManager;
-    private boolean isTop = false;
-    private boolean isBack = false;
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -93,6 +97,9 @@ public class HomeFragment2 extends Fragment implements View.OnClickListener, Smo
         }
     };
 
+    public void setListener(Imylistener imylisterer) {
+        this.imylisterer = imylisterer;
+    }
 
     private int mScreenHeight; // 屏幕高度
 
@@ -107,7 +114,7 @@ public class HomeFragment2 extends Fragment implements View.OnClickListener, Smo
     private int titleViewHeight = 65; // 标题栏的高度
 
     private View itemHeaderBannerView; // 从ListView获取的广告子View
-    private int bannerViewHeight = 130; // 广告视图的高度
+    private int bannerViewHeight; // 广告视图的高度
     private int bannerViewTopMargin; // 广告视图距离顶部的距离
 
     private View itemHeaderFilterView; // 从ListView获取的筛选子View
@@ -195,6 +202,7 @@ public class HomeFragment2 extends Fragment implements View.OnClickListener, Smo
 
                 // 获取广告头部View、自身的高度、距离顶部的高度
                 if (itemHeaderBannerView == null) {
+                    LogUtils.i("1111111");
                     itemHeaderBannerView = smoothListView.getChildAt(1);
                 }
                 if (itemHeaderBannerView != null) {
@@ -209,26 +217,19 @@ public class HomeFragment2 extends Fragment implements View.OnClickListener, Smo
                 if (itemHeaderFilterView != null) {
                     filterViewTopMargin = DensityUtil.px2dip(getActivity(), itemHeaderFilterView.getTop());
                 }
-
-                if (filterViewTopMargin <= titleViewHeight || firstVisibleItem > filterViewPosition) {
-                    isStickyTop = true; // 吸附在顶部
-                    realFilterView.setVisibility(View.VISIBLE);
-                } else {
+//                if (filterViewTopMargin <= titleViewHeight || firstVisibleItem > filterViewPosition) {
+//                    LogUtils.i("吸附到顶部");
+//                    isStickyTop = true; // 吸附在顶部
+//                    realFilterView.setVisibility(View.VISIBLE);
+//                } else {
+//                    LogUtils.i("没有吸附在顶部");
                     isStickyTop = false; // 没有吸附在顶部
                     realFilterView.setVisibility(View.GONE);
-                }
+//                }
 
                 if (isSmooth && isStickyTop) {
                     isSmooth = false;
                     realFilterView.show(filterPosition);
-                }
-
-                if (isTop) {
-                    isStickyTop = true;
-                }
-
-                if (isBack) {
-                    bannerViewTopMargin = 0;
                 }
 
                 // 处理标题栏颜色渐变
@@ -260,7 +261,6 @@ public class HomeFragment2 extends Fragment implements View.OnClickListener, Smo
             rlBar.setBackgroundColor(ColorUtil.getNewColorByStartEndColor(getActivity(), fraction, R.color.transparent2, R.color.blue));
         }
     }
-
 
     @Override
     public void onRefresh() {
@@ -295,7 +295,8 @@ public class HomeFragment2 extends Fragment implements View.OnClickListener, Smo
         filterData.setFilters(ModelUtil.getFilterData());
 //         广告数据
         bannerList = ModelUtil.getBannerData();
-        mineImage = (ImageView) view.findViewById(R.id.main_img_mine);
+        mineImage = (ImageView) view.findViewById(main_img_mine);
+        mineImage.setOnClickListener(this);
         mSearchLayout = (RelativeLayout) view.findViewById(R.id.main_search_layout);
         mSearchLayout.setOnClickListener(this);
         ImageView downloadBtn = (ImageView) view.findViewById(R.id.main_download);
@@ -330,13 +331,12 @@ public class HomeFragment2 extends Fragment implements View.OnClickListener, Smo
         return view;
     }
 
-
     private LoadDialog mLoadDialog;
 
     private void request(Map<String, String> map) {
         if (mLoadDialog == null) {
             mLoadDialog = new LoadDialog(getActivity(), true, "100倍加速中");
-            mLoadDialog.show();
+//            mLoadDialog.show();
         }
         RetrofitUtil.getInstance()
                 .create(HttpServer.HotService.class)
@@ -393,6 +393,9 @@ public class HomeFragment2 extends Fragment implements View.OnClickListener, Smo
             case R.id.head_game_list:
                 startActivity(new Intent(getActivity(), GameListActivity.class));
                 break;
+            case R.id.main_img_mine:
+                imylisterer.Onclick();
+                break;
             case R.id.game_ll:
                 startActivity(new Intent(getActivity(), GameListActivity.class));
                 break;
@@ -403,7 +406,7 @@ public class HomeFragment2 extends Fragment implements View.OnClickListener, Smo
 //                startActivity(new Intent(getActivity(), GameListActivity.class));
                 break;
             case R.id.earn_ll:
-//                startActivity(new Intent(getActivity(), GameListActivity.class));
+                startActivity(new Intent(getActivity(), EarnActivity.class));
                 break;
             case R.id.server_ll:
                 startActivity(new Intent(getActivity(), CustomerServiceActivity.class));
@@ -417,7 +420,8 @@ public class HomeFragment2 extends Fragment implements View.OnClickListener, Smo
                 break;
             case R.id.share_ll:
 //                startActivity(new Intent(getActivity(), GameListActivity.class));
-                Utils.showShare(getActivity(), "欢迎下载176Game", "", "", "http://down.shouyoucun.cn/sdkgame/syc_60123/syc_60123.apk");
+                startActivity(new Intent(getActivity(), InviteActivity.class));
+//                Utils.showShare(getActivity(), "欢迎下载176Game", "", "", "http://down.shouyoucun.cn/sdkgame/syc_60123/syc_60123.apk");
                 break;
             case R.id.main_download:
                 startActivity(new Intent(getActivity(), DownloadActivity.class));
@@ -572,3 +576,4 @@ public class HomeFragment2 extends Fragment implements View.OnClickListener, Smo
                 });
     }
 }
+

@@ -8,7 +8,7 @@ import android.support.v7.widget.Toolbar;
 import android.widget.Toast;
 
 import com.i76game.R;
-import com.i76game.adapter.InformationAdapter;
+import com.i76game.adapter.MessageAdapter;
 import com.i76game.bean.InformationRVBean;
 import com.i76game.utils.Global;
 import com.i76game.utils.HttpServer;
@@ -33,7 +33,7 @@ import io.reactivex.schedulers.Schedulers;
 public class InformationActivity extends BaseActivity {
 
     private List<InformationRVBean.DataBean.NewsListBean> mInformationList;
-    private InformationAdapter mAdapter;
+    private MessageAdapter mAdapter;
     private String type, title;
     private XRecyclerView recyclerView;
     private int currentPage=1;
@@ -52,7 +52,7 @@ public class InformationActivity extends BaseActivity {
         recyclerView = (XRecyclerView) findViewById(R.id.information_rv);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         mInformationList = new ArrayList<>();
-        mAdapter = new InformationAdapter(mInformationList, this);
+        mAdapter = new MessageAdapter(mInformationList, this);
         recyclerView.setAdapter(mAdapter);
         recyclerView.addItemDecoration(new DividerItemDecoration(this,
                 DividerItemDecoration.VERTICAL));

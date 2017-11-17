@@ -7,14 +7,17 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp">
 
         <LinearLayout
             android:id="@+id/game_ll"
             android:layout_width="0dp"
             android:layout_height="80dp"
             android:layout_weight="1"
-            android:gravity="center_horizontal"
+            android:background="@drawable/btn_bg"
+            android:gravity="center"
             android:orientation="vertical">
 
             <LinearLayout
@@ -27,14 +30,15 @@
                 <ImageView
                     android:layout_width="20dp"
                     android:layout_height="20dp"
-                    android:src="@mipmap/ic_home_mygame2" />
+                    android:src="@mipmap/ic_user_item_1" />
             </LinearLayout>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:text="我的游戏" />
+                android:text="我的游戏"
+                android:textSize="12sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -42,7 +46,8 @@
             android:layout_width="0dp"
             android:layout_height="80dp"
             android:layout_weight="1"
-            android:gravity="center_horizontal"
+            android:background="@drawable/btn_bg"
+            android:gravity="center"
             android:orientation="vertical">
 
             <LinearLayout
@@ -62,7 +67,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:text="分类" />
+                android:text="分类"
+                android:textSize="12sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -70,7 +76,8 @@
             android:layout_width="0dp"
             android:layout_height="80dp"
             android:layout_weight="1"
-            android:gravity="center_horizontal"
+            android:background="@drawable/btn_bg"
+            android:gravity="center"
             android:orientation="vertical">
 
             <LinearLayout
@@ -90,7 +97,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:text="破解" />
+                android:text="破解"
+                android:textSize="12sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -98,7 +106,8 @@
             android:layout_width="0dp"
             android:layout_height="80dp"
             android:layout_weight="1"
-            android:gravity="center_horizontal"
+            android:background="@drawable/btn_bg"
+            android:gravity="center"
             android:orientation="vertical">
 
             <LinearLayout
@@ -118,7 +127,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:text="赚钱" />
+                android:text="赚钱"
+                android:textSize="12sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -126,7 +136,8 @@
             android:layout_width="0dp"
             android:layout_height="80dp"
             android:layout_weight="1"
-            android:gravity="center_horizontal"
+            android:background="@drawable/btn_bg"
+            android:gravity="center"
             android:orientation="vertical">
 
             <LinearLayout
@@ -146,7 +157,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:text="客服" />
+                android:text="客服"
+                android:textSize="12sp" />
         </LinearLayout>
     </LinearLayout>
 
@@ -166,13 +178,18 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:background="@drawable/btn_bg"
             android:gravity="center_vertical"
             android:orientation="horizontal">
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
                 android:orientation="vertical"
                 android:padding="10dp">
 
@@ -228,13 +245,18 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:background="@drawable/btn_bg"
             android:gravity="center_vertical"
             android:orientation="horizontal">
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
                 android:orientation="vertical"
                 android:padding="10dp">
 

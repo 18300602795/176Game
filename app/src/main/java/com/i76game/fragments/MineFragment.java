@@ -23,11 +23,14 @@ import com.i76game.R;
 import com.i76game.activity.AccountSecurityActivity;
 import com.i76game.activity.BackActivity;
 import com.i76game.activity.CustomerServiceActivity;
+import com.i76game.activity.InformationActivity;
+import com.i76game.activity.InviteActivity;
 import com.i76game.activity.LoginActivity;
 import com.i76game.activity.OrderActivity;
 import com.i76game.activity.RechargeActivity;
 import com.i76game.activity.SettingActivity;
 import com.i76game.activity.UserGiftActivity;
+import com.i76game.activity.UserInfoActivity;
 import com.i76game.bean.MineRVBean;
 import com.i76game.pay.OnPaymentListener;
 import com.i76game.pay.PaymentCallbackInfo;
@@ -37,7 +40,7 @@ import com.i76game.utils.LogUtils;
 import com.i76game.utils.OkHttpUtil;
 import com.i76game.utils.SharePrefUtil;
 import com.i76game.utils.StringUtils;
-import com.i76game.utils.Utils;
+import com.i76game.view.CircleImageView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -61,6 +64,7 @@ public class MineFragment extends Fragment implements View.OnClickListener {
     private boolean mIsLogin;
     private int loginCode = 10;
     private int settingCode = 11;
+    private CircleImageView mine_icon;
 
     private TextView mRemain;
     private Handler mHandler = new Handler() {
@@ -89,6 +93,8 @@ public class MineFragment extends Fragment implements View.OnClickListener {
         recharge.setOnClickListener(this);
         mRemain = (TextView) view.findViewById(R.id.mine_remain);
         mLogin = (TextView) view.findViewById(R.id.mine_login);
+        mine_icon = (CircleImageView) view.findViewById(R.id.mine_icon);
+        mine_icon.setOnClickListener(this);
         mLogin.setOnClickListener(this);
         mIsLogin = SharePrefUtil.getBoolean(MyApplication.getContextObject(),
                 SharePrefUtil.KEY.FIRST_LOGIN, true);
@@ -103,12 +109,18 @@ public class MineFragment extends Fragment implements View.OnClickListener {
                 } else {
                     if (position == 2) {
                         //邀请好友
-                        Utils.showShare(getActivity(), "欢迎下载176Game", "", "", "http://down.shouyoucun.cn/sdkgame/syc_60123/syc_60123.apk");
+                        startActivity(new Intent(getActivity(), InviteActivity.class));
+//                        Utils.showShare(getActivity(), "欢迎下载176Game", "", "", "http://down.shouyoucun.cn/sdkgame/syc_60123/syc_60123.apk");
                     } else if (position == 3) {
                         //客服中心
                         startActivity(new Intent(mActivity, CustomerServiceActivity.class));
                     } else if (position == 4) {
                         //我的消息
+                        Intent intent = new Intent();
+                        intent.setClass(getActivity(), InformationActivity.class);
+                        intent.putExtra("type", "2");
+                        intent.putExtra("title", "我的消息");
+                        startActivity(intent);
                     } else if (position == 5) {
                         //我的礼包
                         goActivity(new Intent(mActivity, UserGiftActivity.class));
@@ -219,6 +231,15 @@ public class MineFragment extends Fragment implements View.OnClickListener {
                     //没有登陆的话才可以点击登陆
                     Intent intent = new Intent(mActivity, LoginActivity.class);
                     startActivityForResult(intent, loginCode);
+                }
+                break;
+            case R.id.mine_icon:
+                if (mIsLogin) {
+                    //没有登陆的话才可以点击登陆
+                    Intent intent = new Intent(mActivity, LoginActivity.class);
+                    startActivityForResult(intent, loginCode);
+                }else {
+                    startActivity(new Intent(getActivity(), UserInfoActivity.class));
                 }
                 break;
             case R.id.mine_recharge:

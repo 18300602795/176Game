@@ -44,6 +44,7 @@ public class YesterdayFragment extends Fragment {
     private String result;
     private View layoutNoData;
     private LoadDialog mLoadDialog;
+    private boolean isShow;
     private Handler hanler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -73,6 +74,21 @@ public class YesterdayFragment extends Fragment {
         }
     };
 
+    /**
+     * 在这里实现Fragment数据的缓加载.
+     *
+     * @param isVisibleToUser
+     */
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (getUserVisibleHint()) {
+            isShow = true;
+        } else {
+            isShow = false;
+        }
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_kaifubiao, null);
@@ -84,7 +100,9 @@ public class YesterdayFragment extends Fragment {
         if (mLoadDialog == null) {
             mLoadDialog = new LoadDialog(getActivity(), true, "100倍加速中");
         }
-        mLoadDialog.show();
+        if (isShow) {
+            mLoadDialog.show();
+        }
         getDate();
         listView.setLoadingListener(new XRecyclerView.LoadingListener() {
             @Override
@@ -236,6 +254,7 @@ public class YesterdayFragment extends Fragment {
     }
 
     private Toast toast = null;
+
     protected void showToast(String msg, int length) {
         if (toast == null) {
             toast = Toast.makeText(getActivity(), msg, length);

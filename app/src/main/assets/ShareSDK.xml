@@ -50,15 +50,6 @@
 
     <!-- ShareByAppClient标识是否使用微博客户端分享，默认是false, -->
 
-    <SinaWeibo
-        Id="1"
-        SortId="1"
-        AppKey="568898243"
-        AppSecret="38a4f8204cc784f81f9f0daaf31e02e3"
-        RedirectUrl="http://www.sharesdk.cn"
-        ShareByAppClient="false"
-        Enable="false" />
-
     <TencentWeibo
         Id="2"
         SortId="2"
@@ -97,7 +88,7 @@
         Id="3"
         SortId="3"
         AppId="wx595bc7156c7f4c67"
-        AppSecret="9764a91442b1f6c2ee9a4eb2dba1bf2a"
+        AppSecret="f7428b60632049a69de6cf94865622b3"
 		userName="gh_afb25ac019c9"
 		path="pages/index/index.html?id=1"
         BypassApproval="false"
@@ -107,7 +98,7 @@
         Id="4"
         SortId="4"
         AppId="wx595bc7156c7f4c67"
-        AppSecret="9764a91442b1f6c2ee9a4eb2dba1bf2a"
+        AppSecret="f7428b60632049a69de6cf94865622b3"
         BypassApproval="false"
         Enable="true" />
 
@@ -115,9 +106,18 @@
         Id="5"
         SortId="5"
         AppId="wx595bc7156c7f4c67"
-        AppSecret="9764a91442b1f6c2ee9a4eb2dba1bf2a"
+        AppSecret="f7428b60632049a69de6cf94865622b3"
         BypassApproval="false"
         Enable="true" />
+
+	<SinaWeibo
+		Id="6"
+		SortId="6"
+		AppKey="186342588"
+		AppSecret="6766ac687263267458f1aa89c7451e55"
+		RedirectUrl="http://www.sharesdk.cn"
+		ShareByAppClient="true"
+		Enable="true" />
 
 	<!-- ShareByAppClient标识是否使用微博客户端分享，默认是false -->
 

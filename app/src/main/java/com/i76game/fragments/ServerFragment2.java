@@ -1,16 +1,18 @@
 package com.i76game.fragments;
 
 import android.app.Fragment;
-import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.i76game.MyApplication;
 import com.i76game.R;
+import com.i76game.adapter.MainPagerAdapter;
+import com.i76game.utils.LogUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,77 +21,64 @@ import java.util.List;
  * 开服表
  */
 
-public class ServerFragment2 extends Fragment implements View.OnClickListener{
+public class ServerFragment2 extends Fragment implements View.OnClickListener {
 
 
     private Button mTodayBtn;
     private Button mTomorrowBtn;
     private Button mYesterdayBtn;
-    private android.app.FragmentManager fm;
-    private TodayFragment todayFragment;
-    private YesterdayFragment yesterdayFragment;
-    private TomorrowFragment tomorrowFragment;
     private List<Fragment> fragments;
+    private ViewPager server_pager;
+    private MainPagerAdapter pagerAdapter;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view=inflater.inflate(R.layout.server_fragment,null);
+        View view = inflater.inflate(R.layout.server_fragment, null);
         initView(view);
-        showFragment(1);
+        LogUtils.i("item：" + MyApplication.item);
         mTodayBtn.setBackgroundResource(R.drawable.server_btn_gb_pregress);
         return view;
     }
+
 
     private void initView(View view) {
         mTodayBtn = (Button) view.findViewById(R.id.table_today);
         mTomorrowBtn = (Button) view.findViewById(R.id.table_tomorrow);
         mYesterdayBtn = (Button) view.findViewById(R.id.table_yesterday);
+        server_pager = (ViewPager) view.findViewById(R.id.server_pager);
         mTodayBtn.setOnClickListener(this);
         mTomorrowBtn.setOnClickListener(this);
         mYesterdayBtn.setOnClickListener(this);
-        fm = getActivity().getFragmentManager();
         fragments = new ArrayList<>();
+        addFragment();
+        pagerAdapter = new MainPagerAdapter(getFragmentManager(), fragments);
+        server_pager.setAdapter(pagerAdapter);
+        server_pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                resetView(position);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
     }
-    private void showFragment(int type) {
-        FragmentTransaction transaction = fm.beginTransaction();
-        hideAll(transaction);
-        switch (type) {
-            case 1:
-                if (todayFragment == null) {
-                    todayFragment = new TodayFragment();
-                    transaction.add(R.id.content_fl, todayFragment);
-                    fragments.add(todayFragment);
-                }
-                Log.e("222", "todayFragment：" + todayFragment.today_pager);
-                transaction.show(todayFragment);
-                break;
-            case 2:
-                if (tomorrowFragment == null) {
-                    tomorrowFragment = new TomorrowFragment();
-                    transaction.add(R.id.content_fl, tomorrowFragment);
-                    fragments.add(tomorrowFragment);
-                }
-                Log.e("222", "tomorrowFragment：" + tomorrowFragment.tomorrow_pager);
-                transaction.show(tomorrowFragment);
-                break;
-            case 3:
-                if (yesterdayFragment == null) {
-                    yesterdayFragment = new YesterdayFragment();
-                    transaction.add(R.id.content_fl, yesterdayFragment);
-                    fragments.add(yesterdayFragment);
-                }
-                Log.e("222", "yesterdayFragment：" + yesterdayFragment.yesterday_pager);
-                transaction.show(yesterdayFragment);
-                break;
-        }
-        transaction.commit();
-    }
-    private  void  hideAll(FragmentTransaction transcation){
-        for (Fragment fragment: fragments) {
-            transcation.hide(fragment);
-//            transcation.commit();
-        }
+
+    private void addFragment() {
+        TodayFragment todayFragment = new TodayFragment();
+        TomorrowFragment tomorrowFragment = new TomorrowFragment();
+        YesterdayFragment yesterdayFragment = new YesterdayFragment();
+        fragments.add(todayFragment);
+        fragments.add(tomorrowFragment);
+        fragments.add(yesterdayFragment);
     }
 
 
@@ -97,19 +86,18 @@ public class ServerFragment2 extends Fragment implements View.OnClickListener{
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.table_today:
-                resetView();
-                showFragment(1);
-                mTodayBtn.setBackgroundResource(R.drawable.server_btn_gb_pregress);
+                resetView(0);
+                server_pager.setCurrentItem(0);
+
                 break;
             case R.id.table_tomorrow:
-                resetView();
-                showFragment(2);
-                mTomorrowBtn.setBackgroundResource(R.drawable.server_btn_gb_pregress);
+                resetView(1);
+                server_pager.setCurrentItem(1);
+
                 break;
             case R.id.table_yesterday:
-                resetView();
-                showFragment(3);
-                mYesterdayBtn.setBackgroundResource(R.drawable.server_btn_gb_pregress);
+                resetView(2);
+                server_pager.setCurrentItem(2);
                 break;
         }
     }
@@ -117,10 +105,20 @@ public class ServerFragment2 extends Fragment implements View.OnClickListener{
     /**
      * 重置所有button
      */
-    private void resetView(){
+    private void resetView(int position) {
         mTodayBtn.setBackgroundResource(R.drawable.server_btn_bg);
         mTomorrowBtn.setBackgroundResource(R.drawable.server_btn_bg);
         mYesterdayBtn.setBackgroundResource(R.drawable.server_btn_bg);
+        switch (position) {
+            case 0:
+                mTodayBtn.setBackgroundResource(R.drawable.server_btn_gb_pregress);
+                break;
+            case 1:
+                mTomorrowBtn.setBackgroundResource(R.drawable.server_btn_gb_pregress);
+                break;
+            case 2:
+                mYesterdayBtn.setBackgroundResource(R.drawable.server_btn_gb_pregress);
+                break;
+        }
     }
-
 }

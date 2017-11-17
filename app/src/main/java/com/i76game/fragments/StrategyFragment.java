@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.i76game.R;
-import com.i76game.adapter.InformationAdapter;
+import com.i76game.adapter.MessageAdapter;
 import com.i76game.bean.InformationRVBean;
 import com.i76game.utils.Global;
 import com.i76game.utils.HttpServer;
@@ -35,7 +35,7 @@ import io.reactivex.schedulers.Schedulers;
 
 public class StrategyFragment extends Fragment {
     private List<InformationRVBean.DataBean.NewsListBean> mInformationList;
-    private InformationAdapter mAdapter;
+    private MessageAdapter mAdapter;
     private View view;
     public XRecyclerView recyclerView;
     private int currentPage = 1;
@@ -56,7 +56,7 @@ public class StrategyFragment extends Fragment {
         linearLayoutManager.setScrollEnabled(false);
         recyclerView.setLayoutManager(linearLayoutManager);
         mInformationList = new ArrayList<>();
-        mAdapter = new InformationAdapter(mInformationList, getActivity());
+        mAdapter = new MessageAdapter(mInformationList, getActivity());
         recyclerView.setAdapter(mAdapter);
         recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(),
                 DividerItemDecoration.VERTICAL));

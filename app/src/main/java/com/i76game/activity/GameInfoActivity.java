@@ -5,11 +5,19 @@ import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.util.ArrayMap;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -60,7 +68,7 @@ import io.reactivex.schedulers.Schedulers;
 /**
  * 游戏详情页
  */
-public class GameInfoActivity extends BaseActivity implements SmoothListView.ISmoothListViewListener, View.OnClickListener {
+public class GameInfoActivity extends FragmentActivity implements SmoothListView.ISmoothListViewListener, View.OnClickListener {
 
     SmoothListView smoothListView;
     FilterView realFilterView;
@@ -107,9 +115,13 @@ public class GameInfoActivity extends BaseActivity implements SmoothListView.ISm
     Handler handler = new Handler();
 
     @Override
-    protected int setLayoutResID() {
-        return R.layout.activity_game_info;
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_game_info);
+        initView();
+        initData();
     }
+
 
     public void initView() {
         mContext = this;
@@ -149,6 +161,24 @@ public class GameInfoActivity extends BaseActivity implements SmoothListView.ISm
         ll_banner = (LinearLayout) findViewById(R.id.ll_banner);
         back_return = (ImageView) findViewById(R.id.back_return);
     }
+
+    /**
+     * 设置状态栏透明
+     *
+     * @param on
+     */
+    public void setTranslucentStatus(boolean on) {
+        Window win = getWindow();
+        WindowManager.LayoutParams winParams = win.getAttributes();
+        final int bits = WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS;
+        if (on) {
+            winParams.flags |= bits;
+        } else {
+            winParams.flags &= ~bits;
+        }
+        win.setAttributes(winParams);
+    }
+
 
     public void initData() {
         // 设置广告数据
@@ -199,8 +229,8 @@ public class GameInfoActivity extends BaseActivity implements SmoothListView.ISm
                 ll_banner.setVisibility(View.GONE);
             }
         }, 100);
-        mAdapter = new DetailListAdapter(null, this, 1);
-        smoothListView.setAdapter(mAdapter);
+//        mAdapter = new DetailListAdapter(null, this, 1);
+//        smoothListView.setAdapter(mAdapter);
         smoothListView.setLoadMoreEnable(false);
         back_return.setOnClickListener(this);
     }
@@ -514,6 +544,39 @@ public class GameInfoActivity extends BaseActivity implements SmoothListView.ISm
         }
     }
 
+    /**
+     * 权限检查
+     */
+    public boolean hasPermission(String...permissions){
+        if (Build.VERSION.SDK_INT<23){
+            return true;
+        }
+
+        for (String permission:permissions){
+            if (ContextCompat.checkSelfPermission(this,permission)!=
+                    PackageManager.PERMISSION_GRANTED){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * 请求权限
+     */
+    public void requestPermission(int code , String... permissions){
+        ActivityCompat.requestPermissions(this,permissions,code);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode){
+            case Global.WRITE_READ_EXTERNAL_CODE:
+                writePermission();
+                break;
+        }
+    }
+
     private void clear() {
         realFilterView.clear();
         headerFilterView.fakeFilterView.clear();
@@ -583,8 +646,7 @@ public class GameInfoActivity extends BaseActivity implements SmoothListView.ISm
 //        }
     }
 
-    @Override
-    public void writePermission() {
+    private void writePermission() {
         try {
             if (mData != null) {
                 String target = MyApplication.apkdownload_path + headerBannerView.game_content_name.getText() + ".apk";

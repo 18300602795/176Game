@@ -1,6 +1,10 @@
 package com.i76game.utils;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.style.ForegroundColorSpan;
 
 import java.util.Map;
 
@@ -37,6 +41,7 @@ public class Utils {
         }
         return url;
     }
+
     /**
      * 根据手机的分辨率从 dp 的单位 转成为 px(像素)
      */
@@ -68,9 +73,9 @@ public class Utils {
         oks.setText(text);
         // imagePath是图片的本地路径，Linked-In以外的平台都支持此参数
 //        oks.setImagePath("/sdcard/test.jpg");//确保SDcard下面存在此张图片
-        if (imagePath.equals("")){
+        if (imagePath.equals("")) {
             oks.setImageUrl(imageUrl);
-        }else {
+        } else {
             oks.setImagePath(imagePath);
         }
         // url仅在微信（包括好友和朋友圈）中使用
@@ -99,6 +104,17 @@ public class Utils {
 //        });
         // 启动分享GUI
         oks.show(context);
+    }
+
+    public static SpannableStringBuilder setStyle(String str, String bstr, String fstr) {
+        int bstart = str.indexOf(bstr);
+        int bend = bstart + bstr.length();
+        int fstart = str.indexOf(fstr);
+        int fend = fstart + fstr.length();
+        SpannableStringBuilder style = new SpannableStringBuilder(str);
+        style.setSpan(new ForegroundColorSpan(Color.BLACK), bstart, bend, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        style.setSpan(new ForegroundColorSpan(Color.BLACK), fstart, fend, Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+        return style;
     }
 
 }

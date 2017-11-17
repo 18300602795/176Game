@@ -31,6 +31,7 @@ public class DetailListAdapter extends BaseAdapter {
     public GiftFragment giftFragment;
     private List<Fragment> fragments;
     private int type;
+
     public DetailListAdapter(GameContentBean.DataBean mData, Activity context, int type) {
         this.mData = mData;
         this.type = type;
@@ -67,6 +68,7 @@ public class DetailListAdapter extends BaseAdapter {
         showFragment(type);
         return view;
     }
+
     private void showFragment(int type) {
         FragmentTransaction transaction = fm.beginTransaction();
         hideAll(transaction);
@@ -110,8 +112,9 @@ public class DetailListAdapter extends BaseAdapter {
         }
         transaction.commit();
     }
-    private  void  hideAll(FragmentTransaction transcation){
-        for (Fragment fragment: fragments) {
+
+    private void hideAll(FragmentTransaction transcation) {
+        for (Fragment fragment : fragments) {
             transcation.hide(fragment);
         }
     }

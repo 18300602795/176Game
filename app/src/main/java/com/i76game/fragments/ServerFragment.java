@@ -1,6 +1,5 @@
 package com.i76game.fragments;
 
-import android.app.Activity;
 import android.app.ActivityOptions;
 import android.app.Fragment;
 import android.content.Intent;
@@ -62,7 +61,6 @@ public class ServerFragment extends Fragment implements View.OnClickListener{
     private final int YESTERDAY_DAT=2;
     private final int FAILURE=3;
 
-    private Activity mActivity;
     private LoadDialog mLoadDialog;
     private Handler mHandler=new Handler(){
         @Override
@@ -83,7 +81,7 @@ public class ServerFragment extends Fragment implements View.OnClickListener{
 
                 case FAILURE:
                     hideDialog();
-                    Toast.makeText(mActivity,"网络似乎有点问题",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(),"网络似乎有点问题",Toast.LENGTH_SHORT).show();
                     break;
             }
         }
@@ -93,7 +91,6 @@ public class ServerFragment extends Fragment implements View.OnClickListener{
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.server_fragment,null);
         initView(view);
-        mActivity=getActivity();
         mManager = Glide.with(ServerFragment.this);
         //获取当前星期几
         Calendar calendar=Calendar.getInstance();
@@ -104,7 +101,7 @@ public class ServerFragment extends Fragment implements View.OnClickListener{
         mTodayBtn.setBackgroundResource(R.drawable.server_btn_gb_pregress);
 
         if (mLoadDialog==null){
-            mLoadDialog = new LoadDialog(mActivity,true,"100倍加速中");
+            mLoadDialog = new LoadDialog(getActivity(),true,"100倍加速中");
         }
         mLoadDialog.show();
         OkHttpClient client=new OkHttpClient();
@@ -128,8 +125,7 @@ public class ServerFragment extends Fragment implements View.OnClickListener{
 
     private void initView(View view) {
         mRecyclerView= (RecyclerView) view.findViewById(R.id.table_rv);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity,LinearLayoutManager.VERTICAL,false));
-
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         mTodayBtn = (Button) view.findViewById(R.id.table_today);
         mTomorrowBtn = (Button) view.findViewById(R.id.table_tomorrow);
         mYesterdayBtn = (Button) view.findViewById(R.id.table_yesterday);
@@ -239,7 +235,7 @@ public class ServerFragment extends Fragment implements View.OnClickListener{
 
         @Override
         public TableListHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view= LayoutInflater.from(mActivity)
+            View view= LayoutInflater.from(getActivity())
                     .inflate(R.layout.server_recycle_layout,parent,false);
             return new TableListHolder(view);
         }
@@ -267,7 +263,7 @@ public class ServerFragment extends Fragment implements View.OnClickListener{
                 holder.state.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Toast.makeText(mActivity,"敬请期待",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(),"敬请期待",Toast.LENGTH_SHORT).show();
                     }
                 });
             }
