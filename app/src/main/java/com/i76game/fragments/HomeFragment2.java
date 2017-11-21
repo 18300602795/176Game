@@ -39,6 +39,7 @@ import com.i76game.model.FilterData;
 import com.i76game.utils.ColorUtil;
 import com.i76game.utils.DensityUtil;
 import com.i76game.utils.DimensionUtil;
+import com.i76game.utils.Global;
 import com.i76game.utils.HttpServer;
 import com.i76game.utils.LogUtils;
 import com.i76game.utils.ModelUtil;
@@ -346,7 +347,6 @@ public class HomeFragment2 extends Fragment implements View.OnClickListener, Smo
                 .subscribe(new Observer<HomeRVBean>() {
                     @Override
                     public void onSubscribe(@NonNull Disposable d) {
-
                     }
 
                     @Override
@@ -363,14 +363,6 @@ public class HomeFragment2 extends Fragment implements View.OnClickListener, Smo
                             mGameListBean = homeRVBean.getData().getGame_list();
                             mAdapter.addData(mGameListBean);
                             mAdapter.notifyDataSetChanged();
-                        } else {
-                            if (currentPage == 1) {
-//                                showToast("暂无数据哦", Toast.LENGTH_SHORT);
-                                smoothListView.mFooterView.setState(3);
-                            } else {
-                                smoothListView.mFooterView.setState(4);
-//                                showToast("没有更多数据哦", Toast.LENGTH_SHORT);
-                            }
                         }
                     }
 
@@ -439,6 +431,13 @@ public class HomeFragment2 extends Fragment implements View.OnClickListener, Smo
     private void hideDialog() {
         if (mLoadDialog != null) {
             mLoadDialog.dismiss();
+        }
+        if (currentPage <= 1) {
+//                                showToast("暂无数据哦", Toast.LENGTH_SHORT);
+            smoothListView.mFooterView.setState(3);
+        } else {
+            smoothListView.mFooterView.setState(4);
+//                                showToast("没有更多数据哦", Toast.LENGTH_SHORT);
         }
     }
 
@@ -532,6 +531,7 @@ public class HomeFragment2 extends Fragment implements View.OnClickListener, Smo
         map.put("clientid", "49");
         map.put("classify", "1");
         map.put("from", "3");
+        LogUtils.i("" + Utils.getCompUrlFromParams(Global.Hot_GAME_URL + "slide/list", map));
         RetrofitUtil.getInstance()
                 .create(HttpServer.SlideShow.class)
                 .listResponse(map)

@@ -85,7 +85,6 @@ public class VersionUpdateManager {
                         LogUtils.i("VersionUpdateManager code：" + code);
                         LogUtils.i("VersionUpdateManager msg“" + newVersionBean.getMsg());
                         if (code == 404&&newVersionBean.getData()==null) {
-
                             return;
                         }
                         LogUtils.i("VersionUpdateManager url：" + newVersionBean.getData().getNewurl());

@@ -154,7 +154,7 @@ public class MineFragment extends Fragment implements View.OnClickListener {
     private void initData() {
         mBeanList = new ArrayList<>();
         int[] imageResource = {R.mipmap.ic_mine_reward, R.mipmap.ic_mine_record, R.mipmap.ic_mine_people
-                , R.mipmap.ic_mine_kefu, R.mipmap.ic_mine_message, R.mipmap.ic_mine_gift,
+                , R.mipmap.ic_mine_kefu, R.mipmap.ic_mine_message, R.mipmap.ic_mine_gift1,
                 R.mipmap.ic_mine_coin, R.mipmap.ic_mine_security, R.mipmap.ic_mine_settings,};
         String[] title = {"返利申请", "申请记录", "邀请好友", "客服中心", "我的消息",
                 "我的礼包", "货币明细", "帐号安全", "设置管理"};

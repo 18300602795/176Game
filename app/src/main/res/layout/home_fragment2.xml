@@ -80,7 +80,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
-                android:background="@mipmap/ic_download" />
+                android:background="@mipmap/ic_game_download" />
         </LinearLayout>
 
         <com.i76game.view.FilterView_home

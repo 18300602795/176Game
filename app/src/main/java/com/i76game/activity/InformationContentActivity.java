@@ -12,6 +12,7 @@ import android.widget.ProgressBar;
 
 import com.i76game.R;
 import com.i76game.utils.Global;
+import com.i76game.utils.LogUtils;
 import com.i76game.utils.Utils;
 import com.i76game.view.LoadDialog;
 import com.i76game.view.PowerWebView;
@@ -43,6 +44,7 @@ public class InformationContentActivity extends BaseActivity {
         int id = getIntent().getIntExtra("id",0);
         progressBar1 = (ProgressBar) findViewById(R.id.progressBar1);
         mPath= Global.INFORMATION_CONTENT+id+"?"+Global.clientid+"&"+Global.appid+"&"+Global.agent;
+        LogUtils.i("mPath：" + mPath);
 
     }
 

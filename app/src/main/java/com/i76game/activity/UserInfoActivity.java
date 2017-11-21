@@ -285,4 +285,36 @@ public class UserInfoActivity extends BaseActivity implements View.OnClickListen
     private void showImages(Bitmap bitmap) {
         photo_iv.setImageBitmap(bitmap);
     }
+
+//    private void sendFile(){
+//        String uploadHost="http://192.168.1.100:8080/ReceiveImgFromAndroid/ReceiveImgServlet";  //服务器接收地址
+//        RequestParams params=new RequestParams();
+//        params.addBodyParameter("msg","上传图片");
+//        String filePath = "";
+//        params.addBodyParameter("img1", new File(filePath));  //filePath是手机获取的图片地址
+//        uploadMethod(params,filePath);
+//    }
+//
+//    public  void uploadMethod(final RequestParams params, final String uploadHost) {
+//       HttpUtils http = new HttpUtils();
+//        http.send(HttpRequest.HttpMethod.POST, uploadHost, params,new RequestCallBack<String>() {
+//            @Override
+//            public void onStart() {
+//                //上传开始
+//            }
+//            @Override
+//            public void onLoading(long total, long current,boolean isUploading) {
+//                //上传中
+//            }
+//            @Override
+//            public void onSuccess(ResponseInfo<String> responseInfo) {
+//                //上传成功，这里面的返回值，就是服务器返回的数据
+//                //使用 String result = responseInfo.result 获取返回值
+//            }
+//            @Override
+//            public void onFailure(HttpException error, String msg) {
+//                //上传失败
+//            }
+//        });
+//    }
 }

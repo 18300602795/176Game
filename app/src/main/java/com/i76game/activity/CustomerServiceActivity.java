@@ -34,6 +34,8 @@ public class CustomerServiceActivity extends BaseActivity implements View.OnClic
         back_return.setOnClickListener(this);
         Button connection = (Button) findViewById(R.id.customer_service_btn_connection);
         connection.setOnClickListener(this);
+        Button join = (Button) findViewById(R.id.customer_service_btn_join);
+        join.setOnClickListener(this);
         Button phone = (Button) findViewById(R.id.customer_service_btn_phone);
         phone.setOnClickListener(this);
 
@@ -52,6 +54,10 @@ public class CustomerServiceActivity extends BaseActivity implements View.OnClic
             case R.id.customer_service_btn_connection:
                 String url = "mqqwpa://im/chat?chat_type=wpa&uin=" + mQQText.getText().toString();
                 startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
+                break;
+            case R.id.customer_service_btn_join:
+                String url2 = "mqqwpa://im/chat?chat_type=wpa&uin=" + mQQText.getText().toString();
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url2)));
                 break;
 
             case R.id.customer_service_btn_phone:

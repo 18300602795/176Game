@@ -62,6 +62,7 @@ public class GiftListActivity extends BaseActivity {
     private int mPageIndex = 1;
     private LoadDialog mLoadDialog;
     private Toolbar gift_list_toolbar;
+    private View layoutNoData;
 
     @Override
     protected int setLayoutResID() {
@@ -71,6 +72,7 @@ public class GiftListActivity extends BaseActivity {
     @Override
     public void initView() {
         setToolbar("礼包中心", R.id.gift_list_toolbar);
+        layoutNoData = findViewById(R.id.layout_noData);
         gift_list_toolbar = (Toolbar) findViewById(R.id.gift_list_toolbar);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             gift_list_toolbar.setPadding(0, Utils.dip2px(this, 10), 0, 0);
@@ -114,6 +116,7 @@ public class GiftListActivity extends BaseActivity {
     }
 
     private void request(Map<String, String> map) {
+        layoutNoData.setVisibility(View.GONE);
         //每一次请求都加一，下次加载就是下一页
         mPageIndex++;
         if (mLoadDialog == null) {
@@ -161,6 +164,13 @@ public class GiftListActivity extends BaseActivity {
             View view = LayoutInflater.from(GiftListActivity.this).inflate(
                     R.layout.gift_list_rv_layout, parent, false);
             return new GiftListHolder(view);
+        }
+
+        public List<GiftBean.DataBean.GiftListBean> getDateList() {
+            if (mGiftList == null) {
+                mGiftList = new ArrayList<>();
+            }
+            return mGiftList;
         }
 
         @Override
@@ -293,6 +303,10 @@ public class GiftListActivity extends BaseActivity {
     private void hideDialog() {
         if (mLoadDialog != null) {
             mLoadDialog.dismiss();
+        }
+        layoutNoData.setVisibility(View.GONE);
+        if (mAdapter.getDateList().size() == 0) {
+            layoutNoData.setVisibility(View.VISIBLE);
         }
         mRecyclerView.loadMoreComplete();
         mRecyclerView.refreshComplete();

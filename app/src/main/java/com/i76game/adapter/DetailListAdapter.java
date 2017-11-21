@@ -13,6 +13,7 @@ import com.i76game.R;
 import com.i76game.bean.GameContentBean;
 import com.i76game.fragments.GameDetailFragment;
 import com.i76game.fragments.GiftFragment;
+import com.i76game.fragments.MessageFragment2;
 import com.i76game.fragments.StrategyFragment;
 
 import java.util.ArrayList;
@@ -28,6 +29,7 @@ public class DetailListAdapter extends BaseAdapter {
     private FragmentManager fm;
     private GameDetailFragment gameDrtailFragment;
     public StrategyFragment strategyFragment;
+    public MessageFragment2 messageFragment2;
     public GiftFragment giftFragment;
     private List<Fragment> fragments;
     private int type;
@@ -83,15 +85,16 @@ public class DetailListAdapter extends BaseAdapter {
                 transaction.show(gameDrtailFragment);
                 break;
             case 2:
-                if (strategyFragment == null) {
-                    strategyFragment = new StrategyFragment();
-                    strategyFragment.app_id = String.valueOf(mData.getGameid());
-                    transaction.add(R.id.content_f, strategyFragment);
-                    fragments.add(strategyFragment);
+                if (messageFragment2 == null) {
+                    messageFragment2 = new MessageFragment2();
+                    messageFragment2.app_id = String.valueOf(mData.getGameid());
+                    transaction.add(R.id.content_f, messageFragment2);
+                    fragments.add(messageFragment2);
                 }
-                transaction.show(strategyFragment);
+                transaction.show(messageFragment2);
                 break;
             case 3:
+
                 if (strategyFragment == null) {
                     strategyFragment = new StrategyFragment();
                     strategyFragment.app_id = String.valueOf(mData.getGameid());

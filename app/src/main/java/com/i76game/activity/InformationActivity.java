@@ -5,6 +5,7 @@ import android.support.v4.util.ArrayMap;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 import android.widget.Toast;
 
 import com.i76game.R;
@@ -15,6 +16,7 @@ import com.i76game.utils.HttpServer;
 import com.i76game.utils.LogUtils;
 import com.i76game.utils.RetrofitUtil;
 import com.i76game.utils.Utils;
+import com.i76game.view.LoadDialog;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 
 import java.util.ArrayList;
@@ -38,6 +40,8 @@ public class InformationActivity extends BaseActivity {
     private XRecyclerView recyclerView;
     private int currentPage=1;
     private Toolbar information_toolbar;
+    private View layoutNoData;
+    private LoadDialog mLoadDialog;
     @Override
     protected int setLayoutResID() {
         return R.layout.activity_information;
@@ -48,6 +52,7 @@ public class InformationActivity extends BaseActivity {
         type = getIntent().getStringExtra("type");
         title = getIntent().getStringExtra("title");
         setToolbar(title, R.id.information_toolbar);
+        layoutNoData = findViewById(R.id.layout_noData);
         information_toolbar = (Toolbar) findViewById(R.id.information_toolbar);
         recyclerView = (XRecyclerView) findViewById(R.id.information_rv);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -60,6 +65,10 @@ public class InformationActivity extends BaseActivity {
             information_toolbar.setPadding(0, Utils.dip2px(this, 10), 0, 0);
             setTranslucentStatus(true);
         }
+        if (mLoadDialog == null) {
+            mLoadDialog = new LoadDialog(this, true, "100倍加速中");
+        }
+        mLoadDialog.show();
         getDate();
         recyclerView.setLoadingListener(new XRecyclerView.LoadingListener() {
             @Override
@@ -76,6 +85,7 @@ public class InformationActivity extends BaseActivity {
     }
 
     private void getDate() {
+        layoutNoData.setVisibility(View.GONE);
         ArrayMap<String, String> map = new ArrayMap<>();
         map.put("appid", Global.appid);
         map.put("clientid", Global.clientid);
@@ -86,6 +96,7 @@ public class InformationActivity extends BaseActivity {
         map.put("catalog", "0");
         map.put("post_type", type);
         LogUtils.i("" + currentPage);
+        LogUtils.i("" + Utils.getCompUrlFromParams(Global.Hot_GAME_URL + "news/list", map));
         RetrofitUtil.getInstance().create(HttpServer.InformationService.class)
                 .listResponse(map)
                 .subscribeOn(Schedulers.io())// 指定被观察者发生在 IO 线程
@@ -120,7 +131,7 @@ public class InformationActivity extends BaseActivity {
 
                     @Override
                     public void onError(@NonNull Throwable e) {
-
+                        hideDialog();
                     }
 
                     @Override
@@ -133,6 +144,13 @@ public class InformationActivity extends BaseActivity {
      * 隐藏对话框
      */
     private void hideDialog() {
+        if (mLoadDialog != null) {
+            mLoadDialog.dismiss();
+        }
+        layoutNoData.setVisibility(View.GONE);
         recyclerView.refreshComplete();
+        if (mAdapter.getDateList().size() == 0) {
+            layoutNoData.setVisibility(View.VISIBLE);
+        }
     }
 }

@@ -21,8 +21,10 @@ import com.i76game.MyApplication;
 import com.i76game.R;
 import com.i76game.utils.AuthCodeUtil;
 import com.i76game.utils.Global;
+import com.i76game.utils.LogUtils;
 import com.i76game.utils.OkHttpUtil;
 import com.i76game.utils.SharePrefUtil;
+import com.i76game.view.LoadDialog;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -45,24 +47,28 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     private String username = null;
     private String password = null;
     private ImageView mVisibilityImage;
-    private boolean mIsVisibility=false;
+    private boolean mIsVisibility = false;
+    private LoadDialog mLoadDialog;
 
-    private int mSucceed=200;
-    private int mFailure=400;
+    private int mSucceed = 200;
+    private int mFailure = 400;
+    private int notWeb = 600;
 
-    private Handler mHandler=new Handler(){
+    private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            int arg=msg.arg1;
-            if (mSucceed==arg){
+            int arg = msg.arg1;
+            if (mSucceed == arg) {
                 showToast("欢迎回来", Toast.LENGTH_SHORT);
-                Intent intent=new Intent();
-                intent.putExtra("user_name",username);
-                setResult(Activity.RESULT_OK,intent);
+                Intent intent = new Intent();
+                intent.putExtra("user_name", username);
+                setResult(Activity.RESULT_OK, intent);
                 finish();
-            }else if (mFailure==arg){
+            } else if (mFailure == arg) {
                 showToast("帐号或密码错误", Toast.LENGTH_SHORT);
+            }else if(notWeb == arg){
+                showToast("登录失败, 请检查您的网络", Toast.LENGTH_SHORT);
             }
         }
     };
@@ -81,7 +87,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     public void initView() {
         mEditUserName = (EditText) findViewById(R.id.login_edit_account);
         mEditPassword = (EditText) findViewById(R.id.login_edit_password);
-        Button btnLogin= (Button) findViewById(R.id.login_btn_login);
+        Button btnLogin = (Button) findViewById(R.id.login_btn_login);
         btnLogin.setOnClickListener(this);
         mVisibilityImage = (ImageView) findViewById(R.id.login_password_invisible);
         mVisibilityImage.setOnClickListener(this);
@@ -89,46 +95,48 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             setTranslucentStatus(true);
         }
 
-        TextView forgetPassword= (TextView) findViewById(R.id.login_forget_password);
-        TextView userRegister= (TextView) findViewById(R.id.login_user_register);
+        TextView forgetPassword = (TextView) findViewById(R.id.login_forget_password);
+        TextView userRegister = (TextView) findViewById(R.id.login_user_register);
         forgetPassword.setOnClickListener(this);
         userRegister.setOnClickListener(this);
+        mLoadDialog = new LoadDialog(this, true, "正在登录...");
     }
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.login_btn_login:
                 initText();
                 actionLogin();
                 break;
             case R.id.login_password_invisible:
-                if (!mIsVisibility){
+                if (!mIsVisibility) {
                     mVisibilityImage.setBackgroundResource(R.mipmap.ic_password_visible);
                     mEditPassword.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
-                    mIsVisibility=true;
-                }else{
+                    mIsVisibility = true;
+                } else {
                     mVisibilityImage.setBackgroundResource(R.mipmap.ic_password_invisible);
                     mEditPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-                    mIsVisibility=false;
+                    mIsVisibility = false;
                 }
                 break;
 
 
             case R.id.login_forget_password:
                 Intent helpIntent = new Intent(this, HelpActivity.class);
-                helpIntent.putExtra(HelpActivity.TYPE_TO_HELP,HelpActivity.HELP_8_FORGET_PASSWORD);
+                helpIntent.putExtra(HelpActivity.TYPE_TO_HELP, HelpActivity.HELP_8_FORGET_PASSWORD);
                 startActivity(helpIntent);
                 break;
 
             case R.id.login_user_register:
                 Intent intent = new Intent(this, RegisterPhoneActivity.class);
-                startActivityForResult(intent,userRegisterCode);
+                startActivityForResult(intent, userRegisterCode);
                 break;
         }
     }
 
-    private int userRegisterCode=20;
+    private int userRegisterCode = 20;
+
     public void initText() {
         username = mEditUserName.getText().toString().trim();
         password = mEditPassword.getText().toString().trim();
@@ -136,48 +144,53 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
     private void actionLogin() {
         if (TextUtils.isEmpty(username)) {
-            showToast( "请输入账号",0);
+            showToast("请输入账号", 0);
             return;
         }
         if (TextUtils.isEmpty(password)) {
-            showToast("请输入密码",0);
+            showToast("请输入密码", 0);
             return;
         }
         Pattern pat = Pattern.compile("([a-zA-Z0-9]{6,12})");
         if (!pat.matcher(username).matches()) {
-            showToast("账号只能由6至12位英文或数字组成",0);
+            showToast("账号只能由6至12位英文或数字组成", 0);
             return;
         }
         if (!pat.matcher(password).matches()) {
-            showToast("密码只能由6至12位英文或数字组成",0);
+            showToast("密码只能由6至12位英文或数字组成", 0);
             return;
         }
 
         /**
          * 执行登陆传参数
          */
+        mLoadDialog.show();
         loginRemoteService(username, password);
     }
 
     private void loginRemoteService(final String username, String password) {
         ArrayMap<String, String> map = new ArrayMap<>();
-        map.put("username", AuthCodeUtil.authcodeEncode(username,Global.appkey));
+        map.put("username", AuthCodeUtil.authcodeEncode(username, Global.appkey));
         map.put("password", AuthCodeUtil.authcodeEncode(password, Global.appkey));
 
         OkHttpUtil.postFormEncodingdata(Global.LOGIN_URL, false, map, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-
+                mLoadDialog.cancel();
+                Message message = new Message();
+                message.arg1 = notWeb;
+                mHandler.sendMessage(message);
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                String res = response.body().string().trim();
-
                 try {
+                    mLoadDialog.cancel();
+                    String res = response.body().string().trim();
                     parseJson(res, username);
                 } catch (JSONException e) {
                     e.printStackTrace();
+                    LogUtils.e(e.toString());
                 }
             }
         });
@@ -188,24 +201,24 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
      * 将返回的数据解析并保存
      */
     private void parseJson(String res, String username) throws JSONException {
-        JSONObject jsonObject=new JSONObject(res);
+        JSONObject jsonObject = new JSONObject(res);
         int code = jsonObject.getInt("code");
-        Message message=new Message();
-        if (code>=200&&code<=250){
-            String data=jsonObject.getString("data");
+        Message message = new Message();
+        if (code >= 200 && code <= 250) {
+            String data = jsonObject.getString("data");
             jsonObject = new JSONObject(data);
-            String identifier=jsonObject.getString("identifier");
-            String accesstoken=jsonObject.getString("accesstoken");
-            int expaireTime=jsonObject.getInt("expaire_time");
+            String identifier = jsonObject.getString("identifier");
+            String accesstoken = jsonObject.getString("accesstoken");
+            int expaireTime = jsonObject.getInt("expaire_time");
             SharePrefUtil.saveString(MyApplication.getContextObject(), SharePrefUtil.KEY.IDENTIFIER, identifier);
             SharePrefUtil.saveString(MyApplication.getContextObject(), SharePrefUtil.KEY.ACCESSTOKEN, accesstoken);//token
             SharePrefUtil.saveInt(MyApplication.getContextObject(), SharePrefUtil.KEY.EXPAIRE_TIME, expaireTime);//时间
             SharePrefUtil.saveBoolean(MyApplication.getContextObject(), SharePrefUtil.KEY.FIRST_LOGIN, false);  //表示用户已经登录了，以后都要保持这个状态
             SharePrefUtil.saveString(MyApplication.getContextObject(), SharePrefUtil.KEY.NICHENG, username);//保存用户的账号，（也就是昵称）
-            message.arg1=mSucceed;
+            message.arg1 = mSucceed;
             mHandler.sendMessage(message);
-        }else{
-            message.arg1=mFailure;
+        } else {
+            message.arg1 = mFailure;
             mHandler.sendMessage(message);
         }
     }
@@ -213,12 +226,12 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode==userRegisterCode&&resultCode==Activity.RESULT_OK){
+        if (requestCode == userRegisterCode && resultCode == Activity.RESULT_OK) {
             String userRegisterName = data.getStringExtra("user_name");
-            Log.e("==loginResult===",""+userRegisterName);
-            Intent intent=new Intent();
-            intent.putExtra("user_name",userRegisterName);
-            setResult(Activity.RESULT_OK,intent);
+            Log.e("==loginResult===", "" + userRegisterName);
+            Intent intent = new Intent();
+            intent.putExtra("user_name", userRegisterName);
+            setResult(Activity.RESULT_OK, intent);
             finish();
         }
     }

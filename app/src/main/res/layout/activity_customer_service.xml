@@ -91,6 +91,7 @@
                     android:text="709423355" />
 
                 <Button
+                    android:id="@+id/customer_service_btn_join"
                     android:layout_width="55dp"
                     android:layout_height="26dp"
                     android:layout_gravity="center_horizontal"

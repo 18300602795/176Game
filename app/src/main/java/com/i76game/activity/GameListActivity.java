@@ -66,6 +66,7 @@ public class GameListActivity extends BaseActivity implements View.OnClickListen
     private int mPageIndex = 1;//加载更多的页数
     private View mLastView;
     private LinearLayout tool_ll;
+    private View layoutNoData;
 
     @Override
     protected int setLayoutResID() {
@@ -75,6 +76,7 @@ public class GameListActivity extends BaseActivity implements View.OnClickListen
     @Override
     public void initView() {
         tool_ll = (LinearLayout) findViewById(R.id.tool_ll);
+        layoutNoData = findViewById(R.id.layout_noData);
         mRecyclerView = (XRecyclerView) findViewById(R.id.game_list_rv);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mTabLayout = (TabLayout) findViewById(R.id.game_list_table_layout);
@@ -167,6 +169,7 @@ public class GameListActivity extends BaseActivity implements View.OnClickListen
 
     @Override
     public void initData() {
+        layoutNoData.setVisibility(View.GONE);
         mGameList = new ArrayList<>();
         mAdapter = new GameListAdapter(GameListActivity.this, mGameList);
         mRecyclerView.setAdapter(mAdapter);
@@ -286,6 +289,7 @@ public class GameListActivity extends BaseActivity implements View.OnClickListen
 
     //请求破解和变态版的map
     private Map<String, String> addMapItem(String category) {
+        layoutNoData.setVisibility(View.GONE);
         mMap.clear();
         mMap.put("agent", Global.agent);
         mMap.put("category", category);
@@ -300,6 +304,7 @@ public class GameListActivity extends BaseActivity implements View.OnClickListen
 
     //请求类型的map
     private Map<String, String> addTypeMap(String typeId) {
+        layoutNoData.setVisibility(View.GONE);
         mMap.clear();
         mMap.put("appid", Global.appid);
         mMap.put("clientid", Global.clientid);
@@ -313,6 +318,7 @@ public class GameListActivity extends BaseActivity implements View.OnClickListen
 
     //热门游戏的map
     private Map<String, String> addHotMap() {
+        layoutNoData.setVisibility(View.GONE);
         mMap.clear();
         mMap.put("agent", Global.agent);
         mMap.put("category", "2");
@@ -389,6 +395,10 @@ public class GameListActivity extends BaseActivity implements View.OnClickListen
     private void hideDialog() {
         if (mLoadDialog != null) {
             mLoadDialog.dismiss();
+        }
+        layoutNoData.setVisibility(View.GONE);
+        if (mAdapter.getDateList().size() == 0) {
+            layoutNoData.setVisibility(View.VISIBLE);
         }
         mRecyclerView.loadMoreComplete();
         mRecyclerView.refreshComplete();

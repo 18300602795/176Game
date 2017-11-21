@@ -37,6 +37,12 @@ public class MessageAdapter extends RecyclerView.Adapter<InformationHolder> {
         notifyDataSetChanged();
     }
 
+    public List<InformationRVBean.DataBean.NewsListBean> getDateList() {
+        if (mInformationList == null) {
+            mInformationList = new ArrayList<>();
+        }
+        return mInformationList;
+    }
 
     @Override
     public InformationHolder onCreateViewHolder(ViewGroup parent, int viewType) {

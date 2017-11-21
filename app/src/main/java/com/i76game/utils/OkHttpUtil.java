@@ -53,7 +53,7 @@ public class OkHttpUtil {
             params.put(Global.APP_ID, Global.appid);
             params.put(Global.CLIENT_ID, Global.clientid);
         }
-        LogUtils.i("login：" + StringUtils.getCompUrlFromParams(url, params));
+//        LogUtils.i("login：" + StringUtils.getCompUrlFromParams(url, params));
         for (Map.Entry e : params.entrySet()) {
             fb.add((String) e.getKey(), (String) e.getValue());
         }

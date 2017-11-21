@@ -50,8 +50,13 @@ public class TableListAdapter extends RecyclerView.Adapter<TableListHolder>{
     }
 
     public void addData(List<KaifubiaoBean> beanList) {
-        mBeanList.addAll(beanList);
-        notifyDataSetChanged();
+        try {
+            mBeanList.addAll(beanList);
+            notifyDataSetChanged();
+        }catch (Exception e){
+
+        }
+
     }
 
     public List<KaifubiaoBean> getDateList(){

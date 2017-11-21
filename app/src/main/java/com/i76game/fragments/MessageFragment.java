@@ -38,7 +38,9 @@ public class MessageFragment extends Fragment {
     private MessageAdapter mAdapter;
     private View view;
     private XRecyclerView recyclerView;
-    private int currentPage=1;
+    private int currentPage = 1;
+    private View layoutNoData;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -46,7 +48,9 @@ public class MessageFragment extends Fragment {
         initView();
         return view;
     }
+
     public void initView() {
+        layoutNoData = view.findViewById(R.id.layout_noData);
         recyclerView = (XRecyclerView) view.findViewById(R.id.information_rv);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mInformationList = new ArrayList<>();
@@ -70,6 +74,7 @@ public class MessageFragment extends Fragment {
     }
 
     private void getDate() {
+        layoutNoData.setVisibility(View.GONE);
         ArrayMap<String, String> map = new ArrayMap<>();
         map.put("appid", Global.appid);
         map.put("clientid", Global.clientid);
@@ -92,19 +97,19 @@ public class MessageFragment extends Fragment {
 
                     @Override
                     public void onNext(@NonNull InformationRVBean informationRVBean) {
-                        try{
+                        try {
                             LogUtils.i("msg：" + informationRVBean.getMsg());
                             LogUtils.i("code：" + informationRVBean.getCode());
-                        }catch (Exception e){
+                        } catch (Exception e) {
                             LogUtils.e(e.toString());
                         }
                         if (informationRVBean != null && informationRVBean.getCode() == 200 && informationRVBean.getData().getNews_list().size() > 0) {
                             mInformationList = informationRVBean.getData().getNews_list();
                             mAdapter.addDate(mInformationList);
                         } else {
-                            if (currentPage == 1){
+                            if (currentPage == 1) {
                                 showToast("暂无数据哦", Toast.LENGTH_SHORT);
-                            }else {
+                            } else {
                                 showToast("没有更多数据哦", Toast.LENGTH_SHORT);
                             }
 
@@ -113,7 +118,7 @@ public class MessageFragment extends Fragment {
 
                     @Override
                     public void onError(@NonNull Throwable e) {
-
+                        hideDialog();
                     }
 
                     @Override
@@ -122,14 +127,20 @@ public class MessageFragment extends Fragment {
                     }
                 });
     }
+
     /**
      * 隐藏对话框
      */
     private void hideDialog() {
+        layoutNoData.setVisibility(View.GONE);
+        if (mAdapter.getDateList().size() == 0) {
+            layoutNoData.setVisibility(View.VISIBLE);
+        }
         recyclerView.refreshComplete();
     }
 
     private Toast toast = null;
+
     protected void showToast(String msg, int length) {
         if (toast == null) {
             toast = Toast.makeText(getActivity(), msg, length);

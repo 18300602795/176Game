@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.i76game.R;
@@ -37,6 +38,13 @@ public class InformationAdapter extends RecyclerView.Adapter<InformationHolder> 
         notifyDataSetChanged();
     }
 
+    public List<InformationRVBean.DataBean.NewsListBean> getDateList(){
+        if (mInformationList == null){
+            mInformationList = new ArrayList<>();
+        }
+        return mInformationList;
+    }
+
 
     @Override
     public InformationHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -53,7 +61,7 @@ public class InformationAdapter extends RecyclerView.Adapter<InformationHolder> 
 
         holder.mTitleText.setText(informationBean.getTitle());
         holder.mTimeText.setText(informationBean.getPudate());
-        holder.mImageView.setOnClickListener(new View.OnClickListener() {
+        holder.infomation_ll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 int id = informationBean.getId();
@@ -75,11 +83,13 @@ class InformationHolder extends RecyclerView.ViewHolder {
     TextView mTimeText;
     ImageView mImageView;
     TextView mTitleText;
+    LinearLayout infomation_ll;
 
     public InformationHolder(View itemView) {
         super(itemView);
         mImageView = (ImageView) itemView.findViewById(R.id.information_rv_image);
         mTitleText = (TextView) itemView.findViewById(R.id.information_rv_title);
         mTimeText = (TextView) itemView.findViewById(R.id.information_rv_time);
+        infomation_ll = (LinearLayout) itemView.findViewById(R.id.infomation_ll);
     }
 }

@@ -15,6 +15,7 @@ import com.i76game.adapter.TableListAdapter;
 import com.i76game.bean.KaifubiaoBean;
 import com.i76game.utils.Global;
 import com.i76game.utils.JsonUtil;
+import com.i76game.utils.LogUtils;
 import com.i76game.utils.Utils;
 import com.i76game.view.LoadDialog;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
@@ -129,6 +130,7 @@ public class TodayFragment extends Fragment {
         params.put("key", "1");
         params.put("to", "app");
         String url = Utils.getCompUrlFromParams(Global.SERVER_URL, params);
+        LogUtils.i("今日开服：" + url);
         Request request = new Request.Builder().url(url).build();
         okhttp3.Call call = client.newCall(request);
         call.enqueue(new okhttp3.Callback() {
@@ -199,7 +201,7 @@ public class TodayFragment extends Fragment {
         } finally {
             today_pager = 15 + j;
 //        ref_ly.setRefreshing(false);
-            if (kaidus.size() == 0) {
+            if (kaidus != null && kaidus.size() == 0) {
                 Message msg = new Message();
                 msg.what = 2;
                 hanler.sendMessage(msg);

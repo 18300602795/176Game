@@ -9,4 +9,9 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1" />
+
+    <include
+        android:id="@+id/layout_noData"
+        layout="@layout/state_layout"
+        android:visibility="gone" />
 </LinearLayout>

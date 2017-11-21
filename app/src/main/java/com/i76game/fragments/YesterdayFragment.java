@@ -203,7 +203,7 @@ public class YesterdayFragment extends Fragment {
         } finally {
             yesterday_pager = 15 + j;
 //        ref_ly.setRefreshing(false);
-            if (kaidus.size() == 0) {
+            if (kaidus != null && kaidus.size() == 0) {
                 Message msg = new Message();
                 msg.what = 2;
                 hanler.sendMessage(msg);

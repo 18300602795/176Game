@@ -21,6 +21,7 @@ import com.i76game.utils.GlideUtil;
 import com.i76game.utils.Global;
 import com.i76game.utils.LogUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -43,6 +44,13 @@ public class GameListAdapter extends RecyclerView.Adapter<GameListAdapter.HomeRV
     }
     public void addData(List<HomeRVBean.DataBean.GameListBean> beanList){
         mBeanList.addAll(beanList);
+    }
+
+    public List<HomeRVBean.DataBean.GameListBean> getDateList() {
+        if (mBeanList == null) {
+            mBeanList = new ArrayList<>();
+        }
+        return mBeanList;
     }
 
     @Override
