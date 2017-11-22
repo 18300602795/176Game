@@ -22,8 +22,8 @@ import com.i76game.view.Circle;
 
 public class CircleMenuActivity extends Activity {
     private int[] images = {R.mipmap.ic_mine_fanli, R.mipmap.ic_mine_gift, R.mipmap.ic_mine_huodong,
-            R.mipmap.ic_mine_gonglue, R.mipmap.ic_mine_kefu1, R.mipmap.ic_mine_luntan};
-    private String[] texts = {"返利", "礼包", "活动", "攻略", "客服", "论坛"};
+            R.mipmap.ic_mine_gonglue, R.mipmap.ic_mine_choujiang, R.mipmap.ic_mine_kefu1};
+    private String[] texts = {"返利", "礼包", "活动", "攻略", "抽奖", "客服"};
     private Circle mCircleMenu;
 
     /**
@@ -65,11 +65,11 @@ public class CircleMenuActivity extends Activity {
                     intent.putExtra("type", "2");
                     intent.putExtra("title", "活动中心");
                 } else if (pos == 3) {
-                    intent.setClass(CircleMenuActivity.this, InformationActivity.class);
+                    intent.setClass(CircleMenuActivity.this, MessageActivity.class);
                     intent.putExtra("type", "3");
                     intent.putExtra("title", "攻略中心");
                 } else if (pos == 4) {
-                    intent.setClass(CircleMenuActivity.this, CustomerServiceActivity.class);
+                    intent.setClass(CircleMenuActivity.this, LuckActivity.class);
                 } else if (pos == 5) {
                     intent.setClass(CircleMenuActivity.this, CustomerServiceActivity.class);
                 }

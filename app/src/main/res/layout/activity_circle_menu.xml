@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-                android:id="@+id/main_circle_out"
-              android:layout_height="match_parent">
+    android:id="@+id/main_circle_out"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
 
     <com.i76game.view.Circle
         android:id="@+id/main_circle_menu"
         android:layout_width="270dp"
         android:layout_height="270dp"
-        android:background="@drawable/circle_menu_bg"
+        android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true">
+        android:background="@drawable/circle_menu_bg">
 
         <RelativeLayout
             android:id="@+id/circle_center_img"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content">
 
             <ImageView
                 android:layout_width="45dp"

@@ -117,4 +117,8 @@ public class Utils {
         return style;
     }
 
+    public static double change(double a){
+        return a * Math.PI  / 180;
+    }
+
 }

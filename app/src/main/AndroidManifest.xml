@@ -105,6 +105,12 @@
         <activity android:name="com.i76game.activity.OrderActivity" />
         <!--礼包中心-->
         <activity android:name="com.i76game.activity.GiftListActivity" />
+        <!--抽奖页面-->
+        <activity android:name="com.i76game.activity.LuckActivity" />
+        <!--九宫格抽奖页面-->
+        <activity android:name="com.i76game.activity.PrizeActivity" />
+        <!--攻略页面-->
+        <activity android:name="com.i76game.activity.MessageActivity" />
 
 
         <!--支付页面-->

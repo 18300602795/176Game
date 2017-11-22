@@ -55,7 +55,8 @@ public class FenleiGrideAdapter extends BaseAdapter{
             holder = (ViewHolder) view.getTag();
         }
         holder.grid_name.setText(mGameList.get(i).getGamename());
-        ImgUtil.loadImage(mGameList.get(i).getIcon() + "", holder.grid_icon);
+//        ImgUtil.loadImage(mGameList.get(i).getIcon() + "", holder.grid_icon);
+        ImgUtil.loadImage(context, mGameList.get(i).getIcon(), R.mipmap.load_icon, holder.grid_icon);
         return view;
     }
 

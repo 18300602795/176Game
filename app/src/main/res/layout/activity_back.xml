@@ -8,12 +8,8 @@
     <RelativeLayout
         android:id="@+id/title_rl"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="200dp"
         android:background="@mipmap/bg_rank_top">
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="160dp" />
 
         <ImageView
             android:id="@+id/back_return"
@@ -33,6 +29,19 @@
             android:text="返利申请"
             android:textColor="@android:color/white"
             android:textSize="20sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/back_title"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <com.i76game.view.LotteryView
+                android:id="@+id/lottery"
+                android:layout_width="100dp"
+                android:layout_height="100dp" />
+        </LinearLayout>
     </RelativeLayout>
 
     <EditText
