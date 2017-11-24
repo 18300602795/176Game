@@ -1,6 +1,5 @@
 package com.i76game.fragments;
 
-import android.app.Fragment;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -8,6 +7,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.i76game.R;
@@ -15,8 +15,8 @@ import com.i76game.adapter.TableListAdapter;
 import com.i76game.bean.KaifubiaoBean;
 import com.i76game.utils.Global;
 import com.i76game.utils.JsonUtil;
+import com.i76game.utils.LogUtils;
 import com.i76game.utils.Utils;
-import com.i76game.view.LoadDialog;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 
 import java.io.IOException;
@@ -34,14 +34,13 @@ import okhttp3.Request;
  * Created by Administrator on 2017/10/18 0018.
  */
 
-public class TomorrowFragment extends Fragment {
+public class TomorrowFragment extends BaseFragment {
     private View view;
     private XRecyclerView listView;
     private TableListAdapter mAdapter;
     public int tomorrow_pager;
     private View layoutNoData;
-    private LoadDialog mLoadDialog;
-    private boolean isShow;
+    private LinearLayout loading_ll;
     private Handler hanler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -71,34 +70,25 @@ public class TomorrowFragment extends Fragment {
             }
         }
     };
-    /**
-     * 在这里实现Fragment数据的缓加载.
-     * @param isVisibleToUser
-     */
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        if(getUserVisibleHint()) {
-            isShow = true;
-        } else {
-            isShow = false;
-        }
-    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_kaifubiao, null);
         listView = (XRecyclerView) view.findViewById(R.id.table_rv);
         listView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         layoutNoData = view.findViewById(R.id.layout_noData);
+        loading_ll = (LinearLayout) view.findViewById(R.id.loading_ll);
+
+        return view;
+    }
+
+
+    @Override
+    public void initDate() {
+        LogUtils.i("Tomorrow---开始加载数据");
+        isShow = false;
         mAdapter = new TableListAdapter(null, getActivity());
         listView.setAdapter(mAdapter);
-        if (mLoadDialog == null) {
-            mLoadDialog = new LoadDialog(getActivity(), true, "100倍加速中");
-        }
-        if (isShow) {
-            mLoadDialog.show();
-        }
-
         getDate();
         listView.setLoadingListener(new XRecyclerView.LoadingListener() {
             @Override
@@ -112,9 +102,7 @@ public class TomorrowFragment extends Fragment {
                 showToast("没有更多数据哦", Toast.LENGTH_SHORT);
             }
         });
-        return view;
     }
-
 
     public void getDate() {
         //获取当前星期几
@@ -214,10 +202,8 @@ public class TomorrowFragment extends Fragment {
      * 隐藏对话框
      */
     private void hideDialog() {
-        if (mLoadDialog != null) {
-            mLoadDialog.dismiss();
-        }
         listView.refreshComplete();
+        loading_ll.setVisibility(View.GONE);
     }
 
     private Toast toast = null;

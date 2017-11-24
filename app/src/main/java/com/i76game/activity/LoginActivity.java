@@ -24,7 +24,7 @@ import com.i76game.utils.Global;
 import com.i76game.utils.LogUtils;
 import com.i76game.utils.OkHttpUtil;
 import com.i76game.utils.SharePrefUtil;
-import com.i76game.view.LoadDialog;
+import com.i76game.view.LoginDialog;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -48,7 +48,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     private String password = null;
     private ImageView mVisibilityImage;
     private boolean mIsVisibility = false;
-    private LoadDialog mLoadDialog;
+    private LoginDialog mLoginDialog;
 
     private int mSucceed = 200;
     private int mFailure = 400;
@@ -61,13 +61,14 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             int arg = msg.arg1;
             if (mSucceed == arg) {
                 showToast("欢迎回来", Toast.LENGTH_SHORT);
-                Intent intent = new Intent();
+                Intent intent = new Intent("login");
                 intent.putExtra("user_name", username);
-                setResult(Activity.RESULT_OK, intent);
+                sendBroadcast(intent);
+//                setResult(Activity.RESULT_OK, intent);
                 finish();
             } else if (mFailure == arg) {
                 showToast("帐号或密码错误", Toast.LENGTH_SHORT);
-            }else if(notWeb == arg){
+            } else if (notWeb == arg) {
                 showToast("登录失败, 请检查您的网络", Toast.LENGTH_SHORT);
             }
         }
@@ -99,7 +100,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         TextView userRegister = (TextView) findViewById(R.id.login_user_register);
         forgetPassword.setOnClickListener(this);
         userRegister.setOnClickListener(this);
-        mLoadDialog = new LoadDialog(this, true, "正在登录...");
+        mLoginDialog = new LoginDialog(this);
     }
 
     @Override
@@ -164,7 +165,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         /**
          * 执行登陆传参数
          */
-        mLoadDialog.show();
+        mLoginDialog.show();
+        mLoginDialog.setName("正在登录...");
         loginRemoteService(username, password);
     }
 
@@ -176,7 +178,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         OkHttpUtil.postFormEncodingdata(Global.LOGIN_URL, false, map, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                mLoadDialog.cancel();
+                mLoginDialog.cancel();
                 Message message = new Message();
                 message.arg1 = notWeb;
                 mHandler.sendMessage(message);
@@ -185,7 +187,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 try {
-                    mLoadDialog.cancel();
+                    mLoginDialog.cancel();
                     String res = response.body().string().trim();
                     parseJson(res, username);
                 } catch (JSONException e) {

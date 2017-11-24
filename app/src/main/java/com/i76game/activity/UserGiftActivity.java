@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,7 +22,6 @@ import com.i76game.utils.Global;
 import com.i76game.utils.HttpServer;
 import com.i76game.utils.OkHttpUtil;
 import com.i76game.utils.Utils;
-import com.i76game.view.LoadDialog;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -51,7 +51,8 @@ public class UserGiftActivity extends BaseActivity {
     private RecyclerView mRecyclerView;
     private UserGiftAdapter mAdapter;
     private Toolbar gift_toolbar;
-
+    private View layoutNoData;
+    private LinearLayout loading_ll;
     @Override
     protected int setLayoutResID() {
         return R.layout.activity_gift;
@@ -66,6 +67,8 @@ public class UserGiftActivity extends BaseActivity {
             gift_toolbar.setPadding(0, Utils.dip2px(this, 10), 0, 0);
             setTranslucentStatus(true);
         }
+        loading_ll = (LinearLayout) findViewById(R.id.loading_ll);
+        layoutNoData = findViewById(R.id.layout_noData);
         mRecyclerView = (RecyclerView) findViewById(R.id.gift_rv);
         mAdapter = new UserGiftAdapter();
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -79,11 +82,8 @@ public class UserGiftActivity extends BaseActivity {
         request(map);
     }
 
-    private  LoadDialog mLoadDialog;
     private void request(Map<String,String> map){
-        mLoadDialog = new LoadDialog(this,true,"100倍加速中");
-        mLoadDialog.show();
-
+        layoutNoData.setVisibility(View.GONE);
         OkHttpClient client=new OkHttpClient.Builder()
                 .addInterceptor(new Interceptor() {
                     @Override
@@ -121,7 +121,9 @@ public class UserGiftActivity extends BaseActivity {
                             mGiftList = userGiftCodeBean.getData().getGift_list();
                             mAdapter.notifyDataSetChanged();
                         } else {
-                            showToast("暂无数据哦", Toast.LENGTH_SHORT);
+                            if (mGiftList.size() == 0) {
+                                layoutNoData.setVisibility(View.VISIBLE);
+                            }
                         }
                     }
 
@@ -142,9 +144,7 @@ public class UserGiftActivity extends BaseActivity {
      * 隐藏对话框
      */
     private void hideDialog(){
-        if (mLoadDialog!=null){
-            mLoadDialog.dismiss();
-        }
+        loading_ll.setVisibility(View.GONE);
     }
 
     class UserGiftAdapter extends RecyclerView.Adapter<UserGiftHolder>{

@@ -8,7 +8,7 @@
     <RelativeLayout
         android:id="@+id/title_rl"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="160dp"
         android:background="@mipmap/bg_rank_top">
 
         <ImageView
@@ -35,7 +35,8 @@
             android:layout_height="match_parent"
             android:layout_below="@+id/back_title"
             android:gravity="center"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:visibility="gone">
 
             <com.i76game.view.LotteryView
                 android:id="@+id/lottery"

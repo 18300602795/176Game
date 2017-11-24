@@ -515,31 +515,35 @@ public class GameInfoActivity extends FragmentActivity implements SmoothListView
                 break;
             case R.id.detail_ll:
                 clear();
+                if (mAdapter != null){
+                    mAdapter.showFragment(1);
+                }
                 realFilterView.detail_tv.setTextColor(getResources().getColor(R.color.blue));
                 headerFilterView.fakeFilterView.detail_tv.setTextColor(getResources().getColor(R.color.blue));
-                mAdapter = new DetailListAdapter(mData, this, 1);
-                smoothListView.setAdapter(mAdapter);
                 break;
             case R.id.strategy_ll:
                 clear();
                 realFilterView.strategy_tv.setTextColor(getResources().getColor(R.color.blue));
                 headerFilterView.fakeFilterView.strategy_tv.setTextColor(getResources().getColor(R.color.blue));
-                mAdapter = new DetailListAdapter(mData, this, 2);
-                smoothListView.setAdapter(mAdapter);
+                if (mAdapter != null){
+                    mAdapter.showFragment(2);
+                }
                 break;
             case R.id.activity_ll:
                 clear();
                 realFilterView.activity_tv.setTextColor(getResources().getColor(R.color.blue));
                 headerFilterView.fakeFilterView.activity_tv.setTextColor(getResources().getColor(R.color.blue));
-                mAdapter = new DetailListAdapter(mData, this, 3);
-                smoothListView.setAdapter(mAdapter);
+                if (mAdapter != null){
+                    mAdapter.showFragment(3);
+                }
                 break;
             case R.id.gift_ll:
                 clear();
                 realFilterView.gift_tv.setTextColor(getResources().getColor(R.color.blue));
                 headerFilterView.fakeFilterView.gift_tv.setTextColor(getResources().getColor(R.color.blue));
-                mAdapter = new DetailListAdapter(mData, this, 4);
-                smoothListView.setAdapter(mAdapter);
+                if (mAdapter != null){
+                    mAdapter.showFragment(4);
+                }
                 break;
         }
     }
@@ -632,7 +636,7 @@ public class GameInfoActivity extends FragmentActivity implements SmoothListView
         headerBannerView.game_content_versions.setText("版本：" + mData.getVername());
         mGameSize.setText("下载(" + mData.getSize() + ")");
         // 设置ListView数据
-        mAdapter = new DetailListAdapter(mData, this, 1);
+        mAdapter = new DetailListAdapter(mData, this);
         smoothListView.setAdapter(mAdapter);
         if (mData.getIcon() != null && mData.getIcon() != "") {
             if (Global.drawable == null) {

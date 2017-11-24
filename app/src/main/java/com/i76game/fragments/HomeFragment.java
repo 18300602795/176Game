@@ -20,7 +20,6 @@ import com.i76game.bean.HomeRVBean;
 import com.i76game.utils.HttpServer;
 import com.i76game.utils.LogUtils;
 import com.i76game.utils.RetrofitUtil;
-import com.i76game.view.LoadDialog;
 import com.jcodecraeer.xrecyclerview.ProgressStyle;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 
@@ -95,13 +94,13 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         });
     }
 
-    private LoadDialog mLoadDialog;
+//    private LoadDialog mLoadDialog;
 
     private void request(Map<String, String> map) {
-        if (mLoadDialog == null) {
-            mLoadDialog = new LoadDialog(mActivity, true, "100倍加速中");
-            mLoadDialog.show();
-        }
+//        if (mLoadDialog == null) {
+//            mLoadDialog = new LoadDialog(mActivity, true, "100倍加速中");
+//            mLoadDialog.show();
+//        }
         RetrofitUtil.getInstance()
                 .create(HttpServer.HotService.class)
                 .listResponse(map)
@@ -160,9 +159,9 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
      * 隐藏对话框
      */
     private void hideDialog() {
-        if (mLoadDialog != null) {
-            mLoadDialog.dismiss();
-        }
+//        if (mLoadDialog != null) {
+//            mLoadDialog.dismiss();
+//        }
         mRecyclerView.refreshComplete();
     }
 

@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,7 +29,6 @@ import com.i76game.utils.RetrofitUtil;
 import com.i76game.utils.SharePrefUtil;
 import com.i76game.utils.Utils;
 import com.i76game.view.GiftDialog;
-import com.i76game.view.LoadDialog;
 import com.jcodecraeer.xrecyclerview.ProgressStyle;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 
@@ -60,10 +60,10 @@ public class GiftListActivity extends BaseActivity {
     private GiftListAdapter mAdapter;
     private XRecyclerView mRecyclerView;
     private int mPageIndex = 1;
-    private LoadDialog mLoadDialog;
     private Toolbar gift_list_toolbar;
     private View layoutNoData;
-
+    private LinearLayout loading_ll;
+    private ArrayMap<String, String> map = new ArrayMap<>();
     @Override
     protected int setLayoutResID() {
         return R.layout.gift_list_activity;
@@ -78,14 +78,23 @@ public class GiftListActivity extends BaseActivity {
             gift_list_toolbar.setPadding(0, Utils.dip2px(this, 10), 0, 0);
             setTranslucentStatus(true);
         }
+        loading_ll = (LinearLayout) findViewById(R.id.loading_ll);
         mGiftList = new ArrayList<>();
-        final ArrayMap<String, String> map = new ArrayMap<>();
+        layoutNoData.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mPageIndex = 1;
+                loading_ll.setVisibility(View.VISIBLE);
+                request(map);
+            }
+        });
+
         map.put("appid", Global.appid);
         map.put("clientid", Global.clientid);
         map.put("agent", Global.agent);
         map.put("from", Global.from);
         map.put("page", mPageIndex + "");
-        map.put("offset", "30");
+        map.put("offset", "10");
 
 
         mRecyclerView = (XRecyclerView) findViewById(R.id.gift_list_rv);
@@ -101,7 +110,7 @@ public class GiftListActivity extends BaseActivity {
 
             @Override
             public void onLoadMore() {
-                map.put("page", mPageIndex + "");
+                map.put("page", String.valueOf(mPageIndex + 1));
                 request(map);
             }
         });
@@ -119,10 +128,6 @@ public class GiftListActivity extends BaseActivity {
         layoutNoData.setVisibility(View.GONE);
         //每一次请求都加一，下次加载就是下一页
         mPageIndex++;
-        if (mLoadDialog == null) {
-            mLoadDialog = new LoadDialog(this, true, "100倍加速中");
-            mLoadDialog.show();
-        }
         RetrofitUtil.getInstance()
                 .create(HttpServer.GiftService.class)
                 .listResponse(map)
@@ -301,9 +306,7 @@ public class GiftListActivity extends BaseActivity {
      * 隐藏对话框
      */
     private void hideDialog() {
-        if (mLoadDialog != null) {
-            mLoadDialog.dismiss();
-        }
+        loading_ll.setVisibility(View.GONE);
         layoutNoData.setVisibility(View.GONE);
         if (mAdapter.getDateList().size() == 0) {
             layoutNoData.setVisibility(View.VISIBLE);

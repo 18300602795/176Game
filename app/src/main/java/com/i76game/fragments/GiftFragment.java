@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,7 +29,6 @@ import com.i76game.utils.RetrofitUtil;
 import com.i76game.utils.SharePrefUtil;
 import com.i76game.view.CustomLinearLayoutManager;
 import com.i76game.view.GiftDialog;
-import com.i76game.view.LoadDialog;
 import com.jcodecraeer.xrecyclerview.ProgressStyle;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 
@@ -60,9 +60,10 @@ public class GiftFragment extends Fragment {
     private GiftListAdapter mAdapter;
     public XRecyclerView mRecyclerView;
     private int mPageIndex = 1;
-    private LoadDialog mLoadDialog;
     public CustomLinearLayoutManager linearLayoutManager;
     public String app_id;
+    private View layoutNoData;
+    private LinearLayout loading_ll;
 
     @Nullable
     @Override
@@ -83,7 +84,8 @@ public class GiftFragment extends Fragment {
         map.put("page", mPageIndex + "");
         map.put("offset", "30");
 
-
+        layoutNoData = view.findViewById(R.id.layout_noData);
+        loading_ll = (LinearLayout) view.findViewById(R.id.loading_ll);
         mRecyclerView = (XRecyclerView) view.findViewById(R.id.gift_list_rv);
         linearLayoutManager = new CustomLinearLayoutManager(getActivity());
         linearLayoutManager.setScrollEnabled(false);
@@ -116,10 +118,7 @@ public class GiftFragment extends Fragment {
     private void request(Map<String, String> map) {
         //每一次请求都加一，下次加载就是下一页
         mPageIndex++;
-        if (mLoadDialog == null) {
-            mLoadDialog = new LoadDialog(getActivity(), true, "100倍加速中");
-            mLoadDialog.show();
-        }
+        layoutNoData.setVisibility(View.GONE);
         RetrofitUtil.getInstance()
                 .create(HttpServer.GiftService.class)
                 .listResponse(map)
@@ -138,7 +137,9 @@ public class GiftFragment extends Fragment {
                             mGiftList.addAll(giftBean.getData().getGift_list());
                             mAdapter.notifyDataSetChanged();
                         } else {
-                            showToast("暂无数据哦", Toast.LENGTH_SHORT);
+                           if (mGiftList.size() == 0){
+                               layoutNoData.setVisibility(View.VISIBLE);
+                           }
                         }
                     }
 
@@ -291,9 +292,7 @@ public class GiftFragment extends Fragment {
      * 隐藏对话框
      */
     private void hideDialog() {
-        if (mLoadDialog != null) {
-            mLoadDialog.dismiss();
-        }
+        loading_ll.setVisibility(View.GONE);
         mRecyclerView.loadMoreComplete();
         mRecyclerView.refreshComplete();
     }

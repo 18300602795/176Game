@@ -1,8 +1,10 @@
 package com.i76game.fragments;
 
 import android.app.Activity;
-import android.app.Fragment;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -57,7 +59,7 @@ import okhttp3.Response;
  * 我的页面
  */
 
-public class MineFragment extends Fragment implements View.OnClickListener {
+public class MineFragment extends BaseFragment implements View.OnClickListener {
     private Activity mActivity;
     private List<MineRVBean> mBeanList;
     private TextView mLogin;
@@ -72,6 +74,29 @@ public class MineFragment extends Fragment implements View.OnClickListener {
         public void handleMessage(Message msg) {
             mRemain.setText(StringUtils.stringToDouble((String) msg.obj));
         }
+    };
+    private BroadcastReceiver loginReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            LogUtils.i("收到了登录广播");
+            String userName = intent.getStringExtra("user_name");
+            mLogin.setText(userName);
+            getUserMessage();
+            //让用户名那里设置为不可点击
+            mIsLogin = false;
+        }
+
+    };
+
+    private BroadcastReceiver exitReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            LogUtils.i("收到了登出广播");
+            mIsLogin = true;
+            mLogin.setText("立即登陆");
+            mRemain.setText("0.00");
+        }
+
     };
 
     @Nullable
@@ -238,7 +263,7 @@ public class MineFragment extends Fragment implements View.OnClickListener {
                     //没有登陆的话才可以点击登陆
                     Intent intent = new Intent(mActivity, LoginActivity.class);
                     startActivityForResult(intent, loginCode);
-                }else {
+                } else {
                     startActivity(new Intent(getActivity(), UserInfoActivity.class));
                 }
                 break;
@@ -272,24 +297,24 @@ public class MineFragment extends Fragment implements View.OnClickListener {
         }
     }
 
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == loginCode && resultCode == Activity.RESULT_OK) {
-            String userName = data.getStringExtra("user_name");
-            mLogin.setText(userName);
-
-            getUserMessage();
-            //让用户名那里设置为不可点击
-            mIsLogin = false;
-        } else if (requestCode == settingCode && resultCode == Activity.RESULT_OK) {
-            //退出了登录
-            mIsLogin = true;
-            mLogin.setText("立即登陆");
-            mRemain.setText("0.00");
-        }
-    }
+//
+//    @Override
+//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        if (requestCode == loginCode && resultCode == Activity.RESULT_OK) {
+//            String userName = data.getStringExtra("user_name");
+//            mLogin.setText(userName);
+//
+//            getUserMessage();
+//            //让用户名那里设置为不可点击
+//            mIsLogin = false;
+//        } else if (requestCode == settingCode && resultCode == Activity.RESULT_OK) {
+//            //退出了登录
+//            mIsLogin = true;
+//            mLogin.setText("立即登陆");
+//            mRemain.setText("0.00");
+//        }
+//    }
 
     class MineRVAdapter extends RecyclerView.Adapter<MineRVHolder> {
 
@@ -345,5 +370,19 @@ public class MineFragment extends Fragment implements View.OnClickListener {
 
     interface ItemOnClickListener {
         void onClickListener(int position);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getActivity().registerReceiver(loginReceiver, new IntentFilter("login"));
+        getActivity().registerReceiver(exitReceiver, new IntentFilter("exit"));
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        getActivity().unregisterReceiver(loginReceiver);
+        getActivity().unregisterReceiver(exitReceiver);
     }
 }

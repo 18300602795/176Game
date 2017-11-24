@@ -27,7 +27,6 @@ import com.i76game.utils.Global;
 import com.i76game.utils.HttpServer;
 import com.i76game.utils.RetrofitUtil;
 import com.i76game.utils.Utils;
-import com.i76game.view.LoadDialog;
 import com.jcodecraeer.xrecyclerview.ProgressStyle;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 
@@ -62,12 +61,11 @@ public class GameListActivity extends BaseActivity implements View.OnClickListen
 
     private Map<String, String> mMap = new HashMap<>();
     private View mPopupView1, mPopupView2;
-    private LoadDialog mLoadDialog;
     private int mPageIndex = 1;//加载更多的页数
     private View mLastView;
     private LinearLayout tool_ll;
     private View layoutNoData;
-
+    private LinearLayout loading_ll;
     @Override
     protected int setLayoutResID() {
         return R.layout.activity_game_list;
@@ -80,6 +78,7 @@ public class GameListActivity extends BaseActivity implements View.OnClickListen
         mRecyclerView = (XRecyclerView) findViewById(R.id.game_list_rv);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mTabLayout = (TabLayout) findViewById(R.id.game_list_table_layout);
+        loading_ll = (LinearLayout) findViewById(R.id.loading_ll);
         mTabLayout.setTabMode(TabLayout.MODE_FIXED);
         for (int i = 0; i < mTitles.length; i++) {
             TabLayout.Tab tab = mTabLayout.newTab().setText(mTitles[i]);
@@ -338,11 +337,8 @@ public class GameListActivity extends BaseActivity implements View.OnClickListen
 
 
     private void request(Map<String, String> map) {
-        if (mLoadDialog == null) {
-            mLoadDialog = new LoadDialog(this, true, "100倍加速中");
-        }
         if (mPageIndex == 1) {
-            mLoadDialog.show();
+            loading_ll.setVisibility(View.VISIBLE);
         }
 
         RetrofitUtil.getInstance()
@@ -393,9 +389,7 @@ public class GameListActivity extends BaseActivity implements View.OnClickListen
      * 隐藏对话框
      */
     private void hideDialog() {
-        if (mLoadDialog != null) {
-            mLoadDialog.dismiss();
-        }
+        loading_ll.setVisibility(View.GONE);
         layoutNoData.setVisibility(View.GONE);
         if (mAdapter.getDateList().size() == 0) {
             layoutNoData.setVisibility(View.VISIBLE);

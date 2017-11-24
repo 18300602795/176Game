@@ -15,12 +15,12 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ProgressBar;
 
 import com.i76game.R;
 import com.i76game.utils.Global;
 import com.i76game.utils.OkHttpUtil;
 import com.i76game.utils.Utils;
-import com.i76game.view.LoadDialog;
 import com.i76game.view.PowerWebView;
 
 import java.util.HashMap;
@@ -35,8 +35,8 @@ public class HelpActivity extends BaseActivity {
     private String mLunbotuUrl;
     private PowerWebView mWebView;
     private WebSettings mWebSettings;
+    private ProgressBar progressBar1;
     HashMap<String, String> mHeaderMap = new HashMap<>();
-    LoadDialog mLoadDialog;
     public static final String TYPE_TO_HELP="type_to_help";
     public static final String URL_TO_HELP="URL_to_help";
 
@@ -61,6 +61,7 @@ public class HelpActivity extends BaseActivity {
         mWebView = (PowerWebView) findViewById(R.id.help_web_view);
         mToolbar = (Toolbar) findViewById(R.id.help_toolbar);
         mToolbar.setTitle("安全中心");
+        progressBar1 = (ProgressBar) findViewById(R.id.progressBar1);
         mToolbar.setTitleTextColor(Color.WHITE);
         //侧边栏的按钮
         mToolbar.setNavigationIcon(R.mipmap.ic_actionbar_back);
@@ -178,19 +179,25 @@ public class HelpActivity extends BaseActivity {
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
                 super.onPageStarted(view, url, favicon);
-                if (mLoadDialog==null){
-                    mLoadDialog = new LoadDialog(HelpActivity.this,true,"100倍加速中");
-                }
-                mLoadDialog.show();
             }
 
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
-                if(mLoadDialog!=null){
-                    mLoadDialog.dismiss();
-                }
 
+            }
+        });
+        mWebView.setWebChromeClient(new WebChromeClient(){
+            @Override
+            public void onProgressChanged(WebView view, int newProgress) {
+                super.onProgressChanged(view, newProgress);
+                if(newProgress==100){
+                    progressBar1.setVisibility(View.GONE);//加载完网页进度条消失
+                }
+                else{
+                    progressBar1.setVisibility(View.VISIBLE);//开始加载网页时显示进度条
+                    progressBar1.setProgress(newProgress);//设置进度值
+                }
             }
         });
         mWebView.clearCache(true);
@@ -198,7 +205,6 @@ public class HelpActivity extends BaseActivity {
         CookieManager cookieManager = CookieManager.getInstance();
         cookieManager.setAcceptCookie(true);
         cookieManager.removeSessionCookie();// 移除
-        mWebView.setWebChromeClient(new WebChromeClient());
         mWebView.loadUrl(url,mHeaderMap);
     }
 

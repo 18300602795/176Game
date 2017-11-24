@@ -7,6 +7,8 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -17,14 +19,26 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.i76game.R;
+import com.i76game.utils.GlideUtil;
 import com.i76game.utils.LogUtils;
 import com.i76game.utils.PhotoUtils;
+import com.i76game.utils.SharePrefUtil;
 import com.i76game.utils.ToastUtils;
 import com.i76game.utils.Utils;
 import com.i76game.view.CircleImageView;
 import com.i76game.view.PhotoDialog;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.File;
+import java.util.HashMap;
+
+import cn.sharesdk.framework.Platform;
+import cn.sharesdk.framework.PlatformActionListener;
+import cn.sharesdk.framework.ShareSDK;
+import cn.sharesdk.tencent.qq.QQ;
+import cn.sharesdk.wechat.friends.Wechat;
 
 /**
  * Created by Administrator on 2017/11/16.
@@ -137,13 +151,20 @@ public class UserInfoActivity extends BaseActivity implements View.OnClickListen
                 startActivityForResult(intent, 101);
                 break;
             case R.id.qq_ll:
+                loginThird(QQ.NAME);
                 break;
             case R.id.wechat_ll:
+                loginThird(Wechat.NAME);
                 break;
             case R.id.password_ll:
                 startActivity(new Intent(this, EditWorldActivity.class));
                 break;
             case R.id.exit_btn:
+                SharePrefUtil.delete(this);
+                SharePrefUtil.saveBoolean(this, SharePrefUtil.KEY.FIRST_LOGIN, true);
+                Intent intent_receiver = new Intent("exit");
+                sendBroadcast(intent_receiver);
+                finish();
                 break;
 
         }
@@ -285,6 +306,63 @@ public class UserInfoActivity extends BaseActivity implements View.OnClickListen
     private void showImages(Bitmap bitmap) {
         photo_iv.setImageBitmap(bitmap);
     }
+
+    private Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            qq_tv.setText("已绑定");
+            String jsonString = (String) msg.obj;
+            try {
+                JSONObject object = new JSONObject(jsonString);
+                String icon_url = object.getString("icon");
+                LogUtils.i("头像：" + icon_url);
+                GlideUtil.loadImage(icon_url, photo_iv, R.mipmap.app_icon);
+                nick_tv.setText(object.getString("nickname"));
+            } catch (JSONException e) {
+                e.printStackTrace();
+                LogUtils.e(e.toString());
+            }
+        }
+    };
+
+    private void loginThird(String name) {
+        Platform third = ShareSDK.getPlatform(name);
+//回调信息，可以在这里获取基本的授权返回的信息，但是注意如果做提示和UI操作要传到主线程handler里去执行
+        third.setPlatformActionListener(new PlatformActionListener() {
+
+            @Override
+            public void onError(Platform arg0, int arg1, Throwable arg2) {
+                // TODO Auto-generated method stub
+                arg2.printStackTrace();
+                LogUtils.i("授权出错：");
+            }
+
+            @Override
+            public void onComplete(Platform arg0, int arg1, HashMap<String, Object> arg2) {
+                // TODO Auto-generated method stub
+                //输出所有授权信息
+
+                String jsonString = arg0.getDb().exportData();
+                LogUtils.i("授权信息：" + jsonString);
+                Message message = new Message();
+                message.obj = jsonString;
+                handler.sendMessage(message);
+            }
+
+            @Override
+            public void onCancel(Platform arg0, int arg1) {
+                // TODO Auto-generated method stub
+                LogUtils.i("授权取消：");
+            }
+        });
+//authorize与showUser单独调用一个即可
+        third.authorize();//单独授权,OnComplete返回的hashmap是空的
+//        third.showUser(null);//授权并获取用户信息
+//移除授权
+//weibo.removeAccount(true);
+    }
+
 
 //    private void sendFile(){
 //        String uploadHost="http://192.168.1.100:8080/ReceiveImgFromAndroid/ReceiveImgServlet";  //服务器接收地址

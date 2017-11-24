@@ -23,6 +23,12 @@
         <item>words</item>
 
     </string-array>
-
+    <integer-array name="colors">
+        <item>0xB07ECBDA</item>
+        <item>0xB0E6A92C</item>
+        <item>0xB0D6014D</item>
+        <item>0xB05ABA94</item>
+        <item>0xB050C94D</item>
+    </integer-array>
 
 </resources>

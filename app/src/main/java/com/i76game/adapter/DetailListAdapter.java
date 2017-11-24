@@ -32,19 +32,10 @@ public class DetailListAdapter extends BaseAdapter {
     public MessageFragment2 messageFragment2;
     public GiftFragment giftFragment;
     private List<Fragment> fragments;
-    private int type;
 
-    public DetailListAdapter(GameContentBean.DataBean mData, Activity context, int type) {
+    public DetailListAdapter(GameContentBean.DataBean mData, Activity context) {
         this.mData = mData;
-        this.type = type;
         this.context = context;
-        fm = context.getFragmentManager();
-        fragments = new ArrayList<>();
-    }
-
-    public DetailListAdapter(int type, Activity context) {
-        this.context = context;
-        this.type = type;
         fm = context.getFragmentManager();
         fragments = new ArrayList<>();
     }
@@ -67,11 +58,11 @@ public class DetailListAdapter extends BaseAdapter {
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         view = LayoutInflater.from(context).inflate(R.layout.list_item, null);
-        showFragment(type);
+        showFragment(1);
         return view;
     }
 
-    private void showFragment(int type) {
+    public void showFragment(int type) {
         FragmentTransaction transaction = fm.beginTransaction();
         hideAll(transaction);
         switch (type) {
@@ -87,6 +78,7 @@ public class DetailListAdapter extends BaseAdapter {
             case 2:
                 if (messageFragment2 == null) {
                     messageFragment2 = new MessageFragment2();
+                    messageFragment2.isDate = true;
                     messageFragment2.app_id = String.valueOf(mData.getGameid());
                     transaction.add(R.id.content_f, messageFragment2);
                     fragments.add(messageFragment2);

@@ -60,15 +60,15 @@
 	<QQ
 		Id="1"
 		SortId="1"
-		AppId="1106533886"
-		AppKey="flFFnuUamuf0k6Bn"
+		AppId="1106479249"
+		AppKey="t0fZu0GPGoe8N1Bn"
 		ShareByAppClient="true"
 		Enable="true" />
     <QZone
         Id="2"
         SortId="2"
-		AppId="1106533886"
-		AppKey="flFFnuUamuf0k6Bn"
+		AppId="1106479249"
+		AppKey="t0fZu0GPGoe8N1Bn"
 		BypassApproval="true"
         Enable="true" />
 
@@ -113,8 +113,8 @@
 	<SinaWeibo
 		Id="6"
 		SortId="6"
-		AppKey="186342588"
-		AppSecret="6766ac687263267458f1aa89c7451e55"
+		AppKey="3580696703"
+		AppSecret="b1fb10351004a78924afb898186f7339"
 		RedirectUrl="http://www.sharesdk.cn"
 		ShareByAppClient="true"
 		Enable="true" />

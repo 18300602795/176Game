@@ -22,7 +22,7 @@ import com.i76game.utils.Global;
 import com.i76game.utils.OkHttpUtil;
 import com.i76game.utils.SharePrefUtil;
 import com.i76game.utils.Utils;
-import com.i76game.view.LoadDialog;
+import com.i76game.view.LoginDialog;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -48,7 +48,7 @@ public class RegisterPhoneActivity extends BaseActivity implements View.OnClickL
     //用户输入的文字
     private String username, password, code;
     private boolean mIsVisibility = false;//是否能看到密码
-    private LoadDialog mLoadDialog;
+    private LoginDialog mLoginDialog;
 
     private Handler mHandler = new Handler() {
         @Override
@@ -91,7 +91,7 @@ public class RegisterPhoneActivity extends BaseActivity implements View.OnClickL
         mBtnRegister.setOnClickListener(this);
         mVisibilityImage = (ImageView) findViewById(R.id.register_phone_password_invisible);
         mVisibilityImage.setOnClickListener(this);
-        mLoadDialog = new LoadDialog(this, true, "正在注册...");
+        mLoginDialog = new LoginDialog(this);
     }
 
 
@@ -261,7 +261,8 @@ public class RegisterPhoneActivity extends BaseActivity implements View.OnClickL
             return;
         }
         //去访问借口，开始注册，
-        mLoadDialog.show();
+        mLoginDialog.show();
+        mLoginDialog.setName("正在注册...");
         getCheckCode();
     }
 
@@ -282,7 +283,7 @@ public class RegisterPhoneActivity extends BaseActivity implements View.OnClickL
         OkHttpUtil.postFormEncodingdata(Global.USER_ADD, false, map, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                mLoadDialog.cancel();
+                mLoginDialog.cancel();
                 Message message = Message.obtain();
                 message.arg1 = 404;
                 message.obj = "注册失败, 请检查您的网络";
@@ -291,7 +292,7 @@ public class RegisterPhoneActivity extends BaseActivity implements View.OnClickL
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                mLoadDialog.cancel();
+                mLoginDialog.cancel();
                 String res = response.body().string().trim();
 //                Log.e("------", "res: "+ res);
                 try {

@@ -16,5 +16,8 @@
         android:layout_height="match_parent"
         android:layout_weight="1" />
 
+    <include
+        android:id="@+id/loading_ll"
+        layout="@layout/dialog_loading" />
 
 </LinearLayout>

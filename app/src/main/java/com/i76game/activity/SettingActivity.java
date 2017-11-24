@@ -1,6 +1,6 @@
 package com.i76game.activity;
 
-import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.support.v7.widget.Toolbar;
@@ -65,7 +65,9 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
             case R.id.setting_out_login:
                 SharePrefUtil.delete(this);
                 SharePrefUtil.saveBoolean(this, SharePrefUtil.KEY.FIRST_LOGIN, true);
-                setResult(Activity.RESULT_OK);
+//                setResult(Activity.RESULT_OK);
+                Intent intent = new Intent("exit");
+                sendBroadcast(intent);
                 finish();
                 break;
             case R.id.setting_up_layout:

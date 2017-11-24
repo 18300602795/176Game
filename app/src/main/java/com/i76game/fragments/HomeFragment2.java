@@ -1,6 +1,5 @@
 package com.i76game.fragments;
 
-import android.app.Fragment;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -49,7 +48,6 @@ import com.i76game.view.FilterView_home;
 import com.i76game.view.HeaderBannerView_home;
 import com.i76game.view.HeaderBannerView_home2;
 import com.i76game.view.HeaderFilterView_home;
-import com.i76game.view.LoadDialog;
 import com.i76game.view.SmoothListView;
 import com.i76game.view.VpSwipeRefreshLayout;
 
@@ -71,7 +69,7 @@ import static com.i76game.R.id.main_img_mine;
  * Created by Administrator on 2017/5/8.
  */
 
-public class HomeFragment2 extends Fragment implements View.OnClickListener, SmoothListView.ISmoothListViewListener {
+public class HomeFragment2 extends BaseFragment implements View.OnClickListener, SmoothListView.ISmoothListViewListener {
     private GameListAdapter2 mAdapter;
     private SmoothListView smoothListView;
     private List<HomeRVBean.DataBean.GameListBean> mGameListBean = new ArrayList<>();
@@ -257,9 +255,9 @@ public class HomeFragment2 extends Fragment implements View.OnClickListener, Smo
         rlBar.setAlpha(1f);
         if (fraction >= 1f || isStickyTop) {
             isStickyTop = true;
-            rlBar.setBackgroundColor(getActivity().getResources().getColor(R.color.blue));
+            rlBar.setBackgroundColor(getActivity().getResources().getColor(R.color.main_item_text_color_p));
         } else {
-            rlBar.setBackgroundColor(ColorUtil.getNewColorByStartEndColor(getActivity(), fraction, R.color.transparent2, R.color.blue));
+            rlBar.setBackgroundColor(ColorUtil.getNewColorByStartEndColor(getActivity(), fraction, R.color.transparent2, R.color.main_item_text_color_p));
         }
     }
 
@@ -302,6 +300,10 @@ public class HomeFragment2 extends Fragment implements View.OnClickListener, Smo
         mSearchLayout.setOnClickListener(this);
         ImageView downloadBtn = (ImageView) view.findViewById(R.id.main_download);
         downloadBtn.setOnClickListener(this);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            rlBar.setPadding(0, Utils.dip2px(getActivity(), 10), 0, 0);
+            setTranslucentStatus(true);
+        }
 //         频道数据
 //        channelList = ModelUtil.getChannelData();
 //         运营数据
@@ -332,13 +334,8 @@ public class HomeFragment2 extends Fragment implements View.OnClickListener, Smo
         return view;
     }
 
-    private LoadDialog mLoadDialog;
 
     private void request(Map<String, String> map) {
-        if (mLoadDialog == null) {
-            mLoadDialog = new LoadDialog(getActivity(), true, "100倍加速中");
-//            mLoadDialog.show();
-        }
         RetrofitUtil.getInstance()
                 .create(HttpServer.HotService.class)
                 .listResponse(map)
@@ -429,9 +426,6 @@ public class HomeFragment2 extends Fragment implements View.OnClickListener, Smo
      * 隐藏对话框
      */
     private void hideDialog() {
-        if (mLoadDialog != null) {
-            mLoadDialog.dismiss();
-        }
         if (currentPage <= 1) {
 //                                showToast("暂无数据哦", Toast.LENGTH_SHORT);
             smoothListView.mFooterView.setState(3);

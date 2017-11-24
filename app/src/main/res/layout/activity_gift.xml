@@ -1,19 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/gift_toolbar"
-        android:background="@color/main_item_text_color_p"
         android:layout_width="match_parent"
-        android:layout_height="65dp"/>
+        android:layout_height="65dp"
+        android:background="@color/main_item_text_color_p" />
 
     <android.support.v7.widget.RecyclerView
-        android:layout_weight="1"
         android:id="@+id/gift_rv"
         android:layout_width="match_parent"
-        android:layout_height="0dp"/>
+        android:layout_height="0dp"
+        android:layout_weight="1" />
 
+    <include
+        android:id="@+id/loading_ll"
+        layout="@layout/dialog_loading" />
+
+    <include
+        android:id="@+id/layout_noData"
+        layout="@layout/state_layout"
+        android:visibility="gone" />
 </LinearLayout>

@@ -6,6 +6,7 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.i76game.R;
@@ -16,7 +17,6 @@ import com.i76game.utils.HttpServer;
 import com.i76game.utils.LogUtils;
 import com.i76game.utils.RetrofitUtil;
 import com.i76game.utils.Utils;
-import com.i76game.view.LoadDialog;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 
 import java.util.ArrayList;
@@ -41,7 +41,7 @@ public class MessageActivity extends BaseActivity {
     private int currentPage=1;
     private Toolbar information_toolbar;
     private View layoutNoData;
-    private LoadDialog mLoadDialog;
+    private LinearLayout loading_ll;
     @Override
     protected int setLayoutResID() {
         return R.layout.activity_information;
@@ -55,6 +55,7 @@ public class MessageActivity extends BaseActivity {
         layoutNoData = findViewById(R.id.layout_noData);
         information_toolbar = (Toolbar) findViewById(R.id.information_toolbar);
         recyclerView = (XRecyclerView) findViewById(R.id.information_rv);
+        loading_ll = (LinearLayout) findViewById(R.id.loading_ll);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         mInformationList = new ArrayList<>();
         mAdapter = new InformationAdapter(mInformationList, this);
@@ -65,11 +66,15 @@ public class MessageActivity extends BaseActivity {
             information_toolbar.setPadding(0, Utils.dip2px(this, 10), 0, 0);
             setTranslucentStatus(true);
         }
-        if (mLoadDialog == null) {
-            mLoadDialog = new LoadDialog(this, true, "100倍加速中");
-        }
-        mLoadDialog.show();
         getDate();
+        layoutNoData.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                currentPage = 1;
+                loading_ll.setVisibility(View.VISIBLE);
+                getDate();
+            }
+        });
         recyclerView.setLoadingListener(new XRecyclerView.LoadingListener() {
             @Override
             public void onRefresh() {
@@ -144,9 +149,7 @@ public class MessageActivity extends BaseActivity {
      * 隐藏对话框
      */
     private void hideDialog() {
-        if (mLoadDialog != null) {
-            mLoadDialog.dismiss();
-        }
+        loading_ll.setVisibility(View.GONE);
         layoutNoData.setVisibility(View.GONE);
         recyclerView.refreshComplete();
         if (mAdapter.getDateList().size() == 0) {

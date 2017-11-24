@@ -3,6 +3,8 @@ package com.i76game.activity;
 import android.os.Build;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.i76game.R;
@@ -13,7 +15,6 @@ import com.i76game.utils.HttpServer;
 import com.i76game.utils.LogUtils;
 import com.i76game.utils.RetrofitUtil;
 import com.i76game.utils.Utils;
-import com.i76game.view.LoadDialog;
 import com.jcodecraeer.xrecyclerview.ProgressStyle;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 
@@ -36,11 +37,13 @@ public class CategoryActivity extends BaseActivity {
     private GameListAdapter mAdapter;
     private XRecyclerView mRecyclerView;
     private List<HomeRVBean.DataBean.GameListBean> mGameListBean = new ArrayList<>();
-    private int currentPage=1;
+    private int currentPage = 1;
     private Toolbar category_toolbar;
     private String name;
     private String id;
+    private LinearLayout loading_ll;
     private Map<String, String> mMap = new HashMap<>();
+
     @Override
     protected int setLayoutResID() {
         return R.layout.category_activity;
@@ -51,6 +54,7 @@ public class CategoryActivity extends BaseActivity {
         name = getIntent().getStringExtra("category_name");
         id = getIntent().getStringExtra("category_id");
         setToolbar(name, R.id.category_toolbar);
+        loading_ll = (LinearLayout) findViewById(R.id.loading_ll);
         category_toolbar = (Toolbar) findViewById(R.id.category_toolbar);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             category_toolbar.setPadding(0, Utils.dip2px(this, 10), 0, 0);
@@ -96,13 +100,8 @@ public class CategoryActivity extends BaseActivity {
         });
     }
 
-    private LoadDialog mLoadDialog;
 
     private void request(Map<String, String> map) {
-        if (mLoadDialog == null) {
-            mLoadDialog = new LoadDialog(this, true, "100倍加速中");
-            mLoadDialog.show();
-        }
         RetrofitUtil.getInstance()
                 .create(HttpServer.HotService.class)
                 .listResponse(map)
@@ -116,10 +115,10 @@ public class CategoryActivity extends BaseActivity {
 
                     @Override
                     public void onNext(@NonNull HomeRVBean homeRVBean) {
-                        try{
+                        try {
                             LogUtils.i("msg：" + homeRVBean.getMsg());
                             LogUtils.i("code：" + homeRVBean.getCode());
-                        }catch (Exception e){
+                        } catch (Exception e) {
                             LogUtils.e(e.toString());
                         }
                         if (homeRVBean != null && homeRVBean.getCode() == 200) {
@@ -127,9 +126,9 @@ public class CategoryActivity extends BaseActivity {
                             mAdapter.addData(mGameListBean);
                             mAdapter.notifyDataSetChanged();
                         } else {
-                            if (currentPage == 1){
+                            if (currentPage == 1) {
                                 showToast("暂无数据哦", Toast.LENGTH_SHORT);
-                            }else {
+                            } else {
                                 showToast("没有更多数据哦", Toast.LENGTH_SHORT);
                             }
                         }
@@ -146,17 +145,17 @@ public class CategoryActivity extends BaseActivity {
                     }
                 });
     }
+
     /**
      * 隐藏对话框
      */
     private void hideDialog() {
-        if (mLoadDialog != null) {
-            mLoadDialog.dismiss();
-        }
+        loading_ll.setVisibility(View.GONE);
         mRecyclerView.refreshComplete();
     }
 
     private Toast toast = null;
+
     protected void showToast(String msg, int length) {
         if (toast == null) {
             toast = Toast.makeText(this, msg, length);

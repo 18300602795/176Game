@@ -1,6 +1,5 @@
 package com.i76game.fragments;
 
-import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.util.ArrayMap;
@@ -9,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.i76game.R;
@@ -18,7 +18,6 @@ import com.i76game.utils.Global;
 import com.i76game.utils.HttpServer;
 import com.i76game.utils.LogUtils;
 import com.i76game.utils.RetrofitUtil;
-import com.i76game.view.LoadDialog;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 
 import java.util.ArrayList;
@@ -34,7 +33,7 @@ import io.reactivex.schedulers.Schedulers;
  * Created by Administrator on 2017/5/8.
  */
 
-public class MessageFragment2 extends Fragment {
+public class MessageFragment2 extends BaseFragment {
     private List<InformationRVBean.DataBean.NewsListBean> mInformationList;
     private InformationAdapter mAdapter;
     private View view;
@@ -42,9 +41,8 @@ public class MessageFragment2 extends Fragment {
     private int currentPage = 1;
     public String app_id = "";
     private View layoutNoData;
-    private LoadDialog mLoadDialog;
-    private boolean isShow;
-
+    private LinearLayout loading_ll;
+    public boolean isDate;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -58,18 +56,31 @@ public class MessageFragment2 extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mInformationList = new ArrayList<>();
         layoutNoData = view.findViewById(R.id.layout_noData);
+        loading_ll = (LinearLayout) view.findViewById(R.id.loading_ll);
+        if (isDate){
+            initDate();
+        }
+
+    }
+
+    @Override
+    public void initDate() {
+        LogUtils.i("msg---开始加载数据");
+        isShow = false;
         mAdapter = new InformationAdapter(mInformationList, getActivity());
         recyclerView.setAdapter(mAdapter);
+
         recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(),
                 DividerItemDecoration.VERTICAL));
         getDate();
-        if (mLoadDialog == null) {
-            mLoadDialog = new LoadDialog(getActivity(), true, "100倍加速中");
-        }
-
-        if (isShow) {
-            mLoadDialog.show();
-        }
+        layoutNoData.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                currentPage = 1;
+                loading_ll.setVisibility(View.VISIBLE);
+                getDate();
+            }
+        });
         recyclerView.setLoadingListener(new XRecyclerView.LoadingListener() {
             @Override
             public void onRefresh() {
@@ -82,23 +93,6 @@ public class MessageFragment2 extends Fragment {
                 getDate();
             }
         });
-    }
-
-    /**
-     * 在这里实现Fragment数据的缓加载.
-     *
-     * @param isVisibleToUser
-     */
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        if (getUserVisibleHint()) {
-            isShow = true;
-            LogUtils.i("true");
-        } else {
-            LogUtils.i("false");
-            isShow = false;
-        }
     }
 
     private void getDate() {
@@ -164,11 +158,9 @@ public class MessageFragment2 extends Fragment {
      * 隐藏对话框
      */
     private void hideDialog() {
-        if (mLoadDialog != null) {
-            mLoadDialog.dismiss();
-        }
         LogUtils.i("隐藏dialog");
 //        layoutNoData.setVisibility(View.GONE);
+        loading_ll.setVisibility(View.GONE);
         recyclerView.refreshComplete();
         if (mAdapter.getDateList().size() == 0) {
             LogUtils.i("没有数据");

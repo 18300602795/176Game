@@ -14,7 +14,6 @@ import com.i76game.R;
 import com.i76game.utils.Global;
 import com.i76game.utils.LogUtils;
 import com.i76game.utils.Utils;
-import com.i76game.view.LoadDialog;
 import com.i76game.view.PowerWebView;
 
 /**
@@ -22,7 +21,6 @@ import com.i76game.view.PowerWebView;
  */
 
 public class InformationContentActivity extends BaseActivity {
-    private LoadDialog mLoadDialog;
     private PowerWebView mWebView;
     private String mPath;
     private ProgressBar progressBar1;
@@ -83,16 +81,11 @@ public class InformationContentActivity extends BaseActivity {
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
                 super.onPageStarted(view, url, favicon);
-                if (mLoadDialog==null){
-                    mLoadDialog = new LoadDialog(InformationContentActivity.this,true,"100倍加速中");
-                }
-//                mLoadDialog.show();
             }
 
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
-                mLoadDialog.dismiss();
             }
         });
 
