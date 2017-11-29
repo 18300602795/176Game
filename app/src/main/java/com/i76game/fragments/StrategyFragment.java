@@ -8,8 +8,10 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.i76game.MyApplication;
 import com.i76game.R;
 import com.i76game.adapter.MessageAdapter;
 import com.i76game.bean.InformationRVBean;
@@ -41,6 +43,9 @@ public class StrategyFragment extends Fragment {
     private int currentPage = 1;
     public CustomLinearLayoutManager linearLayoutManager;
     public String app_id;
+    private LinearLayout loading_ll;
+    private View layoutNoData;
+    public String post_type;
 
     @Nullable
     @Override
@@ -53,22 +58,34 @@ public class StrategyFragment extends Fragment {
     public void initView() {
         recyclerView = (XRecyclerView) view.findViewById(R.id.information_rv);
         linearLayoutManager = new CustomLinearLayoutManager(getActivity());
-        linearLayoutManager.setScrollEnabled(false);
+        linearLayoutManager.setScrollEnabled(true);
         recyclerView.setLayoutManager(linearLayoutManager);
         mInformationList = new ArrayList<>();
         mAdapter = new MessageAdapter(mInformationList, getActivity());
         recyclerView.setAdapter(mAdapter);
         recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(),
                 DividerItemDecoration.VERTICAL));
+        layoutNoData = view.findViewById(R.id.layout_noData);
+        loading_ll = (LinearLayout) view.findViewById(R.id.loading_ll);
         getDate();
+        layoutNoData.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                currentPage = 1;
+                loading_ll.setVisibility(View.VISIBLE);
+                getDate();
+            }
+        });
         recyclerView.setLoadingListener(new XRecyclerView.LoadingListener() {
             @Override
             public void onRefresh() {
+                currentPage = 1;
                 getDate();
             }
 
             @Override
             public void onLoadMore() {
+                LogUtils.i("开始加载更多");
                 currentPage += 1;
                 getDate();
             }
@@ -76,13 +93,16 @@ public class StrategyFragment extends Fragment {
     }
 
     private void getDate() {
+        layoutNoData.setVisibility(View.GONE);
         ArrayMap<String, String> map = new ArrayMap<>();
-        map.put("appid", app_id);
+        map.put("appid", "100");
+        map.put("post_type", post_type);
+        map.put("gameid", app_id);
         map.put("clientid", Global.clientid);
         map.put("agent", "");
         map.put("from", "3");
         map.put("page", String.valueOf(currentPage));
-        map.put("offset", "10");
+        map.put("offset", MyApplication.num);
         map.put("catalog", "0");
         LogUtils.i("" + currentPage);
         RetrofitUtil.getInstance().create(HttpServer.InformationService.class)
@@ -98,6 +118,7 @@ public class StrategyFragment extends Fragment {
 
                     @Override
                     public void onNext(@NonNull InformationRVBean informationRVBean) {
+                        recyclerView.refreshComplete();
                         try {
                             LogUtils.i("msg：" + informationRVBean.getMsg());
                             LogUtils.i("code：" + informationRVBean.getCode());
@@ -107,11 +128,16 @@ public class StrategyFragment extends Fragment {
                         if (informationRVBean != null && informationRVBean.getCode() == 200 && informationRVBean.getData().getNews_list().size() > 0) {
                             mInformationList = informationRVBean.getData().getNews_list();
                             mAdapter.addDate(mInformationList);
+                            if (mInformationList.size() < Integer.valueOf(MyApplication.num)){
+                                recyclerView.setNoMore(true);
+                            }else {
+                                recyclerView.setNoMore(false);
+                            }
                         } else {
                             if (currentPage == 1) {
-                                showToast("暂无数据哦", Toast.LENGTH_SHORT);
+                                recyclerView.setNoMore(true);
                             } else {
-                                showToast("没有更多数据哦", Toast.LENGTH_SHORT);
+                                recyclerView.setNoMore(true);
                             }
 
                         }
@@ -119,7 +145,7 @@ public class StrategyFragment extends Fragment {
 
                     @Override
                     public void onError(@NonNull Throwable e) {
-
+                        hideDialog();
                     }
 
                     @Override
@@ -133,7 +159,13 @@ public class StrategyFragment extends Fragment {
      * 隐藏对话框
      */
     private void hideDialog() {
-        recyclerView.refreshComplete();
+        loading_ll.setVisibility(View.GONE);
+        recyclerView.setVisibility(View.VISIBLE);
+//        recyclerView.refreshComplete();
+        if (mAdapter.getDateList().size() == 0) {
+            layoutNoData.setVisibility(View.VISIBLE);
+            recyclerView.setVisibility(View.GONE);
+        }
     }
 
     private Toast toast = null;

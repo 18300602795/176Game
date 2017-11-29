@@ -21,7 +21,7 @@ import java.util.List;
  * Created by Administrator on 2017/11/1.
  */
 
-public class MessageAdapter extends RecyclerView.Adapter<InformationHolder> {
+public class MessageAdapter extends RecyclerView.Adapter<MessageHolder> {
     private Activity mActivity;
     private List<InformationRVBean.DataBean.NewsListBean> mInformationList;
 
@@ -45,14 +45,14 @@ public class MessageAdapter extends RecyclerView.Adapter<InformationHolder> {
     }
 
     @Override
-    public InformationHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public MessageHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(mActivity)
                 .inflate(R.layout.message_rv_layout, parent, false);
-        return new InformationHolder(view);
+        return new MessageHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(InformationHolder holder, int position) {
+    public void onBindViewHolder(MessageHolder holder, int position) {
         final InformationRVBean.DataBean.NewsListBean informationBean = mInformationList.get(position);
         GlideUtil.loadImage(mActivity, informationBean.getImg(), holder.mImageView,
                 R.mipmap.icon_horizontal);

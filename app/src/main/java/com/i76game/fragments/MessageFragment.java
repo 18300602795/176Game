@@ -5,12 +5,12 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.util.ArrayMap;
 import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.i76game.MyApplication;
 import com.i76game.R;
 import com.i76game.adapter.MessageAdapter;
 import com.i76game.bean.InformationRVBean;
@@ -52,7 +52,7 @@ public class MessageFragment extends Fragment {
     public void initView() {
         layoutNoData = view.findViewById(R.id.layout_noData);
         recyclerView = (XRecyclerView) view.findViewById(R.id.information_rv);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+//        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mInformationList = new ArrayList<>();
         mAdapter = new MessageAdapter(mInformationList, getActivity());
         recyclerView.setAdapter(mAdapter);
@@ -81,7 +81,7 @@ public class MessageFragment extends Fragment {
         map.put("agent", "");
         map.put("from", "3");
         map.put("page", String.valueOf(currentPage));
-        map.put("offset", "10");
+        map.put("offset", MyApplication.num);
         map.put("catalog", "0");
         LogUtils.i("" + currentPage);
         RetrofitUtil.getInstance().create(HttpServer.InformationService.class)
@@ -97,6 +97,7 @@ public class MessageFragment extends Fragment {
 
                     @Override
                     public void onNext(@NonNull InformationRVBean informationRVBean) {
+                        recyclerView.refreshComplete();
                         try {
                             LogUtils.i("msg：" + informationRVBean.getMsg());
                             LogUtils.i("code：" + informationRVBean.getCode());
@@ -106,10 +107,17 @@ public class MessageFragment extends Fragment {
                         if (informationRVBean != null && informationRVBean.getCode() == 200 && informationRVBean.getData().getNews_list().size() > 0) {
                             mInformationList = informationRVBean.getData().getNews_list();
                             mAdapter.addDate(mInformationList);
+                            if (mInformationList.size() < Integer.valueOf(MyApplication.num)){
+                                recyclerView.setNoMore(true);
+                            }else {
+                                recyclerView.setNoMore(false);
+                            }
                         } else {
                             if (currentPage == 1) {
+                                recyclerView.setNoMore(true);
                                 showToast("暂无数据哦", Toast.LENGTH_SHORT);
                             } else {
+                                recyclerView.setNoMore(true);
                                 showToast("没有更多数据哦", Toast.LENGTH_SHORT);
                             }
 
@@ -136,7 +144,6 @@ public class MessageFragment extends Fragment {
         if (mAdapter.getDateList().size() == 0) {
             layoutNoData.setVisibility(View.VISIBLE);
         }
-        recyclerView.refreshComplete();
     }
 
     private Toast toast = null;

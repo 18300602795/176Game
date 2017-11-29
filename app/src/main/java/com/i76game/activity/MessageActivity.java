@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.i76game.MyApplication;
 import com.i76game.R;
 import com.i76game.adapter.InformationAdapter;
 import com.i76game.bean.InformationRVBean;
@@ -97,7 +98,7 @@ public class MessageActivity extends BaseActivity {
         map.put("agent", "");
         map.put("from", "3");
         map.put("page", String.valueOf(currentPage));
-        map.put("offset", "10");
+        map.put("offset", MyApplication.num);
         map.put("catalog", "0");
         map.put("post_type", type);
         LogUtils.i("" + currentPage);
@@ -115,6 +116,7 @@ public class MessageActivity extends BaseActivity {
 
                     @Override
                     public void onNext(@NonNull InformationRVBean informationRVBean) {
+                        recyclerView.refreshComplete();
                         try{
                             LogUtils.i("msg：" + informationRVBean.getMsg());
                             LogUtils.i("code：" + informationRVBean.getCode());
@@ -124,10 +126,17 @@ public class MessageActivity extends BaseActivity {
                         if (informationRVBean != null && informationRVBean.getCode() == 200 && informationRVBean.getData().getNews_list().size() > 0) {
                             mInformationList = informationRVBean.getData().getNews_list();
                             mAdapter.addDate(mInformationList);
+                            if (mInformationList.size() < Integer.valueOf(MyApplication.num)){
+                                recyclerView.setNoMore(true);
+                            }else {
+                                recyclerView.setNoMore(false);
+                            }
                         } else {
                             if (currentPage == 1){
+                                recyclerView.setNoMore(true);
                                 showToast("暂无数据哦", Toast.LENGTH_SHORT);
                             }else {
+                                recyclerView.setNoMore(true);
                                 showToast("没有更多数据哦", Toast.LENGTH_SHORT);
                             }
 
@@ -151,7 +160,6 @@ public class MessageActivity extends BaseActivity {
     private void hideDialog() {
         loading_ll.setVisibility(View.GONE);
         layoutNoData.setVisibility(View.GONE);
-        recyclerView.refreshComplete();
         if (mAdapter.getDateList().size() == 0) {
             layoutNoData.setVisibility(View.VISIBLE);
         }

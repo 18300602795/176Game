@@ -18,24 +18,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="盗墓决"
+        android:singleLine="true"
         android:textColor="@color/font_black_0"
         android:textSize="12sp" />
 
-    <TextView
-        android:id="@+id/item_num"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="3.8万人在玩"
-        android:padding="2dp"
-        android:textSize="10sp" />
-
-    <Button
-        android:id="@+id/item_bt"
-        android:layout_width="50dp"
-        android:layout_height="25dp"
-        android:background="@drawable/server_btn_bg"
-        android:text="下载"
-        android:textColor="@color/server_btn_color"
-        android:textSize="12sp" />
 
 </LinearLayout>

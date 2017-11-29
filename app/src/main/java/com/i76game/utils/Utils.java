@@ -117,8 +117,15 @@ public class Utils {
         return style;
     }
 
-    public static double change(double a){
-        return a * Math.PI  / 180;
+    public static double change(double a) {
+        return a * Math.PI / 180;
     }
 
+    public static boolean isEmpty(String str) {
+        if (str == null || str.equals(null) || str.equals("")) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

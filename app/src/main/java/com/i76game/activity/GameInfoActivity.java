@@ -14,7 +14,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.util.ArrayMap;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -41,6 +40,7 @@ import com.i76game.utils.GetTypeUtils;
 import com.i76game.utils.Global;
 import com.i76game.utils.HttpServer;
 import com.i76game.utils.ImgUtil;
+import com.i76game.utils.LogUtils;
 import com.i76game.utils.ModelUtil;
 import com.i76game.utils.RetrofitUtil;
 import com.i76game.utils.Utils;
@@ -48,12 +48,12 @@ import com.i76game.view.FilterView;
 import com.i76game.view.HeaderBannerView;
 import com.i76game.view.HeaderFilterView;
 import com.i76game.view.SmoothListView;
+import com.i76game.view.SmoothListView2;
 import com.lidroid.xutils.exception.DbException;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.HttpHandler;
 import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
-import com.lidroid.xutils.util.LogUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -68,15 +68,16 @@ import io.reactivex.schedulers.Schedulers;
 /**
  * 游戏详情页
  */
-public class GameInfoActivity extends FragmentActivity implements SmoothListView.ISmoothListViewListener, View.OnClickListener {
+public class GameInfoActivity extends FragmentActivity implements SmoothListView2.ISmoothListViewListener, View.OnClickListener {
 
-    SmoothListView smoothListView;
+    SmoothListView2 smoothListView;
     FilterView realFilterView;
     LinearLayout rlBar;
     TextView game_title;
     private DownloadAPKManager mDownloadAPKManager;
     private RelativeLayout mDownloadLayout;
     private GameContentBean.DataBean mData;
+    private List<GameContentBean.GameListBean> gameListBeen;
     private ProgressBar mDownloadProgress;
     private TextView mGameSize;
     private ImageView home_rv_icon;
@@ -126,7 +127,7 @@ public class GameInfoActivity extends FragmentActivity implements SmoothListView
     public void initView() {
         mContext = this;
         mActivity = this;
-        smoothListView = (SmoothListView) findViewById(R.id.listView);
+        smoothListView = (SmoothListView2) findViewById(R.id.listView);
         realFilterView = (FilterView) findViewById(R.id.real_filterView);
         rlBar = (LinearLayout) findViewById(R.id.rl_bar);
         game_title = (TextView) findViewById(R.id.game_content_name);
@@ -231,7 +232,6 @@ public class GameInfoActivity extends FragmentActivity implements SmoothListView
         }, 100);
 //        mAdapter = new DetailListAdapter(null, this, 1);
 //        smoothListView.setAdapter(mAdapter);
-        smoothListView.setLoadMoreEnable(false);
         back_return.setOnClickListener(this);
     }
 
@@ -257,22 +257,6 @@ public class GameInfoActivity extends FragmentActivity implements SmoothListView
             }
         });
         smoothListView.setSmoothListViewListener(this);
-        smoothListView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                switch (motionEvent.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        break;
-                    case MotionEvent.ACTION_MOVE:
-                        break;
-                    case MotionEvent.ACTION_UP:
-//                        com.i76game.utils.LogUtils.i("抬起");
-//                        handleTitleBarColorEvaluate(true);
-                        break;
-                }
-                return false;
-            }
-        });
         smoothListView.setOnScrollListener(new SmoothListView.OnSmoothScrollListener() {
             @Override
             public void onSmoothScrolling(View view) {
@@ -355,6 +339,12 @@ public class GameInfoActivity extends FragmentActivity implements SmoothListView
                     mAdapter.strategyFragment.recyclerView.setLayoutManager(mAdapter.strategyFragment.linearLayoutManager);
                 }
             }
+            if (mAdapter.messageFragment2 != null) {
+                if (mAdapter.messageFragment2.linearLayoutManager != null) {
+                    mAdapter.messageFragment2.linearLayoutManager.setScrollEnabled(false);
+                    mAdapter.messageFragment2.recyclerView.setLayoutManager(mAdapter.messageFragment2.linearLayoutManager);
+                }
+            }
             if (mAdapter.giftFragment != null) {
                 if (mAdapter.giftFragment.linearLayoutManager != null) {
                     mAdapter.giftFragment.linearLayoutManager.setScrollEnabled(false);
@@ -370,6 +360,12 @@ public class GameInfoActivity extends FragmentActivity implements SmoothListView
                 if (mAdapter.strategyFragment.linearLayoutManager != null) {
                     mAdapter.strategyFragment.linearLayoutManager.setScrollEnabled(true);
                     mAdapter.strategyFragment.recyclerView.setLayoutManager(mAdapter.strategyFragment.linearLayoutManager);
+                }
+            }
+            if (mAdapter.messageFragment2 != null) {
+                if (mAdapter.messageFragment2.linearLayoutManager != null) {
+                    mAdapter.messageFragment2.linearLayoutManager.setScrollEnabled(true);
+                    mAdapter.messageFragment2.recyclerView.setLayoutManager(mAdapter.messageFragment2.linearLayoutManager);
                 }
             }
             if (mAdapter.giftFragment != null) {
@@ -390,29 +386,8 @@ public class GameInfoActivity extends FragmentActivity implements SmoothListView
         float fraction;
         hideInfo();
         game_title.setVisibility(View.VISIBLE);
-//        if (isUp) {
-//            if (bannerViewTopMargin != 0) {
-//                if (bannerViewTopMargin <= -titleViewHeight / 2 && bannerViewTopMargin > -titleViewHeight) {
-//                    isTop = true;
-//                    com.i76game.utils.LogUtils.i("显示标题栏");
-//                    smoothListView.setSelection(1);
-//                    smoothListView.scrollTo(0, Utils.dip2px(this, titleViewHeight));
-////                    ObjectAnimator.ofFloat(headerBannerView.infomation_ll, "translationY", Utils.dip2px(this, (bannerViewHeight - bannerViewTopMargin) * 1 / 2)).setDuration(300).start();
-////                    ObjectAnimator.ofFloat(headerBannerView.infomation_ll, "translationX", Utils.dip2px(this, -(bannerViewHeight - bannerViewTopMargin) * 1 / 2)).setDuration(300).start();
-//                    isStickyTop = true;
-//                } else if (bannerViewTopMargin > -titleViewHeight / 2) {
-//                    isStickyTop = false;
-//                    isBack = true;
-//                    com.i76game.utils.LogUtils.i("返回");
-//                    smoothListView.scrollTo(0, Utils.dip2px(this,  0));
-//                    smoothListView.setSelection(1);
-//                    bannerViewTopMargin = 0;
-//                }
-//            }
-//        }else {
         ObjectAnimator.ofFloat(headerBannerView.infomation_ll, "translationY", Utils.dip2px(this, -bannerViewTopMargin * 1 / 2)).setDuration(0).start();
         ObjectAnimator.ofFloat(headerBannerView.infomation_ll, "translationX", Utils.dip2px(this, bannerViewTopMargin * 1 / 2)).setDuration(0).start();
-//        }
         if (bannerViewTopMargin > 0) {
             fraction = 1f - bannerViewTopMargin * 1f / 60;
             if (fraction < 0f) fraction = 0f;
@@ -426,7 +401,7 @@ public class GameInfoActivity extends FragmentActivity implements SmoothListView
         if (fraction > 1f) fraction = 1f;
 //        rlBar.setAlpha(1f);
         if (fraction >= 1f || isStickyTop) {
-//            com.i76game.utils.LogUtils.i("标题栏");
+//            LogUtils.i("标题栏");
             isStickyTop = true;
             rlBar.setBackgroundColor(mContext.getResources().getColor(R.color.blue));
 //            rlBar.setBackgroundResource(R.mipmap.bg_game_detail);
@@ -434,7 +409,7 @@ public class GameInfoActivity extends FragmentActivity implements SmoothListView
             open();
         } else {
             if (bannerViewTopMargin == 0) {
-//                com.i76game.utils.LogUtils.i("返回原位");
+//                LogUtils.i("返回原位");
                 showInfo();
                 headerBannerView.ll_banner.setBackgroundResource(R.mipmap.bg_game_detail);
                 close();
@@ -479,7 +454,7 @@ public class GameInfoActivity extends FragmentActivity implements SmoothListView
 
     @Override
     public void onLoadMore() {
-
+        LogUtils.i("加载更多");
     }
 
     //开场动画
@@ -587,6 +562,7 @@ public class GameInfoActivity extends FragmentActivity implements SmoothListView
     }
 
     private void httpRequest(ArrayMap<String, String> map) {
+        LogUtils.i("游戏详情接口：" + Utils.getCompUrlFromParams(Global.Hot_GAME_URL + "game/detail", map));
         RetrofitUtil.getInstance()
                 .create(HttpServer.GameContentServer.class)
                 .listResponse(map)
@@ -602,6 +578,7 @@ public class GameInfoActivity extends FragmentActivity implements SmoothListView
                     public void onNext(@NonNull GameContentBean gameContentBean) {
                         if (gameContentBean != null) {
                             mData = gameContentBean.getData();
+                            gameListBeen = gameContentBean.getMsg();
                             try {
                                 refreshUI();
                                 refreshUi();
@@ -636,7 +613,7 @@ public class GameInfoActivity extends FragmentActivity implements SmoothListView
         headerBannerView.game_content_versions.setText("版本：" + mData.getVername());
         mGameSize.setText("下载(" + mData.getSize() + ")");
         // 设置ListView数据
-        mAdapter = new DetailListAdapter(mData, this);
+        mAdapter = new DetailListAdapter(this, mData, gameListBeen);
         smoothListView.setAdapter(mAdapter);
         if (mData.getIcon() != null && mData.getIcon() != "") {
             if (Global.drawable == null) {
@@ -686,7 +663,7 @@ public class GameInfoActivity extends FragmentActivity implements SmoothListView
                         try {
                             mDownloadAPKManager.stopDownload(downloadInfo);
                         } catch (DbException e) {
-                            LogUtils.e(e.getMessage(), e);
+                            com.lidroid.xutils.util.LogUtils.e(e.getMessage(), e);
                         }
                         break;
                     case CANCELLED:
@@ -694,7 +671,7 @@ public class GameInfoActivity extends FragmentActivity implements SmoothListView
                         try {
                             mDownloadAPKManager.resumeDownload(downloadInfo, downloadStateListener);
                         } catch (DbException e) {
-                            LogUtils.e(e.getMessage(), e);
+                            com.lidroid.xutils.util.LogUtils.e(e.getMessage(), e);
                         }
                         break;
                     case SUCCESS:
@@ -718,7 +695,7 @@ public class GameInfoActivity extends FragmentActivity implements SmoothListView
             ApkUtils.deleteDownloadApk(MyApplication.getContextObject(), downloadInfo.getFileName());//delete file apk from sdcard!
             mDownloadAPKManager.removeDownload(downloadInfo);
         } catch (DbException e) {
-            LogUtils.e(e.getMessage(), e);
+            com.lidroid.xutils.util.LogUtils.e(e.getMessage(), e);
         }
     }
 

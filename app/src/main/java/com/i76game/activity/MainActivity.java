@@ -15,7 +15,7 @@ import android.widget.Toast;
 import com.i76game.R;
 import com.i76game.adapter.MainPagerAdapter;
 import com.i76game.fragments.BaseFragment;
-import com.i76game.fragments.HomeFragment2;
+import com.i76game.fragments.HomeFragment;
 import com.i76game.fragments.InformationFragment;
 import com.i76game.fragments.MineFragment;
 import com.i76game.fragments.ServerFragment;
@@ -63,7 +63,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     }
 
     private void addFragment() {
-        HomeFragment2 homeFragment2 = new HomeFragment2();
+        HomeFragment homeFragment2 = new HomeFragment();
         homeFragment2.setListener(new Imylistener() {
             @Override
             public void Onclick() {

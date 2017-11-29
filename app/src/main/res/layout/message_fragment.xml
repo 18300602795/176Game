@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -7,8 +7,7 @@
     <com.jcodecraeer.xrecyclerview.XRecyclerView
         android:id="@+id/information_rv"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_height="match_parent" />
 
     <include
         android:id="@+id/loading_ll"
@@ -18,4 +17,4 @@
         android:id="@+id/layout_noData"
         layout="@layout/state_layout"
         android:visibility="gone" />
-</LinearLayout>
+</RelativeLayout>

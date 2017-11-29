@@ -19,6 +19,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.i76game.MyApplication;
 import com.i76game.R;
 import com.i76game.adapter.GameListAdapter;
 import com.i76game.bean.HomeRVBean;
@@ -221,7 +222,7 @@ public class GameListActivity extends BaseActivity implements View.OnClickListen
 
                     @Override
                     public void onComplete() {
-                        mPopupGrid.setAdapter(new ArrayAdapter<String>(GameListActivity.this
+                        mPopupGrid.setAdapter(new ArrayAdapter<>(GameListActivity.this
                                 , android.R.layout.simple_list_item_1, mTypes));
                     }
                 });
@@ -292,7 +293,7 @@ public class GameListActivity extends BaseActivity implements View.OnClickListen
         mMap.clear();
         mMap.put("agent", Global.agent);
         mMap.put("category", category);
-        mMap.put("offset", "30");
+        mMap.put("offset", MyApplication.num);
         mMap.put("appid", Global.appid);
         mMap.put("clientid", Global.clientid);
         mMap.put("classify", "1");
@@ -311,7 +312,7 @@ public class GameListActivity extends BaseActivity implements View.OnClickListen
         mMap.put("from", Global.from);
         mMap.put("page", "1");
         mMap.put("type", typeId);
-        mMap.put("offset", "30");
+        mMap.put("offset", MyApplication.num);
         return mMap;
     }
 
@@ -321,7 +322,7 @@ public class GameListActivity extends BaseActivity implements View.OnClickListen
         mMap.clear();
         mMap.put("agent", Global.agent);
         mMap.put("category", "2");
-        mMap.put("offset", "30");
+        mMap.put("offset", MyApplication.num);
         mMap.put("hot", "1");
         mMap.put("appid", Global.appid);
         mMap.put("clientid", Global.clientid);
@@ -354,6 +355,7 @@ public class GameListActivity extends BaseActivity implements View.OnClickListen
 
                     @Override
                     public void onNext(@NonNull HomeRVBean homeRVBean) {
+                        mRecyclerView.refreshComplete();
                         if (homeRVBean != null && homeRVBean.getCode() == 200) {
                             if (mPageIndex == 1) {
                                 mGameList = homeRVBean.getData().getGame_list();
@@ -361,12 +363,18 @@ public class GameListActivity extends BaseActivity implements View.OnClickListen
                             } else {
                                 mAdapter.addData(homeRVBean.getData().getGame_list());
                             }
-
                             mAdapter.notifyDataSetChanged();
+                            if (homeRVBean.getData().getGame_list().size() < Integer.valueOf(MyApplication.num)){
+                                mRecyclerView.setNoMore(true);
+                            }else {
+                                mRecyclerView.setNoMore(false);
+                            }
                         } else {
                             if (mPageIndex == 1){
+                                mRecyclerView.setNoMore(true);
                                 showToast("暂无数据哦", Toast.LENGTH_SHORT);
                             }else {
+                                mRecyclerView.setNoMore(true);
                                 showToast("没有更多数据哦", Toast.LENGTH_SHORT);
                             }
                         }
@@ -395,7 +403,7 @@ public class GameListActivity extends BaseActivity implements View.OnClickListen
             layoutNoData.setVisibility(View.VISIBLE);
         }
         mRecyclerView.loadMoreComplete();
-        mRecyclerView.refreshComplete();
+//        mRecyclerView.refreshComplete();
         //刷新加载过一次后加1
         mPageIndex++;
     }

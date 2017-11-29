@@ -32,10 +32,12 @@ public class DetailListAdapter extends BaseAdapter {
     public MessageFragment2 messageFragment2;
     public GiftFragment giftFragment;
     private List<Fragment> fragments;
+    private List<GameContentBean.GameListBean> gameListBeen;
 
-    public DetailListAdapter(GameContentBean.DataBean mData, Activity context) {
-        this.mData = mData;
+    public DetailListAdapter(Activity context, GameContentBean.DataBean mData, List<GameContentBean.GameListBean> gameListBeen) {
         this.context = context;
+        this.mData = mData;
+        this.gameListBeen = gameListBeen;
         fm = context.getFragmentManager();
         fragments = new ArrayList<>();
     }
@@ -70,6 +72,7 @@ public class DetailListAdapter extends BaseAdapter {
                 if (gameDrtailFragment == null) {
                     gameDrtailFragment = new GameDetailFragment();
                     gameDrtailFragment.mData = mData;
+                    gameDrtailFragment.gameListBeen = gameListBeen;
                     transaction.add(R.id.content_f, gameDrtailFragment);
                     fragments.add(gameDrtailFragment);
                 }
@@ -79,6 +82,7 @@ public class DetailListAdapter extends BaseAdapter {
                 if (messageFragment2 == null) {
                     messageFragment2 = new MessageFragment2();
                     messageFragment2.isDate = true;
+                    messageFragment2.post_type = "3";
                     messageFragment2.app_id = String.valueOf(mData.getGameid());
                     transaction.add(R.id.content_f, messageFragment2);
                     fragments.add(messageFragment2);
@@ -90,6 +94,7 @@ public class DetailListAdapter extends BaseAdapter {
                 if (strategyFragment == null) {
                     strategyFragment = new StrategyFragment();
                     strategyFragment.app_id = String.valueOf(mData.getGameid());
+                    strategyFragment.post_type = "2";
                     transaction.add(R.id.content_f, strategyFragment);
                     fragments.add(strategyFragment);
                 }

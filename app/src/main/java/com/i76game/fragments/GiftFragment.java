@@ -24,9 +24,11 @@ import com.i76game.bean.GiftBean;
 import com.i76game.utils.GlideUtil;
 import com.i76game.utils.Global;
 import com.i76game.utils.HttpServer;
+import com.i76game.utils.LogUtils;
 import com.i76game.utils.OkHttpUtil;
 import com.i76game.utils.RetrofitUtil;
 import com.i76game.utils.SharePrefUtil;
+import com.i76game.utils.Utils;
 import com.i76game.view.CustomLinearLayoutManager;
 import com.i76game.view.GiftDialog;
 import com.jcodecraeer.xrecyclerview.ProgressStyle;
@@ -77,12 +79,13 @@ public class GiftFragment extends Fragment {
     public void initView() {
         mGiftList = new ArrayList<>();
         final ArrayMap<String, String> map = new ArrayMap<>();
-        map.put("appid", app_id);
+        map.put("appid", "100");
+        map.put("gameid", app_id);
         map.put("clientid", Global.clientid);
         map.put("agent", Global.agent);
         map.put("from", Global.from);
         map.put("page", mPageIndex + "");
-        map.put("offset", "30");
+        map.put("offset", MyApplication.num);
 
         layoutNoData = view.findViewById(R.id.layout_noData);
         loading_ll = (LinearLayout) view.findViewById(R.id.loading_ll);
@@ -117,6 +120,7 @@ public class GiftFragment extends Fragment {
 
     private void request(Map<String, String> map) {
         //每一次请求都加一，下次加载就是下一页
+        LogUtils.i("" + Utils.getCompUrlFromParams(Global.Hot_GAME_URL + "gift/list", map));
         mPageIndex++;
         layoutNoData.setVisibility(View.GONE);
         RetrofitUtil.getInstance()
@@ -133,10 +137,17 @@ public class GiftFragment extends Fragment {
 
                     @Override
                     public void onNext(@NonNull GiftBean giftBean) {
+                        mRecyclerView.refreshComplete();
                         if (giftBean != null && giftBean.getCode() == 200) {
                             mGiftList.addAll(giftBean.getData().getGift_list());
                             mAdapter.notifyDataSetChanged();
+                            if (mGiftList.size() < Integer.valueOf(MyApplication.num)){
+                                mRecyclerView.setNoMore(true);
+                            }else {
+                                mRecyclerView.setNoMore(false);
+                            }
                         } else {
+                            mRecyclerView.setNoMore(true);
                            if (mGiftList.size() == 0){
                                layoutNoData.setVisibility(View.VISIBLE);
                            }
@@ -162,6 +173,12 @@ public class GiftFragment extends Fragment {
             View view = LayoutInflater.from(getActivity()).inflate(
                     R.layout.gift_list_rv_layout, parent, false);
             return new GiftListHolder(view);
+        }
+        public List<GiftBean.DataBean.GiftListBean> getDateList() {
+            if (mGiftList == null) {
+                mGiftList = new ArrayList<>();
+            }
+            return mGiftList;
         }
 
         @Override
@@ -293,8 +310,12 @@ public class GiftFragment extends Fragment {
      */
     private void hideDialog() {
         loading_ll.setVisibility(View.GONE);
-        mRecyclerView.loadMoreComplete();
-        mRecyclerView.refreshComplete();
+//        mRecyclerView.loadMoreComplete();
+//        mRecyclerView.refreshComplete();
+        if (mAdapter.getDateList().size() == 0) {
+            layoutNoData.setVisibility(View.VISIBLE);
+            mRecyclerView.setVisibility(View.GONE);
+        }
     }
 
     private Toast toast = null;

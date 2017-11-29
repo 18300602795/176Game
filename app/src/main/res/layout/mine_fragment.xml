@@ -66,16 +66,17 @@
                 android:orientation="vertical"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="10dp"
+                android:layout_marginRight="30dp"
                 android:layout_marginLeft="10dp"
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentRight="true">
                 <TextView
-                    android:text="平台币余额"
+                    android:text="积分"
                     style="@style/mine_text_sytle"/>
 
                 <TextView
-                    android:text="0.00"
+                    android:id="@+id/code_tv"
+                    android:text="0"
                     android:layout_gravity="center_horizontal"
                     style="@style/mine_text_sytle"/>
             </LinearLayout>

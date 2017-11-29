@@ -94,7 +94,7 @@ public class GiftListActivity extends BaseActivity {
         map.put("agent", Global.agent);
         map.put("from", Global.from);
         map.put("page", mPageIndex + "");
-        map.put("offset", "10");
+        map.put("offset", MyApplication.num);
 
 
         mRecyclerView = (XRecyclerView) findViewById(R.id.gift_list_rv);
@@ -142,10 +142,17 @@ public class GiftListActivity extends BaseActivity {
 
                     @Override
                     public void onNext(@NonNull GiftBean giftBean) {
+                        mRecyclerView.refreshComplete();
                         if (giftBean != null && giftBean.getCode() == 200) {
                             mGiftList.addAll(giftBean.getData().getGift_list());
                             mAdapter.notifyDataSetChanged();
+                            if (mGiftList.size() < Integer.valueOf(MyApplication.num)){
+                                mRecyclerView.setNoMore(true);
+                            }else {
+                                mRecyclerView.setNoMore(false);
+                            }
                         } else {
+                            mRecyclerView.setNoMore(true);
                             showToast("暂无数据哦", Toast.LENGTH_SHORT);
                         }
                     }
@@ -312,6 +319,6 @@ public class GiftListActivity extends BaseActivity {
             layoutNoData.setVisibility(View.VISIBLE);
         }
         mRecyclerView.loadMoreComplete();
-        mRecyclerView.refreshComplete();
+//        mRecyclerView.refreshComplete();
     }
 }

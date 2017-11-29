@@ -79,7 +79,9 @@ public class InformationFragment extends BaseFragment {
     private void addFragments() {
         fragments = new ArrayList<>();
         MessageFragment2 messageFragment = new MessageFragment2();
+        messageFragment.post_type = "1";
         MessageFragment2 messageFragment2 = new MessageFragment2();
+        messageFragment2.post_type = "3";
         fragments.add(messageFragment);
         fragments.add(messageFragment2);
     }

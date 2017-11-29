@@ -33,6 +33,7 @@ public class MyApplication extends Application {
     public static String gameID = "syc_60123";
     public static String agentID = "399";
     public static int item;
+    public static String num = "10";
     @Override
     public void onCreate(){
         //获取Context

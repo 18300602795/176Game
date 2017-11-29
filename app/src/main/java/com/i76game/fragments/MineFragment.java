@@ -67,12 +67,13 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
     private int loginCode = 10;
     private int settingCode = 11;
     private CircleImageView mine_icon;
-
     private TextView mRemain;
+    private TextView code_tv;
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             mRemain.setText(StringUtils.stringToDouble((String) msg.obj));
+            code_tv.setText((String) msg.obj);
         }
     };
     private BroadcastReceiver loginReceiver = new BroadcastReceiver() {
@@ -95,6 +96,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
             mIsLogin = true;
             mLogin.setText("立即登陆");
             mRemain.setText("0.00");
+            code_tv.setText("0");
         }
 
     };
@@ -117,6 +119,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
         Button recharge = (Button) view.findViewById(R.id.mine_recharge);
         recharge.setOnClickListener(this);
         mRemain = (TextView) view.findViewById(R.id.mine_remain);
+        code_tv = (TextView) view.findViewById(R.id.code_tv);
         mLogin = (TextView) view.findViewById(R.id.mine_login);
         mine_icon = (CircleImageView) view.findViewById(R.id.mine_icon);
         mine_icon.setOnClickListener(this);

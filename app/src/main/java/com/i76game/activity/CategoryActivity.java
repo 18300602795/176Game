@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.i76game.MyApplication;
 import com.i76game.R;
 import com.i76game.adapter.GameListAdapter;
 import com.i76game.bean.HomeRVBean;
@@ -79,7 +80,7 @@ public class CategoryActivity extends BaseActivity {
         mMap.put("from", Global.from);
         mMap.put("page", "1");
         mMap.put("type", typeId);
-        mMap.put("offset", "30");
+        mMap.put("offset", MyApplication.num);
         return mMap;
     }
 
@@ -115,6 +116,7 @@ public class CategoryActivity extends BaseActivity {
 
                     @Override
                     public void onNext(@NonNull HomeRVBean homeRVBean) {
+                        mRecyclerView.refreshComplete();
                         try {
                             LogUtils.i("msg：" + homeRVBean.getMsg());
                             LogUtils.i("code：" + homeRVBean.getCode());
@@ -125,11 +127,17 @@ public class CategoryActivity extends BaseActivity {
                             mGameListBean = homeRVBean.getData().getGame_list();
                             mAdapter.addData(mGameListBean);
                             mAdapter.notifyDataSetChanged();
+                            if (mGameListBean.size() < Integer.valueOf(MyApplication.num)) {
+                                mRecyclerView.setNoMore(true);
+                            } else {
+                                mRecyclerView.setNoMore(false);
+                            }
+
                         } else {
                             if (currentPage == 1) {
-                                showToast("暂无数据哦", Toast.LENGTH_SHORT);
+                                mRecyclerView.setNoMore(true);
                             } else {
-                                showToast("没有更多数据哦", Toast.LENGTH_SHORT);
+                                mRecyclerView.setNoMore(true);
                             }
                         }
                     }
@@ -151,7 +159,7 @@ public class CategoryActivity extends BaseActivity {
      */
     private void hideDialog() {
         loading_ll.setVisibility(View.GONE);
-        mRecyclerView.refreshComplete();
+//        mRecyclerView.refreshComplete();
     }
 
     private Toast toast = null;

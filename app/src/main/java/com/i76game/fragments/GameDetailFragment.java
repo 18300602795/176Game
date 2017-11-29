@@ -21,6 +21,7 @@ import com.i76game.utils.LogUtils;
 import com.i76game.view.TextViewExpandableAnimation;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Administrator on 2017/11/6.
@@ -34,6 +35,7 @@ public class GameDetailFragment extends Fragment {
     private GameCountAdapter mAdapter;
     private GridView recommend_gv;
     private RecommendAdapter gvAdapter;
+    public List<GameContentBean.GameListBean> gameListBeen;
 
     @Nullable
     @Override
@@ -51,7 +53,7 @@ public class GameDetailFragment extends Fragment {
         welfare_game = (TextViewExpandableAnimation) view.findViewById(R.id.welfare_game);
         welfare_recharge = (TextViewExpandableAnimation) view.findViewById(R.id.welfare_recharge);
         recommend_gv = (GridView) view.findViewById(R.id.recommend_gv);
-        gvAdapter = new RecommendAdapter(getActivity());
+        gvAdapter = new RecommendAdapter(getActivity(), gameListBeen);
         recommend_gv.setAdapter(gvAdapter);
         mAdapter = new GameCountAdapter(getActivity());
         mRecyclerView.setAdapter(mAdapter);

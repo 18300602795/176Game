@@ -4,7 +4,7 @@
     android:background="@color/white"
     android:layout_height="match_parent">
 
-    <com.i76game.view.SmoothListView
+    <com.i76game.view.SmoothListView2
         android:id="@+id/listView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
