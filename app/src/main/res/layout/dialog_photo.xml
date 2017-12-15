@@ -2,25 +2,30 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="10dp">
 
     <TextView
         android:id="@+id/take_btn"
         android:layout_width="match_parent"
         android:layout_height="60dp"
+        android:background="@drawable/btn_bg"
         android:gravity="center"
         android:padding="10dp"
         android:text="拍照"
         android:textColor="@color/blue"
         android:textSize="16sp" />
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="#f1f1f1" />
+
     <TextView
         android:id="@+id/photo_btn"
         android:layout_width="match_parent"
         android:layout_height="60dp"
+        android:background="@drawable/btn_bg"
         android:gravity="center"
         android:padding="10dp"
         android:text="相册"

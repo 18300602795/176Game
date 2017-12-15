@@ -7,6 +7,7 @@ import android.os.Environment;
 import android.os.StrictMode;
 import android.support.v4.util.ArrayMap;
 
+import com.i76game.bean.UserInfoBean;
 import com.i76game.utils.Global;
 import com.i76game.utils.OkHttpUtil;
 import com.i76game.utils.SharePrefUtil;
@@ -34,6 +35,8 @@ public class MyApplication extends Application {
     public static String agentID = "399";
     public static int item;
     public static String num = "10";
+    public static String agent = "241";
+    public static UserInfoBean userInfoBean;
     @Override
     public void onCreate(){
         //获取Context

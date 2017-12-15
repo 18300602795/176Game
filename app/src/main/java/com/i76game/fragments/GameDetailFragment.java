@@ -63,8 +63,8 @@ public class GameDetailFragment extends Fragment {
         if (mData != null) {
             LogUtils.i("game_id" + mData.getGameid());
             mExpandableAnimation.setText(mData.getDisc());
-            welfare_game.setText(mData.getDisc());
-            welfare_recharge.setText(mData.getDisc());
+            welfare_game.setText("暂无数据");
+            welfare_recharge.setText("暂无数据");
             final ArrayList<String> imageList = (ArrayList<String>) mData.getImage();
             mAdapter.setImageUrls(imageList);
             mAdapter.notifyDataSetChanged();

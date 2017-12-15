@@ -24,6 +24,7 @@ import com.i76game.utils.Global;
 import com.i76game.utils.LogUtils;
 import com.i76game.utils.OkHttpUtil;
 import com.i76game.utils.SharePrefUtil;
+import com.i76game.utils.Utils;
 import com.i76game.view.LoginDialog;
 
 import org.json.JSONException;
@@ -62,7 +63,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             if (mSucceed == arg) {
                 showToast("欢迎回来", Toast.LENGTH_SHORT);
                 Intent intent = new Intent("login");
-                intent.putExtra("user_name", username);
                 sendBroadcast(intent);
 //                setResult(Activity.RESULT_OK, intent);
                 finish();
@@ -174,7 +174,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         ArrayMap<String, String> map = new ArrayMap<>();
         map.put("username", AuthCodeUtil.authcodeEncode(username, Global.appkey));
         map.put("password", AuthCodeUtil.authcodeEncode(password, Global.appkey));
-
+        LogUtils.i("游戏登录接口：" + Utils.getCompUrlFromParams(Global.LOGIN_URL, map));
         OkHttpUtil.postFormEncodingdata(Global.LOGIN_URL, false, map, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
@@ -189,6 +189,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 try {
                     mLoginDialog.cancel();
                     String res = response.body().string().trim();
+                    LogUtils.i("登录数据：" + res);
                     parseJson(res, username);
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -231,9 +232,10 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         if (requestCode == userRegisterCode && resultCode == Activity.RESULT_OK) {
             String userRegisterName = data.getStringExtra("user_name");
             Log.e("==loginResult===", "" + userRegisterName);
-            Intent intent = new Intent();
+            Intent intent = new Intent("login");
             intent.putExtra("user_name", userRegisterName);
-            setResult(Activity.RESULT_OK, intent);
+//            setResult(Activity.RESULT_OK, intent);
+            sendBroadcast(intent);
             finish();
         }
     }

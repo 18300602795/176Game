@@ -1,9 +1,13 @@
 package com.i76game.activity;
 
 import android.app.Fragment;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.util.ArrayMap;
 import android.support.v4.view.ViewPager;
 import android.view.KeyEvent;
 import android.view.View;
@@ -12,8 +16,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.i76game.MyApplication;
 import com.i76game.R;
 import com.i76game.adapter.MainPagerAdapter;
+import com.i76game.bean.UserInfoBean;
 import com.i76game.fragments.BaseFragment;
 import com.i76game.fragments.HomeFragment;
 import com.i76game.fragments.InformationFragment;
@@ -21,10 +27,21 @@ import com.i76game.fragments.MineFragment;
 import com.i76game.fragments.ServerFragment;
 import com.i76game.inter.Imylistener;
 import com.i76game.update.VersionUpdateManager;
+import com.i76game.utils.Global;
+import com.i76game.utils.JsonUtil;
 import com.i76game.utils.LogUtils;
+import com.i76game.utils.OkHttpUtil;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
 
 public class MainActivity extends FragmentActivity implements View.OnClickListener {
     private ImageView mHomeImage;
@@ -98,7 +115,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         fanliLayout.setOnClickListener(this);
         messageLayout.setOnClickListener(this);
         mineLayout.setOnClickListener(this);
-
+        getUserInfo();
         mHomeImage = (ImageView) findViewById(R.id.main_home_image);
         mServerImage = (ImageView) findViewById(R.id.main_server_image);
         mMessageImage = (ImageView) findViewById(R.id.main_message_image);
@@ -209,6 +226,48 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         }
     }
 
+    /**
+     * 获取用户信息
+     */
+    public void getUserInfo() {
+        LogUtils.i("获取用户详情：" + Global.INFO_URL);
+        ArrayMap<String, String> map = new ArrayMap<>();
+        OkHttpUtil.postFormEncodingdata(Global.INFO_URL, false, map, new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                String res = response.body().string().trim();
+                LogUtils.e("获取用户详情：" + res);
+                parseJson(res);
+            }
+        });
+    }
+
+    /**
+     * 解析平台币
+     *
+     * @param res 成功返回的json数据
+     */
+    private void parseJson(String res) {
+        try {
+            JSONObject jsonObject = new JSONObject(res);
+            int code = jsonObject.getInt("code");
+            if (code == 200) {
+                String data = jsonObject.getString("data");
+                MyApplication.userInfoBean = JsonUtil.parse(data, UserInfoBean.class);
+                Intent intent = new Intent("setInfo");
+                sendBroadcast(intent);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+            LogUtils.e(e.toString());
+        }
+    }
+
 
     /**
      * 点击2次退出程序
@@ -235,4 +294,24 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         }
     }
 
+    private BroadcastReceiver infoReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            LogUtils.i("收到了用户信息");
+            getUserInfo();
+        }
+
+    };
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        registerReceiver(infoReceiver, new IntentFilter("getInfo"));
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(infoReceiver);
+    }
 }

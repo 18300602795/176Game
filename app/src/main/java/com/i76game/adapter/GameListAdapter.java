@@ -19,7 +19,6 @@ import com.i76game.bean.HomeRVBean;
 import com.i76game.utils.GetTypeUtils;
 import com.i76game.utils.GlideUtil;
 import com.i76game.utils.Global;
-import com.i76game.utils.LogUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,9 +65,6 @@ public class GameListAdapter extends RecyclerView.Adapter<GameListAdapter.HomeRV
         GlideUtil.loadImage(gameListBean.getIcon(), holder.mIcon, R.mipmap.load_icon);
         if (!TextUtils.isEmpty(gameListBean.getType())){
             String[] types = GetTypeUtils.getType(gameListBean.getType());
-            for (int i = 0; i < types.length; i++){
-                LogUtils.i(i + "：" + types[i]);
-            }
             if (TextUtils.isEmpty(types[1])) {
                 holder.mType3.setText(types[0]);
                 holder.mType4.setVisibility(View.GONE);

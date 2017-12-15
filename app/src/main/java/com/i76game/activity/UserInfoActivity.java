@@ -1,7 +1,10 @@
 package com.i76game.activity;
 
 import android.Manifest;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -18,6 +21,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.i76game.MyApplication;
 import com.i76game.R;
 import com.i76game.utils.GlideUtil;
 import com.i76game.utils.LogUtils;
@@ -27,6 +31,7 @@ import com.i76game.utils.ToastUtils;
 import com.i76game.utils.Utils;
 import com.i76game.view.CircleImageView;
 import com.i76game.view.PhotoDialog;
+import com.i76game.view.TipDialog;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -50,11 +55,12 @@ public class UserInfoActivity extends BaseActivity implements View.OnClickListen
     private TextView num_tv, nick_tv, qq_tv, wechat_tv;
     private TextView exit_btn;
     private CircleImageView photo_iv;
-    private PhotoDialog dialog;
+    private PhotoDialog photoDialog;
     private File fileUri = new File(Environment.getExternalStorageDirectory().getPath() + File.separator + "/photo.jpg");
     private File fileCropUri = new File(Environment.getExternalStorageDirectory().getPath() + File.separator + "/crop_photo.jpg");
     private Uri imageUri;
     private Uri cropImageUri;
+    private TipDialog tipDialog;
     private static final int CODE_GALLERY_REQUEST = 0xa0;
     private static final int CODE_CAMERA_REQUEST = 0xa1;
     private static final int CODE_RESULT_REQUEST = 0xa2;
@@ -75,7 +81,8 @@ public class UserInfoActivity extends BaseActivity implements View.OnClickListen
             info_toolbar.setPadding(0, Utils.dip2px(this, 10), 0, 0);
             setTranslucentStatus(true);
         }
-        dialog = new PhotoDialog(this);
+        photoDialog = new PhotoDialog(this);
+        tipDialog = new TipDialog(this);
         photo_ll = (LinearLayout) findViewById(R.id.photo_ll);
         num_ll = (LinearLayout) findViewById(R.id.num_ll);
         nick_ll = (LinearLayout) findViewById(R.id.nick_ll);
@@ -97,15 +104,52 @@ public class UserInfoActivity extends BaseActivity implements View.OnClickListen
         qq_ll.setOnClickListener(this);
         wechat_ll.setOnClickListener(this);
         password_ll.setOnClickListener(this);
-
         exit_btn.setOnClickListener(this);
-        num_tv.setText(setNum(num_tv.getText().toString()));
+        setInfo();
     }
+
+    private void setInfo(){
+        if (Utils.isEmpty(MyApplication.userInfoBean.getNickname())){
+            nick_tv.setText("设置昵称");
+            nick_tv.setTextColor(getResources().getColor(R.color.red));
+        }else {
+            nick_tv.setText(MyApplication.userInfoBean.getNickname());
+            nick_tv.setTextColor(getResources().getColor(R.color.font_black_0));
+        }
+        if (Utils.isEmpty(MyApplication.userInfoBean.getMobile())){
+            num_tv.setText("绑定手机");
+            num_tv.setTextColor(getResources().getColor(R.color.red));
+        }else {
+            try{
+                num_tv.setText(setNum(MyApplication.userInfoBean.getMobile()));
+                num_tv.setTextColor(getResources().getColor(R.color.font_black_0));
+            }catch (Exception e){
+                num_tv.setText("绑定手机");
+                num_tv.setTextColor(getResources().getColor(R.color.red));
+            }
+        }
+        if (Utils.isEmpty(MyApplication.userInfoBean.getQq())){
+            qq_tv.setText("去绑定");
+            qq_tv.setTextColor(getResources().getColor(R.color.red));
+        }else {
+            qq_tv.setText("已绑定");
+            qq_tv.setTextColor(getResources().getColor(R.color.font_black_0));
+        }
+
+        if (Utils.isEmpty(MyApplication.userInfoBean.getWechat()) || MyApplication.userInfoBean.getWechat().equals("0")){
+            wechat_tv.setText("去绑定");
+            wechat_tv.setTextColor(getResources().getColor(R.color.red));
+        }else {
+            wechat_tv.setText("已绑定");
+            wechat_tv.setTextColor(getResources().getColor(R.color.font_black_0));
+        }
+    }
+
 
     private String setNum(String num) {
         if (num.length() == 11) {
             String num1 = num.substring(0, 3);
-            String num2 = num.substring(num.length() - 5, num.length() - 1);
+            String num2 = num.substring(num.length() - 4, num.length());
             num = num1 + "****" + num2;
         }
         return num;
@@ -116,11 +160,11 @@ public class UserInfoActivity extends BaseActivity implements View.OnClickListen
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.photo_ll:
-                dialog.show();
-                dialog.setOnCallbackLister(new PhotoDialog.ClickListenerInterface() {
+                photoDialog.show();
+                photoDialog.setOnCallbackLister(new PhotoDialog.ClickListenerInterface() {
                     @Override
                     public void click(int id) {
-                        dialog.cancel();
+                        photoDialog.cancel();
                         switch (id) {
                             case R.id.take_btn:
                                 try {
@@ -144,6 +188,7 @@ public class UserInfoActivity extends BaseActivity implements View.OnClickListen
                 });
                 break;
             case R.id.num_ll:
+                EnterHelpActivity(new Intent(), HelpActivity.HELP_4_PHONE);
                 break;
             case R.id.nick_ll:
                 Intent intent = new Intent(this, EditNickActivity.class);
@@ -157,17 +202,40 @@ public class UserInfoActivity extends BaseActivity implements View.OnClickListen
                 loginThird(Wechat.NAME);
                 break;
             case R.id.password_ll:
-                startActivity(new Intent(this, EditWorldActivity.class));
+                EnterHelpActivity(new Intent(), HelpActivity.HELP_2_MODIFY_PASSWORD);
+//                startActivity(new Intent(this, EditWorldActivity.class));
                 break;
             case R.id.exit_btn:
-                SharePrefUtil.delete(this);
-                SharePrefUtil.saveBoolean(this, SharePrefUtil.KEY.FIRST_LOGIN, true);
-                Intent intent_receiver = new Intent("exit");
-                sendBroadcast(intent_receiver);
-                finish();
+                tipDialog.show();
+                tipDialog.setTip("是否确定退出登录？");
+                tipDialog.setOnCallbackLister(new TipDialog.ClickListenerInterface() {
+                    @Override
+                    public void click(int id) {
+                        switch (id) {
+                            case R.id.confirm_btn:
+                                SharePrefUtil.delete(UserInfoActivity.this);
+                                SharePrefUtil.saveBoolean(UserInfoActivity.this, SharePrefUtil.KEY.FIRST_LOGIN, true);
+                                Intent intent_receiver = new Intent("exit");
+                                sendBroadcast(intent_receiver);
+                                finish();
+                                break;
+                            case R.id.cancel_btn:
+                                break;
+
+                        }
+                        tipDialog.cancel();
+                    }
+
+                });
                 break;
 
         }
+    }
+
+    private void EnterHelpActivity(Intent intent, String type) {
+        intent.setClass(this, HelpActivity.class);
+        intent.putExtra(HelpActivity.TYPE_TO_HELP, type);
+        startActivity(intent);
     }
 
     /**
@@ -205,7 +273,6 @@ public class UserInfoActivity extends BaseActivity implements View.OnClickListen
         } else {
             PhotoUtils.openPic(this, CODE_GALLERY_REQUEST);
         }
-
     }
 
     /**
@@ -311,14 +378,26 @@ public class UserInfoActivity extends BaseActivity implements View.OnClickListen
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            qq_tv.setText("已绑定");
             String jsonString = (String) msg.obj;
             try {
                 JSONObject object = new JSONObject(jsonString);
                 String icon_url = object.getString("icon");
                 LogUtils.i("头像：" + icon_url);
-                GlideUtil.loadImage(icon_url, photo_iv, R.mipmap.app_icon);
+                GlideUtil.loadImage(icon_url, photo_iv, R.mipmap.ic_head_image);
                 nick_tv.setText(object.getString("nickname"));
+                if (msg.arg1 == 1) {
+                    qq_tv.setText("已绑定");
+                    Platform qq = ShareSDK.getPlatform(QQ.NAME);
+                    //移除授权
+                    qq.removeAccount(true);
+                } else if (msg.arg1 == 2) {
+                    wechat_tv.setText("已绑定");
+                    Platform wechat = ShareSDK.getPlatform(Wechat.NAME);
+                    //移除授权
+                    wechat.removeAccount(true);
+                }
+
+
             } catch (JSONException e) {
                 e.printStackTrace();
                 LogUtils.e(e.toString());
@@ -326,7 +405,7 @@ public class UserInfoActivity extends BaseActivity implements View.OnClickListen
         }
     };
 
-    private void loginThird(String name) {
+    private void loginThird(final String name) {
         Platform third = ShareSDK.getPlatform(name);
 //回调信息，可以在这里获取基本的授权返回的信息，但是注意如果做提示和UI操作要传到主线程handler里去执行
         third.setPlatformActionListener(new PlatformActionListener() {
@@ -347,6 +426,12 @@ public class UserInfoActivity extends BaseActivity implements View.OnClickListen
                 LogUtils.i("授权信息：" + jsonString);
                 Message message = new Message();
                 message.obj = jsonString;
+                if (name.equals(QQ.NAME)) {
+                    message.arg1 = 1;
+                } else if (name.equals(Wechat.NAME)) {
+                    message.arg1 = 2;
+                }
+
                 handler.sendMessage(message);
             }
 
@@ -359,8 +444,26 @@ public class UserInfoActivity extends BaseActivity implements View.OnClickListen
 //authorize与showUser单独调用一个即可
         third.authorize();//单独授权,OnComplete返回的hashmap是空的
 //        third.showUser(null);//授权并获取用户信息
-//移除授权
-//weibo.removeAccount(true);
+    }
+
+    private BroadcastReceiver infoReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            LogUtils.i("收到了用户信息");
+            setInfo();
+        }
+    };
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        registerReceiver(infoReceiver, new IntentFilter("setInfo"));
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(infoReceiver);
     }
 
 

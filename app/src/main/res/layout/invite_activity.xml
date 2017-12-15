@@ -25,7 +25,7 @@
                 android:layout_margin="10dp"
                 android:background="#f5f5f5"
                 android:padding="10dp"
-                android:text="每邀请一位好友，您将获得0.5平台币邀请奖励，平台币可用于支持该货币的游戏充值。每邀请10人，还有神秘大奖等你哦~" />
+                android:text="每邀请一位好友，您将获得5积分邀请奖励，积分可用于抽奖。每邀请10人，还有神秘大奖等你哦~" />
 
             <LinearLayout
                 android:layout_width="match_parent"

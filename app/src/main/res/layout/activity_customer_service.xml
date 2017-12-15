@@ -125,7 +125,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:text="709423355" />
+                    android:text="15915944299" />
 
                 <Button
                     android:id="@+id/customer_service_btn_phone"

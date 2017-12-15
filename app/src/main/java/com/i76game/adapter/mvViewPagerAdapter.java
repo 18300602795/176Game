@@ -89,6 +89,7 @@ public class mvViewPagerAdapter extends PagerAdapter {
      */
     public void enterIntoGameDetails(int gameID) {
         Intent intent3 = new Intent(context, GameInfoActivity.class);
+        Global.drawable = null;
         intent3.putExtra(Global.GAME_ID, gameID);
         context.startActivity(intent3);
         ((Activity) context).overridePendingTransition(R.anim.act_in,

@@ -15,7 +15,7 @@ import com.i76game.utils.Utils;
 
 public class EditWorldActivity extends BaseActivity implements View.OnClickListener {
     private Toolbar edit_toolbar;
-    private EditText old_et, new_et;
+    private EditText old_et, new_et, affirm_et;
     private TextView edit_btn;
 
     @Override
@@ -34,6 +34,7 @@ public class EditWorldActivity extends BaseActivity implements View.OnClickListe
         old_et = (EditText) findViewById(R.id.old_et);
         new_et = (EditText) findViewById(R.id.new_et);
         edit_btn = (TextView) findViewById(R.id.edit_btn);
+        affirm_et = (EditText) findViewById(R.id.affirm_et);
 
         edit_btn.setOnClickListener(this);
     }

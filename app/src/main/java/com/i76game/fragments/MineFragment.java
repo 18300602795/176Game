@@ -34,6 +34,7 @@ import com.i76game.activity.SettingActivity;
 import com.i76game.activity.UserGiftActivity;
 import com.i76game.activity.UserInfoActivity;
 import com.i76game.bean.MineRVBean;
+import com.i76game.bean.MoneyBean;
 import com.i76game.pay.OnPaymentListener;
 import com.i76game.pay.PaymentCallbackInfo;
 import com.i76game.pay.PaymentErrorMsg;
@@ -41,7 +42,7 @@ import com.i76game.utils.Global;
 import com.i76game.utils.LogUtils;
 import com.i76game.utils.OkHttpUtil;
 import com.i76game.utils.SharePrefUtil;
-import com.i76game.utils.StringUtils;
+import com.i76game.utils.Utils;
 import com.i76game.view.CircleImageView;
 
 import org.json.JSONException;
@@ -72,17 +73,19 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            mRemain.setText(StringUtils.stringToDouble((String) msg.obj));
-            code_tv.setText((String) msg.obj);
+            MoneyBean moneyBean = (MoneyBean) msg.obj;
+            LogUtils.i("mHandler");
+            mRemain.setText(moneyBean.getRemain());
+            code_tv.setText(moneyBean.getIntegral());
         }
     };
     private BroadcastReceiver loginReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             LogUtils.i("收到了登录广播");
-            String userName = intent.getStringExtra("user_name");
-            mLogin.setText(userName);
             getUserMessage();
+            Intent intent1 = new Intent("getInfo");
+            getActivity().sendBroadcast(intent1);
             //让用户名那里设置为不可点击
             mIsLogin = false;
         }
@@ -98,7 +101,23 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
             mRemain.setText("0.00");
             code_tv.setText("0");
         }
+    };
 
+    private BroadcastReceiver moneyReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            LogUtils.i("收到了获取积分广播");
+            getUserMessage();
+        }
+    };
+
+    private BroadcastReceiver infoReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            LogUtils.i("收到了获取详情广播");
+            mLogin.setText(Utils.isEmpty(MyApplication.userInfoBean.getNickname()) ? SharePrefUtil.getString(MyApplication.getContextObject(),
+                    SharePrefUtil.KEY.NICHENG, "立即登陆") : MyApplication.userInfoBean.getNickname());
+        }
     };
 
     @Nullable
@@ -126,6 +145,10 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
         mLogin.setOnClickListener(this);
         mIsLogin = SharePrefUtil.getBoolean(MyApplication.getContextObject(),
                 SharePrefUtil.KEY.FIRST_LOGIN, true);
+        if (MyApplication.userInfoBean != null){
+            mLogin.setText(Utils.isEmpty(MyApplication.userInfoBean.getNickname()) ? SharePrefUtil.getString(MyApplication.getContextObject(),
+                    SharePrefUtil.KEY.NICHENG, "立即登陆") : MyApplication.userInfoBean.getNickname());
+        }
         setItemOnClickListener(new ItemOnClickListener() {
             @Override
             public void onClickListener(int position) {
@@ -206,12 +229,13 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
         }
     }
 
+//
+
     /**
      * 获取用户信息
      */
     public void getUserMessage() {
-        mLogin.setText(SharePrefUtil.getString(MyApplication.getContextObject(),
-                SharePrefUtil.KEY.NICHENG, "立即登陆"));
+        LogUtils.i("获取用户信息：" + Global.MONEY_URL);
         OkHttpUtil.getdata(Global.MONEY_URL, false, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
@@ -234,19 +258,34 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
      * @param res 成功返回的json数据
      */
     private void parseJson(String res) {
+        String remain = "0";
         try {
             JSONObject jsonObject = new JSONObject(res);
             int code = jsonObject.getInt("code");
             if (code == 200) {
                 String data = jsonObject.getString("data");
                 jsonObject = new JSONObject(data);
-                String remain = jsonObject.getString("remain");
+                remain = jsonObject.getString("remain");
+                jsonObject = new JSONObject(remain);
+//                MoneyBean moneyBean = JsonUtil.parse(remain, MoneyBean.class);
+                String integral = jsonObject.getString("integral");
+                String ptb = jsonObject.getString("remain");
+                MoneyBean moneyBean = new MoneyBean();
+                moneyBean.setRemain(ptb);
+                moneyBean.setIntegral(integral);
                 Message message = Message.obtain();
-                message.obj = remain;
+                message.obj = moneyBean;
                 mHandler.sendMessage(message);
             }
         } catch (JSONException e) {
             e.printStackTrace();
+            LogUtils.e(e.toString());
+            MoneyBean moneyBean = new MoneyBean();
+            moneyBean.setRemain(remain);
+            moneyBean.setIntegral("0");
+            Message message = Message.obtain();
+            message.obj = moneyBean;
+            mHandler.sendMessage(message);
         }
     }
 
@@ -278,6 +317,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                                 + callbackInfo.money + " 消息提示："
                                 + callbackInfo.msg, Toast.LENGTH_LONG)
                                 .show();
+                        getUserMessage();
                     }
 
                     @Override
@@ -373,6 +413,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
 
     interface ItemOnClickListener {
         void onClickListener(int position);
+
     }
 
     @Override
@@ -380,6 +421,8 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
         super.onResume();
         getActivity().registerReceiver(loginReceiver, new IntentFilter("login"));
         getActivity().registerReceiver(exitReceiver, new IntentFilter("exit"));
+        getActivity().registerReceiver(moneyReceiver, new IntentFilter("money"));
+        getActivity().registerReceiver(infoReceiver, new IntentFilter("setInfo"));
     }
 
     @Override
@@ -387,5 +430,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
         super.onDestroy();
         getActivity().unregisterReceiver(loginReceiver);
         getActivity().unregisterReceiver(exitReceiver);
+        getActivity().unregisterReceiver(moneyReceiver);
+        getActivity().unregisterReceiver(infoReceiver);
     }
 }

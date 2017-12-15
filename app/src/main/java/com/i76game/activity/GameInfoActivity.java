@@ -48,7 +48,6 @@ import com.i76game.view.FilterView;
 import com.i76game.view.HeaderBannerView;
 import com.i76game.view.HeaderFilterView;
 import com.i76game.view.SmoothListView;
-import com.i76game.view.SmoothListView2;
 import com.lidroid.xutils.exception.DbException;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.HttpHandler;
@@ -68,9 +67,9 @@ import io.reactivex.schedulers.Schedulers;
 /**
  * 游戏详情页
  */
-public class GameInfoActivity extends FragmentActivity implements SmoothListView2.ISmoothListViewListener, View.OnClickListener {
+public class GameInfoActivity extends FragmentActivity implements SmoothListView.ISmoothListViewListener, View.OnClickListener {
 
-    SmoothListView2 smoothListView;
+    SmoothListView smoothListView;
     FilterView realFilterView;
     LinearLayout rlBar;
     TextView game_title;
@@ -127,7 +126,7 @@ public class GameInfoActivity extends FragmentActivity implements SmoothListView
     public void initView() {
         mContext = this;
         mActivity = this;
-        smoothListView = (SmoothListView2) findViewById(R.id.listView);
+        smoothListView = (SmoothListView) findViewById(R.id.listView);
         realFilterView = (FilterView) findViewById(R.id.real_filterView);
         rlBar = (LinearLayout) findViewById(R.id.rl_bar);
         game_title = (TextView) findViewById(R.id.game_content_name);
@@ -257,6 +256,7 @@ public class GameInfoActivity extends FragmentActivity implements SmoothListView
             }
         });
         smoothListView.setSmoothListViewListener(this);
+        smoothListView.setLoadMoreEnable(false);
         smoothListView.setOnScrollListener(new SmoothListView.OnSmoothScrollListener() {
             @Override
             public void onSmoothScrolling(View view) {
@@ -310,7 +310,7 @@ public class GameInfoActivity extends FragmentActivity implements SmoothListView
                 }
 
                 // 处理标题栏颜色渐变
-                handleTitleBarColorEvaluate(false);
+                handleTitleBarColorEvaluate();
             }
         });
     }
@@ -380,7 +380,7 @@ public class GameInfoActivity extends FragmentActivity implements SmoothListView
 
 
     // 处理标题栏颜色渐变
-    private void handleTitleBarColorEvaluate(boolean isUp) {
+    private void handleTitleBarColorEvaluate() {
         isTop = false;
         isBack = false;
         float fraction;
@@ -618,7 +618,8 @@ public class GameInfoActivity extends FragmentActivity implements SmoothListView
         if (mData.getIcon() != null && mData.getIcon() != "") {
             if (Global.drawable == null) {
                 ImgUtil.getBitmapUtils(GameInfoActivity.this).display(headerBannerView.home_rv_icon, mData.getIcon() + "");
-                ImgUtil.loadImage(mData.getIcon() + "", headerBannerView.home_rv_icon);
+//                ImgUtil.loadImage(mData.getIcon() + "", headerBannerView.home_rv_icon);
+                ImgUtil.loadImage(GameInfoActivity.this, mData.getIcon() + "", R.mipmap.load_icon, headerBannerView.home_rv_icon);
                 LogUtils.i("图片url：" + mData.getIcon());
             }
         }

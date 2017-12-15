@@ -26,7 +26,7 @@
         android:layout_marginTop="5dp"
         android:gravity="center"
         android:padding="5dp"
-        android:text="关注后即可 获得3平台币(等价3元人命币)" />
+        android:text="关注后即可 获得3积分" />
 
     <TextView
         android:layout_width="match_parent"
@@ -51,6 +51,7 @@
         android:layout_gravity="center_horizontal" />
 
     <TextView
+        android:id="@+id/save_btn"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
@@ -67,14 +68,16 @@
         android:layout_weight="1" />
 
     <EditText
+        android:id="@+id/code_et"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:background="@drawable/we_gray_bg"
-        android:hint="输入兑换码，领取3平台币"
+        android:hint="输入兑换码，领取3积分"
         android:padding="10dp" />
 
     <TextView
+        android:id="@+id/accept_btn"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"

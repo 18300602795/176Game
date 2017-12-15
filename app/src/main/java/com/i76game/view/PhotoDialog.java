@@ -62,7 +62,7 @@ public class PhotoDialog extends Dialog implements View.OnClickListener {
     public void init() {
         LayoutInflater inflater = LayoutInflater.from(context);
         //自定义布局转换成view
-        View view = inflater.inflate(R.layout.photo_dialog, null);
+        View view = inflater.inflate(R.layout.dialog_photo, null);
         //设置到当前的窗体
         setContentView(view);
         //拿到自定义布局的各个控件
@@ -76,7 +76,8 @@ public class PhotoDialog extends Dialog implements View.OnClickListener {
         WindowManager.LayoutParams lp = dialogWindow.getAttributes();
         DisplayMetrics d = context.getResources().getDisplayMetrics(); // 获取屏幕宽、高用
         // 高度设置为屏幕的0.6
-        //lp.height =(int) (d.heightPixels * 0.6);
+//        lp.height =(int) (d.heightPixels * 0.6);
+        lp.width = (int) (d.widthPixels * 0.8);
         dialogWindow.setAttributes(lp);
     }
 

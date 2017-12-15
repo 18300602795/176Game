@@ -28,6 +28,12 @@ import java.util.List;
  */
 public class BackActivity extends BaseActivity implements View.OnClickListener{
 
+    private EditText back_money;
+    private EditText back_game_name;
+    private EditText back_person_id;
+    private EditText back_game_id;
+    private EditText back_person_name;
+    private EditText back_area;
     private EditText mSelectDateBtn;
     private ImageView back_return;
     private RelativeLayout title_rl;
@@ -42,6 +48,12 @@ public class BackActivity extends BaseActivity implements View.OnClickListener{
     public void initView() {
         lottery=(LotteryView) findViewById(R.id.lottery);
         Button postBtn= (Button) findViewById(R.id.back_post);
+        back_money = (EditText) findViewById(R.id.back_money);
+        back_game_name = (EditText) findViewById(R.id.back_game_name);
+        back_person_id = (EditText) findViewById(R.id.back_person_id);
+        back_game_id = (EditText) findViewById(R.id.back_game_id);
+        back_person_name = (EditText) findViewById(R.id.back_person_name);
+        back_area = (EditText) findViewById(R.id.back_area);
         mSelectDateBtn = (EditText) findViewById(R.id.back_select_date);
         back_return = (ImageView) findViewById(R.id.back_return);
         title_rl = (RelativeLayout) findViewById(R.id.title_rl);
@@ -105,15 +117,14 @@ public class BackActivity extends BaseActivity implements View.OnClickListener{
      */
     private void postData() {
         ArrayMap<String,String> map=new ArrayMap<>();
-        map.put("time","");
-        map.put("money","");
-        map.put("person_name","");
-        map.put("game_area","");
-        map.put("game_name","");
-        map.put("game_id","");
+        map.put("time",mSelectDateBtn.getText().toString());
+        map.put("money",back_money.getText().toString());
+        map.put("person_name",back_person_name.getText().toString());
+        map.put("person_id",back_person_id.getText().toString());
+        map.put("game_area",back_area.getText().toString());
+        map.put("game_name",back_game_name.getText().toString());
+        map.put("game_id",back_game_id.getText().toString());
 //        OkHttpUtil.postFormEncodingdata(url,false,map,new );
-
-
     }
 
     /**

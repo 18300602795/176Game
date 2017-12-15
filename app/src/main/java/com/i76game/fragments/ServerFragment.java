@@ -4,45 +4,43 @@ import android.app.Fragment;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.i76game.MyApplication;
 import com.i76game.R;
-import com.i76game.adapter.MainPagerAdapter;
 import com.i76game.utils.LogUtils;
 import com.i76game.utils.Utils;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * 开服表
  */
 
-public class ServerFragment extends BaseFragment implements View.OnClickListener {
+public class ServerFragment extends BaseFragment {
 
 
-    private Button mTodayBtn;
-    private Button mTomorrowBtn;
-    private Button mYesterdayBtn;
-    private List<Fragment> fragments;
+    private ArrayList<Fragment> fragments;
     private ViewPager server_pager;
-    private MainPagerAdapter pagerAdapter;
     private LinearLayout fragment_ll;
     private TextView fragment_title;
+    private TabLayout tabs;
+    private RegisterAdapter pagerAdapter;
+    private String[] mTitles = {"今日开服", "即将开服", "已开新服"};
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.server_fragment, null);
+        tabs = (TabLayout) view.findViewById(R.id.tabs);
         initView(view);
         LogUtils.i("item：" + MyApplication.item);
-        mTodayBtn.setBackgroundResource(R.drawable.server_btn_gb_pregress);
         return view;
     }
 
@@ -55,17 +53,13 @@ public class ServerFragment extends BaseFragment implements View.OnClickListener
             fragment_ll.setPadding(0, Utils.dip2px(getActivity(), 10), 0, 0);
             setTranslucentStatus(true);
         }
-        mTodayBtn = (Button) view.findViewById(R.id.table_today);
-        mTomorrowBtn = (Button) view.findViewById(R.id.table_tomorrow);
-        mYesterdayBtn = (Button) view.findViewById(R.id.table_yesterday);
         server_pager = (ViewPager) view.findViewById(R.id.server_pager);
         server_pager.setOffscreenPageLimit(3);
-        mTodayBtn.setOnClickListener(this);
-        mTomorrowBtn.setOnClickListener(this);
-        mYesterdayBtn.setOnClickListener(this);
         fragments = new ArrayList<>();
         addFragment();
-        pagerAdapter = new MainPagerAdapter(getFragmentManager(), fragments);
+        tabs.setTabMode(TabLayout.MODE_FIXED);//设置tab模式，当前为系统默认模式
+        tabs.setupWithViewPager(server_pager);//将TabLayout和ViewPager关联起来。
+        pagerAdapter = new RegisterAdapter(getFragmentManager(), fragments, mTitles);
         server_pager.setAdapter(pagerAdapter);
         server_pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -75,7 +69,6 @@ public class ServerFragment extends BaseFragment implements View.OnClickListener
 
             @Override
             public void onPageSelected(int position) {
-                resetView(position);
                 if (((BaseFragment) (pagerAdapter.getItem(position))).isShow)
                     ((BaseFragment) (pagerAdapter.getItem(position))).initDate();
             }
@@ -104,43 +97,4 @@ public class ServerFragment extends BaseFragment implements View.OnClickListener
     }
 
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.table_today:
-                resetView(0);
-                server_pager.setCurrentItem(0);
-
-                break;
-            case R.id.table_tomorrow:
-                resetView(1);
-                server_pager.setCurrentItem(1);
-
-                break;
-            case R.id.table_yesterday:
-                resetView(2);
-                server_pager.setCurrentItem(2);
-                break;
-        }
-    }
-
-    /**
-     * 重置所有button
-     */
-    private void resetView(int position) {
-        mTodayBtn.setBackgroundResource(R.drawable.server_btn_bg);
-        mTomorrowBtn.setBackgroundResource(R.drawable.server_btn_bg);
-        mYesterdayBtn.setBackgroundResource(R.drawable.server_btn_bg);
-        switch (position) {
-            case 0:
-                mTodayBtn.setBackgroundResource(R.drawable.server_btn_gb_pregress);
-                break;
-            case 1:
-                mTomorrowBtn.setBackgroundResource(R.drawable.server_btn_gb_pregress);
-                break;
-            case 2:
-                mYesterdayBtn.setBackgroundResource(R.drawable.server_btn_gb_pregress);
-                break;
-        }
-    }
 }

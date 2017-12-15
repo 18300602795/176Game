@@ -19,6 +19,7 @@ import android.widget.ProgressBar;
 
 import com.i76game.R;
 import com.i76game.utils.Global;
+import com.i76game.utils.LogUtils;
 import com.i76game.utils.OkHttpUtil;
 import com.i76game.utils.Utils;
 import com.i76game.view.PowerWebView;
@@ -136,6 +137,7 @@ public class HelpActivity extends BaseActivity {
         }
         url = url + "?clientid=" + clientid + "&appid=" + appid + "&agent="
                 + agent + "&from=" + from;
+        LogUtils.i("网页网址：" + url);
     }
 
     private void getWebViewData(){
@@ -159,9 +161,10 @@ public class HelpActivity extends BaseActivity {
         mWebSettings.setSupportZoom(true); // 支持缩放
 
         mHeaderMap.put("timestamp", OkHttpUtil.Gettimestamp() + "");
+        LogUtils.i("timestamp：" +  OkHttpUtil.Gettimestamp() + "");
         String token = OkHttpUtil.gethstoken();
+        LogUtils.i("hs-token：" + token);
         mHeaderMap.put("hs-token", token + "");
-//        Log.e("helpActivity","token="+token);
         mWebView.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {

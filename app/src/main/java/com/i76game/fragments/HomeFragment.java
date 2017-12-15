@@ -18,14 +18,16 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.i76game.MyApplication;
 import com.i76game.R;
-import com.i76game.activity.CustomerServiceActivity;
+import com.i76game.activity.CrackListActivity;
 import com.i76game.activity.DownloadActivity;
 import com.i76game.activity.EarnActivity;
 import com.i76game.activity.FenLeiActivity;
 import com.i76game.activity.GameListActivity;
 import com.i76game.activity.InformationActivity;
 import com.i76game.activity.InviteActivity;
+import com.i76game.activity.LoginActivity;
 import com.i76game.activity.SearchActivity;
 import com.i76game.adapter.GameListAdapter2;
 import com.i76game.adapter.mvViewPagerAdapter;
@@ -41,12 +43,14 @@ import com.i76game.utils.HttpServer;
 import com.i76game.utils.LogUtils;
 import com.i76game.utils.ModelUtil;
 import com.i76game.utils.RetrofitUtil;
+import com.i76game.utils.SharePrefUtil;
 import com.i76game.utils.Utils;
 import com.i76game.view.FilterView_home;
 import com.i76game.view.HeaderBannerView_home;
 import com.i76game.view.HeaderBannerView_home2;
 import com.i76game.view.HeaderFilterView_home;
 import com.i76game.view.SmoothListView;
+import com.i76game.view.TipDialog;
 import com.i76game.view.VpSwipeRefreshLayout;
 
 import java.util.ArrayList;
@@ -81,6 +85,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
     private ImageView mineImage;
     private Imylistener imylisterer;
     private boolean hasDate;
+    private TipDialog dialog;
 
     FilterView_home realFilterView;
     LinearLayout rlBar;
@@ -321,6 +326,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
         mSearchLayout.setOnClickListener(this);
         ImageView downloadBtn = (ImageView) view.findViewById(R.id.main_download);
         downloadBtn.setOnClickListener(this);
+        dialog = new TipDialog(getActivity());
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             rlBar.setPadding(0, Utils.dip2px(getActivity(), 10), 0, 0);
             setTranslucentStatus(true);
@@ -417,13 +423,48 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
                 startActivity(new Intent(getActivity(), FenLeiActivity.class));
                 break;
             case R.id.bangdan_ll:
-//                startActivity(new Intent(getActivity(), GameListActivity.class));
+                startActivity(new Intent(getActivity(), CrackListActivity.class));
                 break;
             case R.id.earn_ll:
-                startActivity(new Intent(getActivity(), EarnActivity.class));
+                if (!SharePrefUtil.getBoolean(getActivity(), SharePrefUtil.KEY.FIRST_LOGIN, true)) {
+                    startActivity(new Intent(getActivity(), EarnActivity.class));
+                } else {
+                    dialog.show();
+                    dialog.setTip("您还没有登录，请先登录");
+                    dialog.setOnCallbackLister(new TipDialog.ClickListenerInterface() {
+                        @Override
+                        public void click(int id) {
+                            switch (id) {
+                                case R.id.cancel_btn:
+                                    dialog.cancel();
+                                    break;
+                                case R.id.confirm_btn:
+                                    startActivity(new Intent(getActivity(), LoginActivity.class));
+                                    dialog.cancel();
+                                    break;
+                            }
+                        }
+                    });
+                }
+
                 break;
             case R.id.server_ll:
-                startActivity(new Intent(getActivity(), CustomerServiceActivity.class));
+                dialog.show();
+                dialog.setTip("该功能正在开发中，敬请期待");
+                dialog.setOnCallbackLister(new TipDialog.ClickListenerInterface() {
+                    @Override
+                    public void click(int id) {
+                        switch (id) {
+                            case R.id.cancel_btn:
+                                dialog.cancel();
+                                break;
+                            case R.id.confirm_btn:
+                                dialog.cancel();
+                                break;
+                        }
+                    }
+                });
+//                startActivity(new Intent(getActivity(), CustomerServiceActivity.class));
                 break;
             case R.id.activity_ll:
                 Intent intent = new Intent();
@@ -553,7 +594,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
         map.put("page", 1 + "");
         map.put("agent", "");
         map.put("category", "2");
-        map.put("offset", "30");
+        map.put("offset", MyApplication.num);
         map.put("clientid", "49");
         map.put("classify", "1");
         map.put("from", "3");

@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.i76game.MyApplication;
 import com.i76game.R;
 import com.i76game.utils.EncodingUtils;
 import com.i76game.utils.Utils;
@@ -31,7 +32,7 @@ public class InviteActivity extends BaseActivity implements View.OnClickListener
     private ImageView qr_iv;
     private LinearLayout wechat_ll, moments_ll, weibo_ll, qq_ll, qzone_ll, copy_ll;
     private String url = "http://down.shouyoucun.cn/sdkgame/syc_60123/76bt.apk";
-
+    private String text;
     @Override
     protected int setLayoutResID() {
         return R.layout.invite_activity;
@@ -58,6 +59,11 @@ public class InviteActivity extends BaseActivity implements View.OnClickListener
         qq_ll.setOnClickListener(this);
         qzone_ll.setOnClickListener(this);
         copy_ll.setOnClickListener(this);
+        if (MyApplication.userInfoBean != null){
+            text = "我的邀请码是：" + MyApplication.userInfoBean.getId();
+        }else {
+            text = "";
+        }
     }
 
     @Override
@@ -75,19 +81,19 @@ public class InviteActivity extends BaseActivity implements View.OnClickListener
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.wechat_ll:
-                share(Wechat.NAME);
+                share(Wechat.NAME, text);
                 break;
             case R.id.moments_ll:
-                share(WechatMoments.NAME);
+                share(WechatMoments.NAME, text);
                 break;
             case R.id.weibo_ll:
-                share(SinaWeibo.NAME);
+                share(SinaWeibo.NAME, text);
                 break;
             case R.id.qq_ll:
-                share(QQ.NAME);
+                share(QQ.NAME, text);
                 break;
             case R.id.qzone_ll:
-                share(QZone.NAME);
+                share(QZone.NAME, text);
                 break;
             case R.id.copy_ll:
                 ClipboardManager copy = (ClipboardManager) InviteActivity.this
@@ -98,13 +104,13 @@ public class InviteActivity extends BaseActivity implements View.OnClickListener
         }
     }
 
-    private void share(String name) {
+    private void share(String name, String text) {
         OnekeyShare oks = new OnekeyShare();
         oks.setImageUrl("http://f1.sharesdk.cn/imgs/2014/02/26/owWpLZo_638x960.jpg");
         oks.setTitleUrl(url);
         oks.setUrl(url);
         oks.setSiteUrl(url);
-        oks.setText("text");
+        oks.setText(text);
         oks.setTitle("标题");
         oks.setPlatform(name);
         oks.show(this);

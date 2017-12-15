@@ -19,6 +19,7 @@ import com.i76game.MyApplication;
 import com.i76game.R;
 import com.i76game.utils.AuthCodeUtil;
 import com.i76game.utils.Global;
+import com.i76game.utils.LogUtils;
 import com.i76game.utils.OkHttpUtil;
 import com.i76game.utils.SharePrefUtil;
 import com.i76game.utils.Utils;
@@ -43,6 +44,7 @@ public class RegisterPhoneActivity extends BaseActivity implements View.OnClickL
     private EditText mEditUserName;
     private EditText mEditPassword;
     private EditText mEditProve;
+    private EditText invite_et;
     private Button mBtnProve, mBtnRegister;
     private Toolbar register_toolbar;
     //用户输入的文字
@@ -85,6 +87,7 @@ public class RegisterPhoneActivity extends BaseActivity implements View.OnClickL
         mEditUserName = (EditText) findViewById(R.id.register_phone_edit_account);
         mEditPassword = (EditText) findViewById(R.id.register_phone_edit_password);
         mEditProve = (EditText) findViewById(R.id.register_phone_edit_prove);
+        invite_et = (EditText) findViewById(R.id.invite_et);
         mBtnProve = (Button) findViewById(R.id.register_phone_btn_prove);
         mBtnProve.setOnClickListener(this);
         mBtnRegister = (Button) findViewById(R.id.register_phone_btn_register);
@@ -270,6 +273,8 @@ public class RegisterPhoneActivity extends BaseActivity implements View.OnClickL
 //        if (mSessionId == null) {
 //            return;
 //        }
+        String string_code = invite_et.getText().toString();
+
         ArrayMap<String, String> map = new ArrayMap<>();
         map.put("type", 1 + "");
         map.put("username", AuthCodeUtil.authcodeEncode(username, Global.appkey));
@@ -277,9 +282,12 @@ public class RegisterPhoneActivity extends BaseActivity implements View.OnClickL
         map.put("smscode", code + "");
         map.put("sessionid", mSessionId + "");
         map.put("password", AuthCodeUtil.authcodeEncode(password, Global.appkey) + "");
+        if (!Utils.isEmpty(string_code))
+            map.put("invite", string_code);
         map.put("deviceid", "");
 
 //        map.put("client",)
+        LogUtils.i("游戏注册接口：" + Utils.getCompUrlFromParams(Global.USER_ADD, map));
         OkHttpUtil.postFormEncodingdata(Global.USER_ADD, false, map, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
@@ -294,7 +302,7 @@ public class RegisterPhoneActivity extends BaseActivity implements View.OnClickL
             public void onResponse(Call call, Response response) throws IOException {
                 mLoginDialog.cancel();
                 String res = response.body().string().trim();
-//                Log.e("------", "res: "+ res);
+                LogUtils.i("res: " + res);
                 try {
                     parseLoginJson(res);
                 } catch (JSONException e) {

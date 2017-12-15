@@ -13,6 +13,7 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ProgressBar;
 
 import com.i76game.R;
 import com.i76game.pay.AndroidJSInterfaceForWeb;
@@ -23,7 +24,6 @@ import com.i76game.utils.Global;
 import com.i76game.utils.LogUtils;
 import com.i76game.utils.OkHttpUtil;
 import com.i76game.utils.Utils;
-import com.i76game.view.LoadDialog;
 
 import java.util.HashMap;
 
@@ -38,13 +38,14 @@ public class RechargeActivity extends BaseActivity {
     private String url, title;
     private double amount;
     private String toast;
+    private ProgressBar progressBar1;
     HashMap<String, String> header = new HashMap<>();
 
     public static OnPaymentListener paymentListener;// 充值接口监听
     public boolean isPaySus = false;// 支付jar包的回执
     public static final int REQUEST_CODE = 200;
     private WebView mWebView;
-    private LoadDialog mLoadDialog;
+
     @Override
     protected int setLayoutResID() {
         return R.layout.activity_recharge;
@@ -55,7 +56,7 @@ public class RechargeActivity extends BaseActivity {
         Intent intent = getIntent();
         url = intent.getStringExtra("url");
         title = intent.getStringExtra("title");
-
+        progressBar1 = (ProgressBar) findViewById(R.id.progressBar1);
         Toolbar toolbar = (Toolbar) findViewById(R.id.recharge_toolbar);
         // 主标题,默认为app_label的名字
         toolbar.setTitle("支付中");
@@ -74,6 +75,7 @@ public class RechargeActivity extends BaseActivity {
             toolbar.setPadding(0, Utils.dip2px(this, 10), 0, 0);
             setTranslucentStatus(true);
         }
+        LogUtils.i("充值");
         mWebView = (WebView) findViewById(R.id.recharge_web_view);
         mWebView.setWebViewClient(new WebViewClient() {
             @Override
@@ -90,7 +92,18 @@ public class RechargeActivity extends BaseActivity {
                 return true;
             }
         });
-
+        mWebView.setWebChromeClient(new WebChromeClient() {
+            @Override
+            public void onProgressChanged(WebView view, int newProgress) {
+                super.onProgressChanged(view, newProgress);
+                if (newProgress == 100) {
+                    progressBar1.setVisibility(View.GONE);//加载完网页进度条消失
+                } else {
+                    progressBar1.setVisibility(View.VISIBLE);//开始加载网页时显示进度条
+                    progressBar1.setProgress(newProgress);//设置进度值
+                }
+            }
+        });
         mWebView.getSettings().setJavaScriptEnabled(true);
         mWebView.getSettings().setLoadsImagesAutomatically(true);
         mWebView.getSettings().setAppCacheEnabled(true);
@@ -105,10 +118,6 @@ public class RechargeActivity extends BaseActivity {
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
                 super.onPageStarted(view, url, favicon);
-                if (mLoadDialog==null){
-                    mLoadDialog = new LoadDialog(RechargeActivity.this,true,"100倍加速中");
-                }
-                mLoadDialog.show();
             }
 
             @Override
@@ -123,16 +132,15 @@ public class RechargeActivity extends BaseActivity {
                 view.loadUrl(url);
                 return true;
             }
+
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
-                mLoadDialog.dismiss();
                 webviewCompat(mWebView);
 
             }
 
         });
-        mWebView.setWebChromeClient(new WebChromeClient());
         webviewCompat(mWebView);
         CookieSyncManager.createInstance(this);
         CookieManager cookieManager = CookieManager.getInstance();
@@ -147,7 +155,7 @@ public class RechargeActivity extends BaseActivity {
         String from = Global.from;
         url = url + "?clientid=" + clientid + "&appid=" + appid + "&agent="
                 + agent + "&from=" + from;
-        LogUtils.iUrl("充值页面网页："  + url);
+        LogUtils.i("充值页面网页：" + url);
         mWebView.loadUrl(url, header);
     }
 
@@ -155,10 +163,10 @@ public class RechargeActivity extends BaseActivity {
     /**
      * 一些版本特性操作，需要适配、
      *
-     * @date 6/3
      * @param mWebView
+     * @date 6/3
      * @reason 在微蓝项目的时候遇到了 返回键 之后 wv显示错误信息
-     * */
+     */
     private void webviewCompat(WebView mWebView) {
         if (OkHttpUtil.isNetWorkConneted(mWebView.getContext())) {
             mWebView.getSettings().setCacheMode(WebSettings.LOAD_DEFAULT);

@@ -9,6 +9,7 @@ import android.widget.LinearLayout;
 
 import com.i76game.R;
 import com.i76game.utils.Utils;
+import com.i76game.view.TipDialog;
 
 /**
  * Created by Administrator on 2017/11/15.
@@ -18,7 +19,7 @@ public class EarnActivity extends BaseActivity implements View.OnClickListener{
     private Toolbar earn_toolbar;
     private ImageView earn_iv;
     private LinearLayout sign_ll, attention_ll, invite_ll, active_ll, demo_ll, play_ll;
-
+    private TipDialog tipDialog;
     @Override
     protected int setLayoutResID() {
         return R.layout.earn_activity;
@@ -28,6 +29,7 @@ public class EarnActivity extends BaseActivity implements View.OnClickListener{
     public void initView() {
         setToolbar("我要赚钱", R.id.earn_toolbar);
         earn_toolbar = (Toolbar) findViewById(R.id.earn_toolbar);
+        tipDialog = new TipDialog(this);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             earn_toolbar.setPadding(0, Utils.dip2px(this, 10), 0, 0);
             setTranslucentStatus(true);
@@ -67,6 +69,21 @@ public class EarnActivity extends BaseActivity implements View.OnClickListener{
                 startActivity(intent);
                 break;
             case R.id.demo_ll:
+                tipDialog.show();
+                tipDialog.setTip("该功能正在开发中，敬请期待");
+                tipDialog.setOnCallbackLister(new TipDialog.ClickListenerInterface() {
+                    @Override
+                    public void click(int id) {
+                        switch (id) {
+                            case R.id.cancel_btn:
+                                tipDialog.cancel();
+                                break;
+                            case R.id.confirm_btn:
+                                tipDialog.cancel();
+                                break;
+                        }
+                    }
+                });
                 break;
             case R.id.play_ll:
                 break;

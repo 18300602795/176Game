@@ -40,29 +40,29 @@ import okhttp3.Response;
  * 手机号注册
  */
 
-public class RegisterPhoneFragment extends Fragment implements View.OnClickListener{
+public class RegisterPhoneFragment extends Fragment implements View.OnClickListener {
     private EditText mEditUserName;
     private EditText mEditPassword;
     private EditText mEditProve;
-    private Button mBtnProve,mBtnRegister;
+    private Button mBtnProve, mBtnRegister;
     //用户输入的文字
-    private String username,password,code;
-    private boolean mIsVisibility=false;//是否能看到密码
+    private String username, password, code;
+    private boolean mIsVisibility = false;//是否能看到密码
     private Activity mActivity;
 
-    private Handler mHandler=new Handler(){
+    private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            int arg=msg.arg1;
-            if (200==arg){
-                Toast.makeText(mActivity,"欢迎来到76游戏",Toast.LENGTH_SHORT).show();
-                Intent intent=new Intent();
-                intent.putExtra("user_name",(String)msg.obj);
-                mActivity.setResult(Activity.RESULT_OK,intent);
+            int arg = msg.arg1;
+            if (200 == arg) {
+                Toast.makeText(mActivity, "欢迎来到76游戏", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent();
+                intent.putExtra("user_name", (String) msg.obj);
+                mActivity.setResult(Activity.RESULT_OK, intent);
                 mActivity.finish();
-            }else if (404==arg){
-                Toast.makeText(mActivity,(String)msg.obj,Toast.LENGTH_SHORT).show();
+            } else if (404 == arg) {
+                Toast.makeText(mActivity, (String) msg.obj, Toast.LENGTH_SHORT).show();
             }
         }
     };
@@ -73,17 +73,17 @@ public class RegisterPhoneFragment extends Fragment implements View.OnClickListe
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view=inflater.inflate(R.layout.register_phone_layout,null);
+        View view = inflater.inflate(R.layout.register_phone_layout, null);
         mEditUserName = (EditText) view.findViewById(R.id.register_phone_edit_account);
         mEditPassword = (EditText) view.findViewById(R.id.register_phone_edit_password);
         mEditProve = (EditText) view.findViewById(R.id.register_phone_edit_prove);
-        mBtnProve= (Button) view.findViewById(R.id.register_phone_btn_prove);
+        mBtnProve = (Button) view.findViewById(R.id.register_phone_btn_prove);
         mBtnProve.setOnClickListener(this);
-        mBtnRegister= (Button) view.findViewById(R.id.register_phone_btn_register);
+        mBtnRegister = (Button) view.findViewById(R.id.register_phone_btn_register);
         mBtnRegister.setOnClickListener(this);
         mVisibilityImage = (ImageView) view.findViewById(R.id.register_phone_password_invisible);
         mVisibilityImage.setOnClickListener(this);
-        mActivity=getActivity();
+        mActivity = getActivity();
         return view;
     }
 
@@ -94,14 +94,14 @@ public class RegisterPhoneFragment extends Fragment implements View.OnClickListe
     }
 
 
-
     //定于变量
     private boolean tag = true;
     private int i = 60; //定于获取验证码60秒
+
     @Override
     public void onClick(View v) {
         initText();
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.register_phone_btn_prove:
                 if (!isvalidate()) {
                     break;
@@ -117,14 +117,14 @@ public class RegisterPhoneFragment extends Fragment implements View.OnClickListe
                 register();
                 break;
             case R.id.register_phone_password_invisible:
-                if (!mIsVisibility){
+                if (!mIsVisibility) {
                     mVisibilityImage.setBackgroundResource(R.mipmap.ic_password_visible);
                     mEditPassword.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
-                    mIsVisibility=true;
-                }else{
+                    mIsVisibility = true;
+                } else {
                     mVisibilityImage.setBackgroundResource(R.mipmap.ic_password_invisible);
                     mEditPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-                    mIsVisibility=false;
+                    mIsVisibility = false;
                 }
                 break;
         }
@@ -195,18 +195,19 @@ public class RegisterPhoneFragment extends Fragment implements View.OnClickListe
             }
         });
     }
+
     //解析验证码
     private void parseProveJson(String res) throws JSONException {
-        JSONObject jsonObject=new JSONObject(res);
+        JSONObject jsonObject = new JSONObject(res);
         int code = jsonObject.getInt("code");
-        Message message=Message.obtain();
-        if (code>=200&&code<=250) {
+        Message message = Message.obtain();
+        if (code >= 200 && code <= 250) {
             String data = jsonObject.getString("data");
             jsonObject = new JSONObject(data);
             mSessionId = jsonObject.getString("sessionid");
-        }else{
-            message.arg1=404;
-            message.obj=jsonObject.getString("msg");
+        } else {
+            message.arg1 = 404;
+            message.obj = jsonObject.getString("msg");
             mHandler.sendMessage(message);
         }
     }
@@ -214,11 +215,11 @@ public class RegisterPhoneFragment extends Fragment implements View.OnClickListe
     private boolean isvalidate() {
         // 获取控件输入的值
         if (TextUtils.isEmpty(username)) {
-            Toast.makeText(mActivity,"手机号不能为空",Toast.LENGTH_SHORT).show();
+            Toast.makeText(mActivity, "手机号不能为空", Toast.LENGTH_SHORT).show();
             return false;
         }
         if (!isPhoneNumberValid(username)) {
-            Toast.makeText(mActivity,"手机号有误",Toast.LENGTH_SHORT).show();
+            Toast.makeText(mActivity, "手机号有误", Toast.LENGTH_SHORT).show();
             return false;
         }
         return true;
@@ -226,15 +227,16 @@ public class RegisterPhoneFragment extends Fragment implements View.OnClickListe
 
     /**
      * 判断手机号有没有错
+     *
      * @param number 手机号
      */
-    public  boolean isPhoneNumberValid(String number){
+    public boolean isPhoneNumberValid(String number) {
         boolean isValid = false;
         String expression = "((^(13|15|18)[0-9]{9}$)|(^0[1,2]{1}\\d{1}-?\\d{8}$)|(^0[3-9] {1}\\d{2}-?\\d{7,8}$)|(^0[1,2]{1}\\d{1}-?\\d{8}-(\\d{1,4})$)|(^0[3-9]{1}\\d{2}-? \\d{7,8}-(\\d{1,4})$))";
         CharSequence inputStr = number;
         Pattern pattern = Pattern.compile(expression);
         Matcher matcher = pattern.matcher(inputStr);
-        if (matcher.matches() ) {
+        if (matcher.matches()) {
             isValid = true;
         }
         return isValid;
@@ -249,11 +251,11 @@ public class RegisterPhoneFragment extends Fragment implements View.OnClickListe
             return;
         }
         if (!p.matcher(password).matches()) {
-            Toast.makeText(mActivity,"密码只能由6至12位英文或数字组成",Toast.LENGTH_SHORT).show();
+            Toast.makeText(mActivity, "密码只能由6至12位英文或数字组成", Toast.LENGTH_SHORT).show();
             return;
         }
         if (TextUtils.isEmpty(code) && code.length() != 4) {
-            Toast.makeText(mActivity,"请输入4位的短信验证码",Toast.LENGTH_SHORT).show();
+            Toast.makeText(mActivity, "请输入4位的短信验证码", Toast.LENGTH_SHORT).show();
             return;
         }
         //去访问借口，开始注册，
@@ -261,12 +263,12 @@ public class RegisterPhoneFragment extends Fragment implements View.OnClickListe
     }
 
     private void getCheckCode() {
-        if (mSessionId==null){
+        if (mSessionId == null) {
             return;
         }
         ArrayMap<String, String> map = new ArrayMap<>();
         map.put("type", 1 + "");
-        map.put("username", AuthCodeUtil.authcodeEncode(username,Global.appkey));
+        map.put("username", AuthCodeUtil.authcodeEncode(username, Global.appkey));
         map.put("mobile", AuthCodeUtil.authcodeEncode(username, Global.appkey));
         map.put("smscode", code + "");
         map.put("sessionid", mSessionId + "");
@@ -294,15 +296,15 @@ public class RegisterPhoneFragment extends Fragment implements View.OnClickListe
     }
 
     private void parseLoginJson(String res) throws JSONException {
-        JSONObject jsonObject=new JSONObject(res);
+        JSONObject jsonObject = new JSONObject(res);
         int code = jsonObject.getInt("code");
-        Message message=Message.obtain();
-        if (code>=200&&code<=250){
-            String data=jsonObject.getString("data");
+        Message message = Message.obtain();
+        if (code >= 200 && code <= 250) {
+            String data = jsonObject.getString("data");
             jsonObject = new JSONObject(data);
-            String identifier=jsonObject.getString("identifier");
-            String accesstoken=jsonObject.getString("accesstoken");
-            int expaireTime=jsonObject.getInt("expaire_time");
+            String identifier = jsonObject.getString("identifier");
+            String accesstoken = jsonObject.getString("accesstoken");
+            int expaireTime = jsonObject.getInt("expaire_time");
 //            Log.e("------", "identifier: "+ identifier);
 //            Log.e("------", "accesstoken: "+ accesstoken);
 //            Log.e("------", "expaire_time: "+ expaireTime);
@@ -311,12 +313,12 @@ public class RegisterPhoneFragment extends Fragment implements View.OnClickListe
             SharePrefUtil.saveInt(MyApplication.getContextObject(), SharePrefUtil.KEY.EXPAIRE_TIME, expaireTime);//时间
             SharePrefUtil.saveBoolean(MyApplication.getContextObject(), SharePrefUtil.KEY.FIRST_LOGIN, false);  //表示用户已经登录了，以后都要保持这个状态
             SharePrefUtil.saveString(MyApplication.getContextObject(), SharePrefUtil.KEY.NICHENG, username);//保存用户的账号，（也就是昵称）
-            message.arg1=200;
-            message.obj=username;
+            message.arg1 = 200;
+            message.obj = username;
             mHandler.sendMessage(message);
-        }else{
-            message.arg1=404;
-            message.obj=jsonObject.getString("msg");
+        } else {
+            message.arg1 = 404;
+            message.obj = jsonObject.getString("msg");
             mHandler.sendMessage(message);
         }
     }

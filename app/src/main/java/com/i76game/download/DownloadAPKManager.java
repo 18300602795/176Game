@@ -67,12 +67,13 @@ public class DownloadAPKManager {
 
     /**
      * 根据url地址获得downloadinfo
+     *
      * @param url
      * @return
      */
-    public DownloadInfo getDownloadInfo(String url){
-        for (DownloadInfo downinfo :downloadInfoList) {
-            if(downinfo.getDownloadUrl().equals(url)){
+    public DownloadInfo getDownloadInfo(String url) {
+        for (DownloadInfo downinfo : downloadInfoList) {
+            if (downinfo.getDownloadUrl().equals(url)) {
                 return downinfo;
             }
         }
@@ -83,9 +84,9 @@ public class DownloadAPKManager {
     /**
      * 根据filename名字获得downloadinfo
      */
-    public DownloadInfo getDownloadfilename(String filename){
-        for (DownloadInfo downinfo :downloadInfoList) {
-            if(downinfo.getDownloadUrl().equals(filename)){
+    public DownloadInfo getDownloadfilename(String filename) {
+        for (DownloadInfo downinfo : downloadInfoList) {
+            if (downinfo.getDownloadUrl().equals(filename)) {
                 return downinfo;
             }
         }
@@ -94,46 +95,50 @@ public class DownloadAPKManager {
 
     /**
      * 通过应用id获取对应的下载信息
+     *
      * @param appId 应用id
      * @return
      */
     public DownloadInfo getDownloadInfoByAppId(String appId) {
-    	for (DownloadInfo downloadInfo : downloadInfoList) {
-			if (appId.equals(downloadInfo.getAppId())) {
-				return downloadInfo;
-			}
-		}
-    	return null;
+        for (DownloadInfo downloadInfo : downloadInfoList) {
+            if (appId.equals(downloadInfo.getAppId())) {
+                return downloadInfo;
+            }
+        }
+        return null;
     }
 
 
     /**
      * 根据游戏包名返回一个downloadInfo
+     *
      * @param packagename
      * @return
      */
-    public DownloadInfo getDownloadInfoByPackagename(String packagename){
+    public DownloadInfo getDownloadInfoByPackagename(String packagename) {
         for (DownloadInfo downinfo : downloadInfoList) {
-            if(downinfo.getBaoming().equals(packagename)){
-                return downinfo;
-            }
-        }
-        return null;
-    }
-    public DownloadInfo getDownloadInfoByPname(String packageName){
-        for (DownloadInfo downinfo : downloadInfoList) {
-            if(downinfo.getPackageName().equals(packageName)){
+            if (downinfo.getBaoming().equals(packagename)) {
                 return downinfo;
             }
         }
         return null;
     }
 
-
+    public DownloadInfo getDownloadInfoByPname(String packageName) {
+        for (DownloadInfo downinfo : downloadInfoList) {
+            if (downinfo.getPackageName().equals(packageName)) {
+                return downinfo;
+            }
+        }
+        return null;
+    }
 
 
     private Toast toast = null;
-    /** 不会一直重复重复重复重复的提醒了 */
+
+    /**
+     * 不会一直重复重复重复重复的提醒了
+     */
     protected void showToast(String msg, int length) {
         if (toast == null) {
             toast = Toast.makeText(mContext, msg, length);
@@ -145,7 +150,7 @@ public class DownloadAPKManager {
 
 
     public void addNewDownload(String appId, String url, String fileName, String target,
-                               boolean autoResume, boolean autoRename,String imageurl, String baoming,
+                               boolean autoResume, boolean autoRename, String imageurl, String baoming,
                                final RequestCallBack<File> callback) throws DbException {
 
         final DownloadInfo downloadInfo = new DownloadInfo();
@@ -159,26 +164,28 @@ public class DownloadAPKManager {
         downloadInfo.setAppId(appId);
 
 
-        String agent=SharePrefUtil.getString(mContext, SharePrefUtil.KEY.AGENT,"");
-        if (!agent.equals("")){
+        String agent = SharePrefUtil.getString(mContext, SharePrefUtil.KEY.AGENT, "");
+//        String agent = Global.agent;
+//        String agent = MyApplication.agent;
+        if (!agent.equals("")) {
             //先去掉最后一个斜杠后面的字符
-            int lastOne=url.lastIndexOf("/");
-            url=url.substring(0, lastOne);
+            int lastOne = url.lastIndexOf("/");
+            url = url.substring(0, lastOne);
             //去掉倒数第二斜杠后面的字符
-            int lastTwo=url.lastIndexOf("/");
-            String gameID=url.substring(lastTwo+1);
-            url=url.substring(0, lastTwo);
+            int lastTwo = url.lastIndexOf("/");
+            String gameID = url.substring(lastTwo + 1);
+            url = url.substring(0, lastTwo);
             //拿到最后下划线后面的渠道id
-            int i=agent.lastIndexOf("_");
-            String agentID=agent.substring(i+1);
+            int i = agent.lastIndexOf("_");
+            String agentID = agent.substring(i + 1);
             //拼接成新的
-            url=url+"/"+gameID+"/"+gameID+"_"+agentID+".apk";
-        }else{
+            url = url + "/" + gameID + "/" + gameID + "_" + agentID + ".apk";
+        } else {
 //            url=url+"abc";
         }
-
+        LogUtils.i("下载的url：" + url);
         downloadInfo.setDownloadUrl(url);
-        LogUtils.iUrl("addNewDownload: "+url);
+        LogUtils.iUrl("addNewDownload: " + url);
         downloadInfo.setAutoRename(autoRename);
         downloadInfo.setAutoResume(autoResume);
         downloadInfo.setFileName(fileName);
@@ -223,13 +230,13 @@ public class DownloadAPKManager {
         }
         downloadInfoList.remove(downloadInfo);
         db.delete(downloadInfo);
-        
+
         // 把apk文件删除
         String apkFilePath = downloadInfo.getFileSavePath();
         File apkFile = new File(apkFilePath);
         if (apkFile.exists()) {
-        	apkFile.delete();
-		}
+            apkFile.delete();
+        }
     }
 
     public void stopDownload(int index) throws DbException {
@@ -373,7 +380,7 @@ public class DownloadAPKManager {
                 downloadInfo.setState(handler.getState());
             }
             try {
-                String packageName= ApkUtils.getPackageNameByApkFile(MyApplication.getContextObject(),downloadInfo.getFileSavePath());
+                String packageName = ApkUtils.getPackageNameByApkFile(MyApplication.getContextObject(), downloadInfo.getFileSavePath());
                 downloadInfo.setPackageName(packageName);
                 db.saveOrUpdate(downloadInfo);
             } catch (DbException e) {
@@ -410,14 +417,15 @@ public class DownloadAPKManager {
             }
         }
     }
-    public void setInstallSuccess(DownloadInfo downloadInfo){
+
+    public void setInstallSuccess(DownloadInfo downloadInfo) {
         downloadInfo.setIsInstallSuccess(1);
         try {
             db.saveOrUpdate(downloadInfo);
         } catch (DbException e) {
             e.printStackTrace();
         }
-        Log.e("hongliang","更新安装完成"+downloadInfo.getFileName());
+        Log.e("hongliang", "更新安装完成" + downloadInfo.getFileName());
     }
 
     private class HttpHandlerStateConverter implements ColumnConverter<HttpHandler.State> {

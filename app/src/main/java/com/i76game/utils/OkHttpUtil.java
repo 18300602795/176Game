@@ -47,6 +47,7 @@ public class OkHttpUtil {
                                             ArrayMap<String, String> params, Callback callBack) {
 
         FormBody.Builder fb = new FormBody.Builder();
+        LogUtils.e("agent：" + Global.agent);
         if (params != null) {
             params.put(Global.AGENT, Global.agent);
             params.put(Global.FROM, Global.from);

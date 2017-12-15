@@ -99,7 +99,7 @@
             <TextView
                 android:id="@+id/main_message_text"
                 style="@style/main_item_text"
-                android:text="消息" />
+                android:text="资讯" />
 
         </LinearLayout>
 

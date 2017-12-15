@@ -262,11 +262,11 @@
 
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="wrap_content"
                 android:background="@color/font_black_6"
                 android:gravity="center_vertical"
                 android:padding="10dp"
-                android:text="做任务赚平台币（平台币可用于游戏充值）" />
+                android:text="签到规则：\n1、连续签到1天给1个积分，2天给2个积分，以此类推连续签到7天给7积分；\n2、连续签到7天为一个周期，第8天算1个积分；\n3、如果不连续签到每次1积分。" />
 
             <LinearLayout
                 android:id="@+id/demo_ll"
@@ -341,7 +341,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="邀请好友(+0平台币)"
+                    android:text="邀请好友(+0积分)"
                     android:textColor="@color/font_black_0"
                     android:textSize="16sp" />
 
@@ -362,6 +362,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
+                android:visibility="gone"
                 android:background="#f1f1f1" />
 
             <LinearLayout
@@ -371,6 +372,7 @@
                 android:background="@drawable/btn_bg"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
+                android:visibility="gone"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp">
 
@@ -399,6 +401,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
+                android:visibility="gone"
                 android:background="#f1f1f1" />
 
             <LinearLayout
@@ -408,6 +411,7 @@
                 android:background="@drawable/btn_bg"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
+                android:visibility="gone"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp">
 

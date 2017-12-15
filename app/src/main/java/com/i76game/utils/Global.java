@@ -16,6 +16,11 @@ public class Global {
 
     public static final String MONEY_URL=Hot_GAME_URL+"user/wallet/get_balance?clientid=49&appid=100&agent=&from=3";
     /**
+     * 用户详情
+     * */
+    public static final String INFO_URL=Hot_GAME_URL+"user/get_user_info";
+
+    /**
      * 用户登陆
      * */
     public static final String LOGIN_URL=Hot_GAME_URL+"user/login";
@@ -44,6 +49,15 @@ public class Global {
      */
     public static final String INFORMATION_CONTENT=Hot_GAME_URL+"news/webdetail/";
 
+    /**
+     * 签到信息
+     */
+    public static final String SIGN_MESSAGE=Hot_GAME_URL+"user/wallet/sign";
+
+    /**
+     * 签到
+     */
+    public static final String UP_SIGN_MESSAGE=Hot_GAME_URL+"user/wallet/up_sign";
     /**
      * 加密解密的 key
      */

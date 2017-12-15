@@ -80,6 +80,7 @@ public class FenleiAdapter extends BaseAdapter {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 HomeRVBean.DataBean.GameListBean gameListBean = (HomeRVBean.DataBean.GameListBean) holder.fenlei_gv.getAdapter().getItem(i);
+                Global.drawable = null;
                 Intent intent = new Intent(context, GameInfoActivity.class);
                 intent.putExtra(Global.GAME_ID, gameListBean.getGameid());
                 context.startActivity(intent);
